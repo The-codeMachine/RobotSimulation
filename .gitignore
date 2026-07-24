@@ -1,0 +1,5 @@
+# the build directory
+build/
+
+# any log files
+*.logs
