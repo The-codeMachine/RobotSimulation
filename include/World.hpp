@@ -37,10 +37,10 @@ static inline constexpr const char* OBJECT_REPRESENTATION = ".#R";
 /// x/y (to the 64-integer limit).
 ///
 struct Location {
-    Location(int x, int y) : x(x), y(y) {}
+    Location(uint32_t x, uint32_t y) : x(x), y(y) {}
     
-    int x;
-    int y;
+    uint32_t x;
+    uint32_t y;
 };
 
 /// @brief 
@@ -59,14 +59,14 @@ struct Location {
 ///
 class World {
 public:
-    World(const std::string& world);
-    World(const std::filesystem::path& worldFile);
+    explicit World(const std::string& world);
+    explicit World(const std::filesystem::path& worldFile);
 
     /// @brief finds the ObjectType at (x, y) and returns it
     /// @param x as base-0
     /// @param y as base-0
     /// @return the ObjectType located at (x, y) 
-    ObjectType at(int x, int y) const;
+    ObjectType at(uint32_t x, uint32_t y) const;
 
     /// @brief finds the ObjectType at location and returns it
     /// @param location 
@@ -77,7 +77,7 @@ public:
     /// @param x as base-0
     /// @param y as base-0
     /// @param value 
-    void update(int x, int y, ObjectType value);
+    void update(uint32_t x, uint32_t y, ObjectType value);
 
     /// @brief changes the ObjectType at location to the new value
     /// @param x as base-0
@@ -85,31 +85,40 @@ public:
     /// @param value 
     void update(Location location, ObjectType value);
 
+    /// @brief converts the world into string for visual representation
+    /// @return the world as a string
+    std::string toString() const noexcept;
+
 private:
     /// @brief converts c to an ObjectType if possible
     /// @param c 
     /// @return c as an ObjectType
-    static ObjectType m_convertToObjectType(char c);
+    static ObjectType convert_to_objecttype_(char c);
+
+    /// @brief converts the ObjectType into a character
+    /// @param obj 
+    /// @return the ObjectType as a character
+    static char convert_to_char_(ObjectType obj);
 
     /// @brief converts (x, y) to a 1D index
     /// @param x as base-0
     /// @param y as base-0
     /// @return (x, y) as a 1D index
-    uint32_t m_convertTo1D(int x, int y) const noexcept;
+    uint32_t convert_to_1D_(uint32_t x, uint32_t y) const noexcept;
 
     /// @brief checks whether (x, y) is a valid position
     /// @param x as base-0
     /// @param y as base-0
     /// @return true if it is valid
-    bool m_validPosition(int x, int y) const noexcept;
+    bool valid_position_(uint32_t x, uint32_t y) const noexcept;
 
     /// @brief constructs the world from a string
     /// @param world 
-    void m_constructFromString(const std::string& world);
+    void construct_from_string_(const std::string& world);
 
 private:
-    std::vector<ObjectType> m_map;
+    std::vector<ObjectType> map_;
 
-    uint32_t ROW_SIZE;
+    uint32_t ROW_SIZE_;
 
 };

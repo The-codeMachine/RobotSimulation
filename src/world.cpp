@@ -3,12 +3,13 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+#include <iostream>
 
-World::World(const std::string& world) {
-    m_constructFromString(world);
+World::World(const std::string& world) : ROW_SIZE_(-1) {
+    construct_from_string_(world);
 }
 
-World::World(const std::filesystem::path& worldFile) {
+World::World(const std::filesystem::path& worldFile) : ROW_SIZE_(-1) {
     if (!std::filesystem::exists(worldFile) 
         || !std::filesystem::is_regular_file(worldFile)) {
             throw std::runtime_error("World file does not exist, or is an invalid file");
@@ -22,35 +23,47 @@ World::World(const std::filesystem::path& worldFile) {
     std::stringstream buffer;
     buffer << file.rdbuf();
 
-    m_constructFromString(buffer.str());
+    construct_from_string_(buffer.str());
 }
 
-ObjectType World::at(int x, int y) const {
-    if (!m_validPosition(x, y))
+ObjectType World::at(uint32_t x, uint32_t y) const {
+    if (!valid_position_(x, y))
         throw std::runtime_error("(x, y) is an invalid position for this world");
 
-    return m_map[m_convertTo1D(x, y)];
+    return map_[convert_to_1D_(x, y)];
 }
 
 ObjectType World::at(Location location) const {
     return at(location.x, location.y);
 }
 
-void World::update(int x, int y, ObjectType value) {
-    if (!m_validPosition(x, y))
+void World::update(uint32_t x, uint32_t y, ObjectType value) {
+    if (!valid_position_(x, y))
         throw std::runtime_error("(x, y) is an invalid position for this world");
 
-    m_map[m_convertTo1D(x, y)] = value;
+    map_[convert_to_1D_(x, y)] = value;
 }
 
 void World::update(Location location, ObjectType value) {
-    if (!m_validPosition(location.x, location.y))
+    if (!valid_position_(location.x, location.y))
         throw std::runtime_error("(x, y) is an invalid position for this world");
 
-    m_map[m_convertTo1D(location.x, location.y)] = value;
+    map_[convert_to_1D_(location.x, location.y)] = value;
 }
 
-ObjectType World::m_convertToObjectType(char c) {
+std::string World::toString() const noexcept {
+    std::string out;
+    
+    for (uint32_t i = 0; i < map_.size(); i += ROW_SIZE_) {
+        for (uint32_t j = 0; j < ROW_SIZE_; ++j) {
+            out += convert_to_char_(map_[convert_to_1D_(j, i)]);
+        }
+    }
+
+    return out;
+}
+
+ObjectType World::convert_to_objecttype_(char c) {
     switch (c) {
         case ' ':
             return ObjectType::EMPTY;
@@ -64,25 +77,40 @@ ObjectType World::m_convertToObjectType(char c) {
     }
 }
 
-uint32_t World::m_convertTo1D(int x, int y) const noexcept {
-    return y * ROW_SIZE + x;
+char World::convert_to_char_(ObjectType obj) {
+    return OBJECT_REPRESENTATION[static_cast<uint8_t>(obj)];
 }
 
-bool World::m_validPosition(int x, int y) const noexcept {
-    uint32_t pos = m_convertTo1D(x, y);
-    return pos >= 0 && pos < m_map.size();
+uint32_t World::convert_to_1D_(uint32_t x, uint32_t y) const noexcept {
+    return y * ROW_SIZE_ + x;
 }
 
-void World::m_constructFromString(const std::string& world) {
-    ROW_SIZE = -1;
+bool World::valid_position_(uint32_t x, uint32_t y) const noexcept {
+    uint32_t pos = convert_to_1D_(x, y);
+    return pos >= 0 && pos < map_.size();
+}
 
-    for (uint32_t i = 0; i < world.size(); ++i) {
-        const char& c = world[i];
+void World::construct_from_string_(const std::string& world) {
+    map_.resize(world.size()); // Note: Might allocate slightly more than needed due to ignored newlines
 
-        if (c == '\n' && ROW_SIZE == -1)
-            ROW_SIZE = i;
-        else {
-            m_map[i] = m_convertToObjectType(c);
+    std::stringstream ss(world);
+    std::string row;
+    uint32_t mapIndex = 0;
+
+    while (std::getline(ss, row)) {
+        // Print the row with a newline to match original std::cout behavior
+        std::cout << row << "\n";
+
+        // Validate row size
+        if (ROW_SIZE_ == -1) {
+            ROW_SIZE_ = row.size();
+        } else if (row.size() != static_cast<size_t>(ROW_SIZE_)) {
+            throw std::runtime_error("Invalid world string: irregular row size detected.");
+        }
+
+        // Populate the map
+        for (char c : row) {
+            map_[mapIndex++] = convert_to_objecttype_(c);
         }
     }
 }
