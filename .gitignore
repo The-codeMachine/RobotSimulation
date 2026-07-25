@@ -1,5 +1,8 @@
 # the build directory
 build/
 
+# the tests directory
+Testing/
+
 # any log files
 *.logs

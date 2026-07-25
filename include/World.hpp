@@ -37,10 +37,10 @@ static inline constexpr const char* OBJECT_REPRESENTATION = ".#R";
 /// x/y (to the 64-integer limit).
 ///
 struct Location {
-    Location(int64_t x, int64_t y) : x(x), y(y) {}
+    Location(int x, int y) : x(x), y(y) {}
     
-    int64_t x;
-    int64_t y;
+    int x;
+    int y;
 };
 
 /// @brief 
@@ -66,18 +66,18 @@ public:
     /// @param x as base-0
     /// @param y as base-0
     /// @return the ObjectType located at (x, y) 
-    ObjectType at(int64_t x, int64_t y) const noexcept;
+    ObjectType at(int x, int y) const;
 
     /// @brief finds the ObjectType at location and returns it
     /// @param location 
     /// @return the ObjectType located at location
-    ObjectType at(Location location) const noexcept;
+    ObjectType at(Location location) const;
 
     /// @brief changes the ObjectType at (x, y) to the new value
     /// @param x as base-0
     /// @param y as base-0
     /// @param value 
-    void update(int64_t x, int64_t y, ObjectType value);
+    void update(int x, int y, ObjectType value);
 
     /// @brief changes the ObjectType at location to the new value
     /// @param x as base-0
@@ -95,13 +95,13 @@ private:
     /// @param x as base-0
     /// @param y as base-0
     /// @return (x, y) as a 1D index
-    uint64_t m_convertTo1D(int64_t x, int64_t y) const noexcept;
+    uint32_t m_convertTo1D(int x, int y) const noexcept;
 
     /// @brief checks whether (x, y) is a valid position
     /// @param x as base-0
     /// @param y as base-0
     /// @return true if it is valid
-    bool m_validPosition(int64_t x, int64_t y) const noexcept;
+    bool m_validPosition(int x, int y) const noexcept;
 
     /// @brief constructs the world from a string
     /// @param world 

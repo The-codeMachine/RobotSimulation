@@ -25,18 +25,18 @@ World::World(const std::filesystem::path& worldFile) {
     m_constructFromString(buffer.str());
 }
 
-ObjectType World::at(int64_t x, int64_t y) const noexcept {
+ObjectType World::at(int x, int y) const {
     if (!m_validPosition(x, y))
         throw std::runtime_error("(x, y) is an invalid position for this world");
 
     return m_map[m_convertTo1D(x, y)];
 }
 
-ObjectType World::at(Location location) const noexcept {
+ObjectType World::at(Location location) const {
     return at(location.x, location.y);
 }
 
-void World::update(int64_t x, int64_t y, ObjectType value) {
+void World::update(int x, int y, ObjectType value) {
     if (!m_validPosition(x, y))
         throw std::runtime_error("(x, y) is an invalid position for this world");
 
@@ -64,19 +64,19 @@ ObjectType World::m_convertToObjectType(char c) {
     }
 }
 
-uint64_t World::m_convertTo1D(int64_t x, int64_t y) const noexcept {
+uint32_t World::m_convertTo1D(int x, int y) const noexcept {
     return y * ROW_SIZE + x;
 }
 
-bool World::m_validPosition(int64_t x, int64_t y) const noexcept {
-    uint64_t pos = m_convertTo1D(x, y);
+bool World::m_validPosition(int x, int y) const noexcept {
+    uint32_t pos = m_convertTo1D(x, y);
     return pos >= 0 && pos < m_map.size();
 }
 
 void World::m_constructFromString(const std::string& world) {
     ROW_SIZE = -1;
 
-    for (uint64_t i = 0; i < world.size(); ++i) {
+    for (uint32_t i = 0; i < world.size(); ++i) {
         const char& c = world[i];
 
         if (c == '\n' && ROW_SIZE == -1)
