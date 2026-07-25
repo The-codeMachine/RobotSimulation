@@ -25,7 +25,7 @@ index of the ObjectType, it's object
 representation as a character. We recommend
 a padding of a space (' ').
 */
-static inline constexpr const char* OBJECT_REPRESENTATION = ".#R";
+static inline constexpr const char* OBJECT_REPRESENTATION = " #R";
 
 /// @brief 
 ///

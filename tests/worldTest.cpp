@@ -1,6 +1,7 @@
 #include <World.hpp>
 
 #include <iostream>
+#include <cassert>
 #include <stdexcept>
 
 int main() {
@@ -8,7 +9,41 @@ int main() {
     try {
         World world(std::filesystem::path("assets/tests/worldInitConstruction.txt"));
 
-        std::cout << world.toString() << "\n";
+        assert(world.toString() == 
+            "######################\n"
+            "#                    #\n"
+            "#                    #\n"
+            "#     ##########     #\n"
+            "#              #     #\n"
+            "#              #     #\n"
+            "#       R      #     #\n"
+            "#              ### ###\n"
+            "#               #    #\n"
+            "#               #    #\n"
+            "#########       ######\n"
+            "#                    #\n"
+            "######################"
+        );
+
+        world.update(16, 8, ObjectType::EMPTY);
+        world.update(16, 9, ObjectType::EMPTY);
+
+        assert(world.toString() == 
+            "######################\n"
+            "#                    #\n"
+            "#                    #\n"
+            "#     ##########     #\n"
+            "#              #     #\n"
+            "#              #     #\n"
+            "#       R      #     #\n"
+            "#              ### ###\n"
+            "#                    #\n"
+            "#                    #\n"
+            "#########       ######\n"
+            "#                    #\n"
+            "######################"
+        );
+
     } catch (const std::exception& e) {
         std::cout << e.what() << "\n";
     }

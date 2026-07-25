@@ -53,11 +53,16 @@ void World::update(Location location, ObjectType value) {
 
 std::string World::toString() const noexcept {
     std::string out;
-    
-    for (uint32_t i = 0; i < map_.size(); i += ROW_SIZE_) {
-        for (uint32_t j = 0; j < ROW_SIZE_; ++j) {
-            out += convert_to_char_(map_[convert_to_1D_(j, i)]);
+
+    const uint32_t rows = map_.size() / ROW_SIZE_;
+
+    for (uint32_t y = 0; y < rows; ++y) {
+        for (uint32_t x = 0; x < ROW_SIZE_; ++x) {
+            out += convert_to_char_(map_[convert_to_1D_(x, y)]);
         }
+
+        if (y + 1 < rows)
+            out += '\n';
     }
 
     return out;
@@ -91,24 +96,19 @@ bool World::valid_position_(uint32_t x, uint32_t y) const noexcept {
 }
 
 void World::construct_from_string_(const std::string& world) {
-    map_.resize(world.size()); // Note: Might allocate slightly more than needed due to ignored newlines
+    map_.resize(world.size());
 
     std::stringstream ss(world);
     std::string row;
     uint32_t mapIndex = 0;
 
     while (std::getline(ss, row)) {
-        // Print the row with a newline to match original std::cout behavior
-        std::cout << row << "\n";
-
-        // Validate row size
         if (ROW_SIZE_ == -1) {
             ROW_SIZE_ = row.size();
         } else if (row.size() != static_cast<size_t>(ROW_SIZE_)) {
             throw std::runtime_error("Invalid world string: irregular row size detected.");
         }
 
-        // Populate the map
         for (char c : row) {
             map_[mapIndex++] = convert_to_objecttype_(c);
         }
