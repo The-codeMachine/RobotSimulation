@@ -26,29 +26,16 @@ World::World(const std::filesystem::path& worldFile) : ROW_SIZE_(-1) {
     construct_from_string_(buffer.str());
 }
 
-ObjectType World::at(uint32_t x, uint32_t y) const {
-    if (!valid_position_(x, y))
-        throw std::runtime_error("(x, y) is an invalid position for this world");
-
-    return map_[convert_to_1D_(x, y)];
+Object World::at(Vector2 pos) const {
+    return map_[convert_to_1D_(pos.x, pos.y)];
 }
 
-ObjectType World::at(Location location) const {
-    return at(location.x, location.y);
-}
-
-void World::update(uint32_t x, uint32_t y, ObjectType value) {
-    if (!valid_position_(x, y))
+void World::update(Object value) {
+    Vector2 pos = value.getTransform().position;
+    if (!valid_position_(pos.x, pos.y))
         throw std::runtime_error("(x, y) is an invalid position for this world");
 
-    map_[convert_to_1D_(x, y)] = value;
-}
-
-void World::update(Location location, ObjectType value) {
-    if (!valid_position_(location.x, location.y))
-        throw std::runtime_error("(x, y) is an invalid position for this world");
-
-    map_[convert_to_1D_(location.x, location.y)] = value;
+    map_[convert_to_1D_(pos.x, pos.y)] = value;
 }
 
 std::string World::toString() const noexcept {
@@ -58,7 +45,7 @@ std::string World::toString() const noexcept {
 
     for (uint32_t y = 0; y < rows; ++y) {
         for (uint32_t x = 0; x < ROW_SIZE_; ++x) {
-            out += convert_to_char_(map_[convert_to_1D_(x, y)]);
+            out += map_[convert_to_1D_(x, y)].toChar();
         }
 
         if (y + 1 < rows)
@@ -80,10 +67,6 @@ ObjectType World::convert_to_objecttype_(char c) {
         default:
             throw std::runtime_error("Invalid ObjectType conversion to char (character is invalid)");
     }
-}
-
-char World::convert_to_char_(ObjectType obj) {
-    return OBJECT_REPRESENTATION[static_cast<uint8_t>(obj)];
 }
 
 uint32_t World::convert_to_1D_(uint32_t x, uint32_t y) const noexcept {
@@ -110,7 +93,7 @@ void World::construct_from_string_(const std::string& world) {
         }
 
         for (char c : row) {
-            map_[mapIndex++] = convert_to_objecttype_(c);
+            map_[mapIndex++] = Object({mapIndex % ROW_SIZE_, mapIndex / ROW_SIZE_}, convert_to_objecttype_(c));
         }
     }
 }

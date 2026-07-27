@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_library(RobotSimulationLib
     src/world.cpp
+    src/robot.cpp
+    src/object.cpp
 )
 
 target_include_directories(RobotSimulationLib PUBLIC 

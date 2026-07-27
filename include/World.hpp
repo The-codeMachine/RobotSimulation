@@ -1,47 +1,9 @@
 #pragma once
 
-#include <cstdint>
+#include <Object.hpp>
+
 #include <string>
 #include <filesystem>
-
-/// @brief 
-///
-/// Represents an object. Specifies which
-/// type of object it is. There might be
-/// an object class later down the line
-/// once we consolidate what a specific
-/// object is. Once that is created,
-/// this should be moved there. 
-///
-enum class ObjectType : uint8_t {
-    EMPTY = 0,
-    WALL,
-    ROBOT
-};
-
-/*
-This correlates to the ObjectType. At the
-index of the ObjectType, it's object 
-representation as a character. We recommend
-a padding of a space (' ').
-*/
-static inline constexpr const char* OBJECT_REPRESENTATION = " #R";
-
-/// @brief 
-///
-/// Location represents a single position
-/// within the world. This consists of an 
-/// integer (x, y) position. Currently,
-/// this is 2D only. The world can expand 
-/// infinitely from positive x/y to negative
-/// x/y (to the 64-integer limit).
-///
-struct Location {
-    Location(uint32_t x, uint32_t y) : x(x), y(y) {}
-    
-    uint32_t x;
-    uint32_t y;
-};
 
 /// @brief 
 ///
@@ -62,28 +24,15 @@ public:
     explicit World(const std::string& world);
     explicit World(const std::filesystem::path& worldFile);
 
-    /// @brief finds the ObjectType at (x, y) and returns it
-    /// @param x as base-0
-    /// @param y as base-0
-    /// @return the ObjectType located at (x, y) 
-    ObjectType at(uint32_t x, uint32_t y) const;
+    /// @brief finds the ObjectType at a specific position and returns it
+    /// @param pos 
+    /// @return the ObjectType located at a specific position
+    Object at(Vector2 pos) const;
 
-    /// @brief finds the ObjectType at location and returns it
-    /// @param location 
-    /// @return the ObjectType located at location
-    ObjectType at(Location location) const;
-
-    /// @brief changes the ObjectType at (x, y) to the new value
-    /// @param x as base-0
-    /// @param y as base-0
+    /// @brief changes the ObjectType at a position to the new value
+    /// @param pos
     /// @param value 
-    void update(uint32_t x, uint32_t y, ObjectType value);
-
-    /// @brief changes the ObjectType at location to the new value
-    /// @param x as base-0
-    /// @param y as base-0
-    /// @param value 
-    void update(Location location, ObjectType value);
+    void update(Object value);
 
     /// @brief converts the world into string for visual representation
     /// @return the world as a string
@@ -94,11 +43,6 @@ private:
     /// @param c 
     /// @return c as an ObjectType
     static ObjectType convert_to_objecttype_(char c);
-
-    /// @brief converts the ObjectType into a character
-    /// @param obj 
-    /// @return the ObjectType as a character
-    static char convert_to_char_(ObjectType obj);
 
     /// @brief converts (x, y) to a 1D index
     /// @param x as base-0
@@ -117,7 +61,7 @@ private:
     void construct_from_string_(const std::string& world);
 
 private:
-    std::vector<ObjectType> map_;
+    std::vector<Object> map_;
 
     uint32_t ROW_SIZE_;
 
