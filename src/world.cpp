@@ -93,7 +93,7 @@ void World::construct_from_string_(const std::string& world) {
         }
 
         for (char c : row) {
-            map_[mapIndex++] = Object(Transform({mapIndex % ROW_SIZE_, mapIndex / ROW_SIZE_}, 0), convert_to_objecttype_(c));
+            map_[mapIndex++] = Object(*this, Transform({mapIndex % ROW_SIZE_, mapIndex / ROW_SIZE_}, 0), convert_to_objecttype_(c));
         }
     }
 }

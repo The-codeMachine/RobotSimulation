@@ -19,25 +19,9 @@ class World;
 /// The robot does not support functionality like
 /// movement, or view. Devices support this.
 ///
-class Robot {
+class Robot : Object {
 public:
-    Robot(World& world, Transform t = Transform());
-
-    /// @brief Gets this robot's current transform
-    /// @return this robot's current transform (reference)
-    Transform& transform();
-    
-    /// @brief Gets this robot's current transform
-    /// @return this robot's current transform (const reference)
-    const Transform& transform() const;
-
-    /// @brief Gets the current world this robot is in
-    /// @return the current world this robot is it (reference)
-    World& world();
-    
-    /// @brief Gets the current world this robot is in
-    /// @return the current world this robot is it (const reference)
-    const World& world() const;
+    Robot(World& world, Transform t);
 
     /// @brief Constructs and adds a device to the Robot
     /// @tparam T 
@@ -77,10 +61,6 @@ public:
     void update(long long deltaTime);
 
 private:
-    Transform transform_;
-    
-    World* world_;
-
     std::vector<std::unique_ptr<Device>> devices_;
 
 };

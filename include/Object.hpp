@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+class World;
+
 /// @brief This is one position in the world. It 
 /// consists of an x and y value. They can be
 /// any real value that the world will support. 
@@ -16,6 +18,7 @@ struct Vector2 {
 struct Transform {
     Transform();
     Transform(Vector2 vec, double rot);
+    Transform(uint32_t x, uint32_t y, double rot);
 
     Vector2 position;
     double rotation;
@@ -52,15 +55,24 @@ static inline constexpr const char* OBJECT_REPRESENTATION = " #R";
 /// world. 
 class Object {
 public:
-    Object(Transform transform = Transform(), ObjectType type = ObjectType::EMPTY);
+    Object();
+    Object(World& world, Transform transform = Transform(), ObjectType type = ObjectType::EMPTY);
 
-    /// @brief Gets the Object's current Transform
-    /// @return the Object's current Transform
+    /// @brief Gets this robot's current transform
+    /// @return this robot's current transform (reference)
     Transform& transform();
 
-    /// @brief Gets the Object's current Transform
-    /// @return the Object's current Transform
+    /// @brief Gets this robot's current transform
+    /// @return this robot's current transform (const reference)
     const Transform& transform() const;
+
+    /// @brief Gets the current world this robot is in
+    /// @return the current world this robot is it (reference)
+    World& world();
+
+    /// @brief Gets the current world this robot is in
+    /// @return the current world this robot is it (const reference)
+    const World& world() const;
 
     /// @brief Get's which type of object this is
     /// @return which type of object this is
@@ -71,6 +83,8 @@ public:
     char toChar() const noexcept;
 
 private:
+    World* world_;
+
     Transform transform_;
     ObjectType type_;
 
