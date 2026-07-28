@@ -1,14 +1,15 @@
 #include <Object.hpp>
 
-Object::Object() : transform_{0, 0}, type_(ObjectType::EMPTY) {}
+Transform::Transform() : position({0, 0}), rotation(0) {}
+Transform::Transform(Vector2 vec, double rot) : position(vec), rotation(rot) {}
 
 Object::Object(Transform transform, ObjectType type) : transform_(transform), type_(type) {}
 
-Transform& Object::getTransform() {
+Transform& Object::transform() {
     return transform_;
 }
 
-Transform Object::getTransform() const noexcept {
+const Transform& Object::transform() const {
     return transform_;
 }
 

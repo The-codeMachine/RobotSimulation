@@ -14,6 +14,9 @@ struct Vector2 {
 /// structure. Every object within the world has this.
 /// Rotation is represented as radians. 
 struct Transform {
+    Transform();
+    Transform(Vector2 vec, double rot);
+
     Vector2 position;
     double rotation;
 };
@@ -49,16 +52,15 @@ static inline constexpr const char* OBJECT_REPRESENTATION = " #R";
 /// world. 
 class Object {
 public:
-    Object();
-    Object(Transform transform, ObjectType type);
+    Object(Transform transform = Transform(), ObjectType type = ObjectType::EMPTY);
 
     /// @brief Gets the Object's current Transform
     /// @return the Object's current Transform
-    Transform& getTransform();
+    Transform& transform();
 
     /// @brief Gets the Object's current Transform
     /// @return the Object's current Transform
-    Transform getTransform() const noexcept;
+    const Transform& transform() const;
 
     /// @brief Get's which type of object this is
     /// @return which type of object this is

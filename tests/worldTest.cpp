@@ -25,8 +25,8 @@ int main() {
             "######################"
         );
 
-        world.update(Object({16, 8}, ObjectType::EMPTY));
-        world.update(Object({16, 9}, ObjectType::EMPTY));
+        world.update(Object(Transform({16, 8}, 0), ObjectType::EMPTY));
+        world.update(Object(Transform({16, 9}, 0), ObjectType::EMPTY));
 
         assert(world.toString() == 
             "######################\n"

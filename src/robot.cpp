@@ -1,23 +1,24 @@
 #include <Robot.hpp>
 
-#include <stdexcept>
+Robot::Robot(World& world, Transform t) : world_(&world), transform_(t) {}
 
-Robot::Robot(const std::vector<Device>& devices) : devices_(devices) {}
-
-Device& Robot::getDevice(uint32_t deviceId) {
-    if (!validIndex(deviceId))
-        throw std::runtime_error("Index is out of range for this robot");
-
-    return devices_[deviceId];
+Transform& Robot::transform() {
+    return transform_;
 }
 
-const Device& Robot::getDevice(uint32_t deviceId) const {
-    if (!validIndex(deviceId))
-        throw std::runtime_error("Index is out of range for this robot");
-
-    return devices_[deviceId];
+const Transform& Robot::transform() const {
+    return transform_;
 }
 
-bool Robot::validIndex(uint32_t i) const noexcept {
-    return i < devices_.size();
+World& Robot::world() {
+    return *world_;
+}
+
+const World& Robot::world() const {
+    return *world_;
+}
+
+void Robot::update(long long deltaTime) {
+    for (auto& d : devices_) 
+        d->update(deltaTime);
 }

@@ -31,7 +31,7 @@ Object World::at(Vector2 pos) const {
 }
 
 void World::update(Object value) {
-    Vector2 pos = value.getTransform().position;
+    Vector2 pos = value.transform().position;
     if (!valid_position_(pos))
         throw std::runtime_error("(x, y) is an invalid position for this world");
 
@@ -93,7 +93,7 @@ void World::construct_from_string_(const std::string& world) {
         }
 
         for (char c : row) {
-            map_[mapIndex++] = Object({mapIndex % ROW_SIZE_, mapIndex / ROW_SIZE_}, convert_to_objecttype_(c));
+            map_[mapIndex++] = Object(Transform({mapIndex % ROW_SIZE_, mapIndex / ROW_SIZE_}, 0), convert_to_objecttype_(c));
         }
     }
 }

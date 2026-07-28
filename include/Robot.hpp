@@ -1,8 +1,13 @@
 #pragma once
 
 #include <Device.hpp>
+#include <Object.hpp>
 
 #include <vector>
+#include <memory>
+#include <stdexcept>
+
+class World;
 
 /// @brief 
 ///
@@ -16,32 +21,66 @@
 ///
 class Robot {
 public:
-    Robot() = default;
-    Robot(const std::vector<Device>& devices);
+    Robot(World& world, Transform t = Transform());
 
-    /// @brief Gets the device located at this index
-    /// @param deviceId 
-    /// @return the device located at this index
-    Device& getDevice(uint32_t deviceId);
+    /// @brief Gets this robot's current transform
+    /// @return this robot's current transform (reference)
+    Transform& transform();
+    
+    /// @brief Gets this robot's current transform
+    /// @return this robot's current transform (const reference)
+    const Transform& transform() const;
 
-    /// @brief Gets the device located at this index
-    /// @param deviceId 
-    /// @return the device located at this index
-    const Device& getDevice(uint32_t deviceId) const;
+    /// @brief Gets the current world this robot is in
+    /// @return the current world this robot is it (reference)
+    World& world();
+    
+    /// @brief Gets the current world this robot is in
+    /// @return the current world this robot is it (const reference)
+    const World& world() const;
+
+    /// @brief Constructs and adds a device to the Robot
+    /// @tparam T 
+    /// @tparam ...Args 
+    /// @param id
+    /// @param ...args 
+    /// @return a reference to the device constructed
+    template<typename T, typename... Args>
+    T& addDevice(const std::vector<unsigned char>& id, Args&&... args) {
+        addDevice<T>(std::make_unique<Device>(id, args));
+    }
+
+    template<typename T>
+    T& addDevice(std::unique_ptr<Device> device) {
+        if (getDevice<T>(device->id()))
+            throw std::runtime_error("Device with that id already exists");
+
+        devices_.push_back(device);
+    }
+
+    /// @brief Gets device T. Throws if it does not exist
+    /// @tparam T 
+    /// @param id
+    /// @return device T if it exists
+    template<typename T> 
+    T* getDevice(const std::vector<unsigned char>& id) {
+        for (const auto& d : devices_) {
+            T* device = dynamic_cast<T*>(d.get());
+            
+            if (device && device->id() == id) 
+                return device;
+        }
+    }
 
     /// @brief This updates the robot based off deltaTime 
-    /// (IDK how I am going to implement it, maybe update 
-    /// all devices, and devices will have a custom function to handle that)
     /// @param deltaTime 
     void update(long long deltaTime);
 
 private:
-    /// @brief Checks whether i is a valid index
-    /// @param i 
-    /// @return true if i is a valid index
-    bool validIndex(uint32_t i) const noexcept;
+    Transform transform_;
+    
+    World* world_;
 
-private:
-    std::vector<Device> devices_;
+    std::vector<std::unique_ptr<Device>> devices_;
 
 };
