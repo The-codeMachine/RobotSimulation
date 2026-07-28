@@ -27,15 +27,15 @@ World::World(const std::filesystem::path& worldFile) : ROW_SIZE_(-1) {
 }
 
 Object World::at(Vector2 pos) const {
-    return map_[convert_to_1D_(pos.x, pos.y)];
+    return map_[convert_to_1D_(pos)];
 }
 
 void World::update(Object value) {
     Vector2 pos = value.getTransform().position;
-    if (!valid_position_(pos.x, pos.y))
+    if (!valid_position_(pos))
         throw std::runtime_error("(x, y) is an invalid position for this world");
 
-    map_[convert_to_1D_(pos.x, pos.y)] = value;
+    map_[convert_to_1D_(pos)] = value;
 }
 
 std::string World::toString() const noexcept {
@@ -45,7 +45,7 @@ std::string World::toString() const noexcept {
 
     for (uint32_t y = 0; y < rows; ++y) {
         for (uint32_t x = 0; x < ROW_SIZE_; ++x) {
-            out += map_[convert_to_1D_(x, y)].toChar();
+            out += map_[convert_to_1D_({x, y})].toChar();
         }
 
         if (y + 1 < rows)
@@ -69,12 +69,12 @@ ObjectType World::convert_to_objecttype_(char c) {
     }
 }
 
-uint32_t World::convert_to_1D_(uint32_t x, uint32_t y) const noexcept {
-    return y * ROW_SIZE_ + x;
+uint32_t World::convert_to_1D_(Vector2 vec) const noexcept {
+    return vec.y * ROW_SIZE_ + vec.x;
 }
 
-bool World::valid_position_(uint32_t x, uint32_t y) const noexcept {
-    uint32_t pos = convert_to_1D_(x, y);
+bool World::valid_position_(Vector2 vec) const noexcept {
+    uint32_t pos = convert_to_1D_(vec);
     return pos >= 0 && pos < map_.size();
 }
 

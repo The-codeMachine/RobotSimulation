@@ -9,5 +9,8 @@
 /// independent of this, but needs this. 
 ///
 class Device {
+public:
+    Device();
 
+    void update(long long deltaTime);
 };

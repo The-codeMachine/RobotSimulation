@@ -48,13 +48,13 @@ private:
     /// @param x as base-0
     /// @param y as base-0
     /// @return (x, y) as a 1D index
-    uint32_t convert_to_1D_(uint32_t x, uint32_t y) const noexcept;
+    uint32_t convert_to_1D_(Vector2 vec) const noexcept;
 
     /// @brief checks whether (x, y) is a valid position
     /// @param x as base-0
     /// @param y as base-0
     /// @return true if it is valid
-    bool valid_position_(uint32_t x, uint32_t y) const noexcept;
+    bool valid_position_(Vector2 vec) const noexcept;
 
     /// @brief constructs the world from a string
     /// @param world 
