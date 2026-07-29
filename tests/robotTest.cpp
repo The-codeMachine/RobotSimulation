@@ -22,6 +22,7 @@ int main() {
 
     std::string str = "test_id";
     std::vector<unsigned char> id(str.begin(), str.end());
+
     TestDevice& d = robot.addDevice<TestDevice>(id);
     TestDevice* found = robot.getDevice<TestDevice>(id);
 
