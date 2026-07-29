@@ -34,7 +34,7 @@ public:
 
     /// @brief Gets the id 
     /// @return a copy of the id
-    std::vector<unsigned char> id() {
+    std::vector<unsigned char> id() const {
         return id_;
     }
 

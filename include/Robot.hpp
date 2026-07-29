@@ -19,7 +19,11 @@ class World;
 /// The robot does not support functionality like
 /// movement, or view. Devices support this.
 ///
-class Robot : Object {
+/// Ids are only unique to the specific Device type,
+/// there can be multiple devices with the same id,
+/// as long as they are different device subclasses. 
+///
+class Robot : public Object {
 public:
     Robot(World& world, Transform t);
 
@@ -31,29 +35,38 @@ public:
     /// @return a reference to the device constructed
     template<typename T, typename... Args>
     T& addDevice(const std::vector<unsigned char>& id, Args&&... args) {
-        addDevice<T>(std::make_unique<Device>(id, args));
+        return addDevice<T>(std::make_unique<T>(id, std::forward<Args>(args)...));
     }
 
+    /// @brief Adds a device based off a constructed unique pointer
+    /// @tparam T 
+    /// @param device 
+    /// @return a reference to that device 
     template<typename T>
     T& addDevice(std::unique_ptr<Device> device) {
-        if (getDevice<T>(device->id()))
-            throw std::runtime_error("Device with that id already exists");
+        T* ptr = dynamic_cast<T*>(device.get());
+        devices_.push_back(std::move(device));
 
-        devices_.push_back(device);
+        ptr->robot_ = this;
+        ptr->onAttach(*this);
+
+        return *ptr;
     }
 
-    /// @brief Gets device T. Throws if it does not exist
+    /// @brief Gets device T. Returns nullptr if it does not exist
     /// @tparam T 
     /// @param id
     /// @return device T if it exists
     template<typename T> 
-    T* getDevice(const std::vector<unsigned char>& id) {
+    T* getDevice(const std::vector<unsigned char>& id) const {
         for (const auto& d : devices_) {
             T* device = dynamic_cast<T*>(d.get());
             
             if (device && device->id() == id) 
                 return device;
         }
+
+        return nullptr;
     }
 
     /// @brief This updates the robot based off deltaTime 
