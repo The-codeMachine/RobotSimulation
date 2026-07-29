@@ -40,6 +40,10 @@ public:
     /// @return the world as a string
     std::string toString() const noexcept;
 
+    /// @brief saves the world's current state to a file
+    /// @param path 
+    void saveToFile(const std::filesystem::path& path) const;
+
 private:
     /// @brief converts c to an ObjectType if possible
     /// @param c 

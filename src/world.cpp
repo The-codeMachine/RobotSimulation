@@ -27,10 +27,16 @@ World::World(const std::filesystem::path& worldFile) : ROW_SIZE_(-1) {
 }
 
 Object& World::at(Vector2 pos) {
+    if (!valid_position_(pos))
+        throw std::runtime_error("Invalid position");
+
     return map_[convert_to_1D_(pos)];
 }
 
 const Object& World::at(Vector2 pos) const {
+    if (!valid_position_(pos))
+        throw std::runtime_error("Invalid position");
+
     return map_[convert_to_1D_(pos)];
 }
 
@@ -59,6 +65,24 @@ std::string World::toString() const noexcept {
     return out;
 }
 
+void World::saveToFile(const std::filesystem::path& path) const {
+    std::ofstream file(path);
+
+    if (!file)
+        throw std::runtime_error("Could not open file at: " + path.string());
+    
+    for (size_t i = 0; i < map_.size(); ++i) {
+        if (i % ROW_SIZE_ == 0 && i != 0)
+            file << std::endl;
+        
+        Transform t = map_[i].transform();
+
+        file << t.position.x << "," << t.position.y << "," << t.rotation << "," << static_cast<int>(map_[i].getType()) << ";";
+    }
+    
+    file.close();
+}
+
 ObjectType World::convert_to_objecttype_(char c) {
     switch (c) {
         case ' ':
@@ -78,26 +102,66 @@ uint32_t World::convert_to_1D_(Vector2 vec) const noexcept {
 }
 
 bool World::valid_position_(Vector2 vec) const noexcept {
-    uint32_t pos = convert_to_1D_(vec);
-    return pos >= 0 && pos < map_.size();
+    if (vec.x >= ROW_SIZE_)
+        return false;
+
+    uint32_t rows = map_.size() / ROW_SIZE_;
+    if (vec.y >= rows)
+        return false;
+
+    return true;
 }
 
 void World::construct_from_string_(const std::string& world) {
-    map_.resize(world.size());
+    if (world.empty()) return;
+
+    struct ParsedObject {
+        uint32_t x, y;
+        double rotation;
+        ObjectType typeChar;
+    };
+    std::vector<ParsedObject> parsedObjects;
+    
+    uint32_t max_x = 0;
+    uint32_t max_y = 0;
 
     std::stringstream ss(world);
-    std::string row;
-    uint32_t mapIndex = 0;
+    std::string objectBlock;
 
-    while (std::getline(ss, row)) {
-        if (ROW_SIZE_ == -1) {
-            ROW_SIZE_ = row.size();
-        } else if (row.size() != static_cast<size_t>(ROW_SIZE_)) {
-            throw std::runtime_error("Invalid world string: irregular row size detected.");
+    while (std::getline(ss, objectBlock, ';')) {
+        if (objectBlock.find_first_not_of(" \t\n\r") == std::string::npos) {
+            continue;
         }
 
-        for (char c : row) {
-            map_[mapIndex++] = Object(*this, Transform({mapIndex % ROW_SIZE_, mapIndex / ROW_SIZE_}, 0), convert_to_objecttype_(c));
+        std::stringstream blockStream(objectBlock);
+        std::string xStr, yStr, rotStr, charStr;
+
+        if (std::getline(blockStream, xStr, ',') &&
+            std::getline(blockStream, yStr, ',') &&
+            std::getline(blockStream, rotStr, ',') &&
+            std::getline(blockStream, charStr)) {
+
+            ParsedObject obj;
+            obj.x = std::stoul(xStr);
+            obj.y = std::stoul(yStr);
+            obj.rotation = std::stod(rotStr);
+            
+            size_t firstChar = charStr.find_first_not_of(" \t\n\r");
+            obj.typeChar = static_cast<ObjectType>(charStr[firstChar] - '0');
+
+            if (obj.x > max_x) max_x = obj.x;
+            if (obj.y > max_y) max_y = obj.y;
+
+            parsedObjects.push_back(obj);
         }
+    }
+
+    ROW_SIZE_ = max_x + 1;
+    uint32_t totalRows = max_y + 1;
+    map_.resize(ROW_SIZE_ * totalRows);
+
+    for (const auto& obj : parsedObjects) {
+        uint32_t index = obj.y * ROW_SIZE_ + obj.x;
+        map_[index] = Object(*this, Transform({obj.x, obj.y}, obj.rotation), obj.typeChar);
     }
 }

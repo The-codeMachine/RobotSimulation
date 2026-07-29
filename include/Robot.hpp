@@ -45,9 +45,12 @@ public:
     template<typename T>
     T& addDevice(std::unique_ptr<Device> device) {
         if (getDevice<T>(device->id()) != nullptr)
-            throw std::runtime_error("Device type with id already exists")
-;
+            throw std::runtime_error("Device type with id already exists");
+            
         T* ptr = dynamic_cast<T*>(device.get());
+        if (!ptr)
+            throw std::invalid_argument("Device type does not match template parameter");
+
         devices_.push_back(std::move(device));
 
         ptr->robot_ = this;

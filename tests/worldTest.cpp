@@ -8,6 +8,8 @@ int main() {
 
     World world(std::filesystem::path("assets/tests/worldInitConstruction.txt"));
 
+    std::cout << world.toString() << "\n";
+
     assert(world.toString() == 
         "######################\n"
         "#                    #\n"
@@ -28,6 +30,26 @@ int main() {
     world.update(Object(world, Transform({16, 9}, 0), ObjectType::EMPTY));
 
     assert(world.toString() == 
+        "######################\n"
+        "#                    #\n"
+        "#                    #\n"
+        "#     ##########     #\n"
+        "#              #     #\n"
+        "#              #     #\n"
+        "#       R      #     #\n"
+        "#              ### ###\n"
+        "#                    #\n"
+        "#                    #\n"
+        "#########       ######\n"
+        "#                    #\n"
+        "######################"
+    );
+
+    std::filesystem::remove("assets/tests/worldSaveTest.txt");
+    world.saveToFile("assets/tests/worldSaveTest.txt");
+
+    World w(std::filesystem::path("assets/tests/worldSaveTest.txt"));
+    assert(w.toString() == 
         "######################\n"
         "#                    #\n"
         "#                    #\n"

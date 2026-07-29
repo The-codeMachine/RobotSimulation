@@ -31,7 +31,34 @@ there are any parsing issues. Example of valid strings include:
 #########
 ```
 
-When constructing from a file, the world expects a file similar to this. 
+When constructing from a file, the world expects a file similar to this:
+
+```
+0,0,0,1;1,0,0,1;2,0,0,1;3,0,0,1;4,0,0,1;
+0,0,0,1;1,1,0,0;2,1,0,0;3,1,0,0;4,1,0,1;
+0,0,0,1;1,2,0,0;2,2,0,0;3,2,0,0;4,2,0,1;
+0,0,0,1;1,3,0,0;2,3,0,0;3,3,0,0;4,3,0,1;
+0,0,0,1;1,4,0,0;2,4,0,0;3,4,0,0;4,4,0,1;
+0,0,0,1;1,5,0,0;2,5,0,0;3,5,0,0;4,5,0,1;
+0,0,0,1;1,6,0,0;2,6,0,0;3,6,0,0;4,6,0,1;
+0,0,0,1;1,7,0,0;2,7,0,0;3,7,0,0;4,7,0,1;
+0,0,0,1;1,8,0,1;2,8,0,1;3,8,0,1;4,8,0,1;
+```
+
+Would construct something like this:
+
+```
+#####
+#   #
+#   #
+#   #
+#   #
+#   #
+#   #
+#   #
+#####
+```
+
 
 ## Object-Accessing
 
@@ -55,4 +82,4 @@ things like ```R``` for robot, it will not construct a robot object.
 ### TODO
 
  - During string construction, make it so that based off the character the specific Object will be constructed, e.g. ```R``` would construct a robot 
- - Find a way to represent an Object's rotational value inside the World's output. Not sure if it is a world issue, or object issue
+ - Make file saving safer
