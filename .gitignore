@@ -6,3 +6,6 @@ Testing/
 
 # any log files
 *.logs
+
+# exclude any .exe files
+*.exe

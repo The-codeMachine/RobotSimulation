@@ -16,8 +16,7 @@
 ///
 /// It allows you to access which object are at
 /// which spot. Eventually, this will own the
-/// Object, but currently that class does not 
-/// exist. 
+/// Object.
 ///
 class World {
 public:

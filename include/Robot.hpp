@@ -44,6 +44,9 @@ public:
     /// @return a reference to that device 
     template<typename T>
     T& addDevice(std::unique_ptr<Device> device) {
+        if (getDevice<T>(device->id()) != nullptr)
+            return nullptr;
+
         T* ptr = dynamic_cast<T*>(device.get());
         devices_.push_back(std::move(device));
 
