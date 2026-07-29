@@ -17,7 +17,7 @@ but can also have a ```SpecialMotor``` called "Left Motor."
 
 The id is a ```std::vector<unsigned char>```, this is so you can use numbers as well as strings. 
 
-If getting/creating a device was unsuccessful, it will return a ```nullptr```. 
+If getting/creating a device was unsuccessful, it will throw an exception. 
 
 ## References
 

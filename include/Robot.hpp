@@ -45,8 +45,8 @@ public:
     template<typename T>
     T& addDevice(std::unique_ptr<Device> device) {
         if (getDevice<T>(device->id()) != nullptr)
-            return nullptr;
-
+            throw std::runtime_error("Device type with id already exists")
+;
         T* ptr = dynamic_cast<T*>(device.get());
         devices_.push_back(std::move(device));
 

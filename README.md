@@ -31,7 +31,9 @@ cmake -B build
 To compile and test this program please run the commands below: 
 
 ```powershell
+# builds the project
 cmake --build build
 
+# runs the tests
 ctest --test-dir build -C Debug --output-on-failure
 ```

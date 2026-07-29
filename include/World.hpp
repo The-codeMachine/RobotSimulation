@@ -23,10 +23,13 @@ public:
     explicit World(const std::string& world);
     explicit World(const std::filesystem::path& worldFile);
 
-    /// @brief finds the ObjectType at a specific position and returns it
-    /// @param pos 
-    /// @return the ObjectType located at a specific position
-    Object at(Vector2 pos) const;
+    /// @brief Gets the current object at that position
+    /// @return the current object at that position (reference)
+    Object& at(Vector2 pos);
+
+    /// @brief Gets the current object at that position
+    /// @return the current object at that position (const reference)
+    const Object& at(Vector2 pos) const;
 
     /// @brief changes the ObjectType at a position to the new value
     /// @param pos

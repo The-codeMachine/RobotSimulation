@@ -54,7 +54,5 @@ things like ```R``` for robot, it will not construct a robot object.
 
 ### TODO
 
- - Add a way to represent the orientation of an object
  - During string construction, make it so that based off the character the specific Object will be constructed, e.g. ```R``` would construct a robot 
- - Make ```at``` return a reference, and make a const reference function as well
  - Find a way to represent an Object's rotational value inside the World's output. Not sure if it is a world issue, or object issue

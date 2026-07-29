@@ -26,7 +26,11 @@ World::World(const std::filesystem::path& worldFile) : ROW_SIZE_(-1) {
     construct_from_string_(buffer.str());
 }
 
-Object World::at(Vector2 pos) const {
+Object& World::at(Vector2 pos) {
+    return map_[convert_to_1D_(pos)];
+}
+
+const Object& World::at(Vector2 pos) const {
     return map_[convert_to_1D_(pos)];
 }
 
