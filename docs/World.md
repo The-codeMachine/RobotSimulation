@@ -82,4 +82,4 @@ things like ```R``` for robot, it will not construct a robot object.
 ### TODO
 
  - During string construction, make it so that based off the character the specific Object will be constructed, e.g. ```R``` would construct a robot 
- - Make file saving safer
+ - Make file saving safer (e.g. add a try/catch block and explain better errors)

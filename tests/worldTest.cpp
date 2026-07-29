@@ -8,8 +8,6 @@ int main() {
 
     World world(std::filesystem::path("assets/tests/worldInitConstruction.txt"));
 
-    std::cout << world.toString() << "\n";
-
     assert(world.toString() == 
         "######################\n"
         "#                    #\n"
