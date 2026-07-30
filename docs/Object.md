@@ -45,7 +45,3 @@ North and 45 is NW.
 ## References
 
 [World](World.md)
-
-### TODO
-
- - Find a way to represent an Object's rotational value inside the World's output. Not sure if it is a world issue, or object issue
