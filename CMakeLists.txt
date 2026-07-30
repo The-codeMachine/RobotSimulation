@@ -8,6 +8,7 @@ add_library(RobotSimulationLib
     src/world.cpp
     src/robot.cpp
     src/object.cpp
+    src/Devices/Motor.cpp
 )
 
 target_include_directories(RobotSimulationLib PUBLIC 
