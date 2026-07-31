@@ -5,6 +5,14 @@
 #include <algorithm>
 #include <cmath>
 
+/// @brief 
+///
+/// Motor is a subclass of Device that allows you to
+/// move something angularily. This can be used for
+/// wheels, or arms. It gives you the ability to change
+/// its throttle, and access its angular position,
+/// and velocity. 
+///
 class Motor : public Device {
 public:
     /// @brief constructs the motor based off limits
@@ -12,15 +20,6 @@ public:
     /// @param maxAngularVelocity Maximum shaft speed (rad/s) 
     /// @param maxAngularAcceleration Maximum acceleration (rad/s^2) 
     Motor(const std::vector<unsigned char>& id, double maxAngularVelocity, double maxAngularAcceleration);
-
-    /**
-     * Set motor output.
-     * Range:
-     *   -1.0 = full reverse
-     *    0.0 = stopped
-     *    1.0 = full forward
-     */
-
 
     /// @brief Sets the motor output, -1.0 = full reverse, 0 = stop, 1.0 = full forward
     /// @param throttle 

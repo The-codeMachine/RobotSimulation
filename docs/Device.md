@@ -19,4 +19,4 @@ update something about the device, or robot.
 
 ## References
 
-[Robot](Robot.md)
+- [Robot](Robot.md)

@@ -21,5 +21,5 @@ If getting/creating a device was unsuccessful, it will throw an exception.
 
 ## References
 
-[Object](Object.md)
-[Device](Device.md)
+- [Object](Object.md)
+- [Device](Device.md)

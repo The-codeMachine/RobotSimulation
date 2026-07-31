@@ -77,7 +77,8 @@ things like ```R``` for robot, it will not construct a robot object.
 
 ## References
 
-[Object](Object.md)
+- [Object](Object.md)
+- [Robot](Robot.md)
 
 ### TODO
 

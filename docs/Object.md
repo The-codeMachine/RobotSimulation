@@ -44,4 +44,4 @@ North and 45 is NW.
 
 ## References
 
-[World](World.md)
+- [World](World.md)
