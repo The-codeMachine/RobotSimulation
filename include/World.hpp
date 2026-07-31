@@ -34,7 +34,7 @@ public:
     /// @brief changes the ObjectType at a position to the new value
     /// @param pos
     /// @param value 
-    void update(Object value);
+    void update(std::unique_ptr<Object> value);
 
     /// @brief converts the world into string for visual representation
     /// @return the world as a string
@@ -67,7 +67,7 @@ private:
     void construct_from_string_(const std::string& world);
 
 private:
-    std::vector<Object> map_;
+    std::vector<std::unique_ptr<Object>> map_;
 
     uint32_t ROW_SIZE_;
 

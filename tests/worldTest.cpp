@@ -24,8 +24,8 @@ int main() {
         "######################"
     );
 
-    world.update(Object(world, Transform({16, 8}, 0), ObjectType::EMPTY));
-    world.update(Object(world, Transform({16, 9}, 0), ObjectType::EMPTY));
+    world.update(std::make_unique<Object>(world, Transform({16, 8}, 0), ObjectType::EMPTY));
+    world.update(std::make_unique<Object>(world, Transform({16, 9}, 0), ObjectType::EMPTY));
 
     assert(world.toString() == 
         "######################\n"

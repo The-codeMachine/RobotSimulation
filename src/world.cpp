@@ -30,22 +30,22 @@ Object& World::at(Vector2 pos) {
     if (!valid_position_(pos))
         throw std::runtime_error("Invalid position");
 
-    return map_[convert_to_1D_(pos)];
+    return *map_[convert_to_1D_(pos)];
 }
 
 const Object& World::at(Vector2 pos) const {
     if (!valid_position_(pos))
         throw std::runtime_error("Invalid position");
 
-    return map_[convert_to_1D_(pos)];
+    return *map_[convert_to_1D_(pos)];
 }
 
-void World::update(Object value) {
-    Vector2 pos = value.transform().position;
+void World::update(std::unique_ptr<Object> value) {
+    Vector2 pos = value->transform().position;
     if (!valid_position_(pos))
         throw std::runtime_error("(x, y) is an invalid position for this world");
 
-    map_[convert_to_1D_(pos)] = value;
+    map_[convert_to_1D_(pos)] = std::move(value);
 }
 
 std::string World::toString() const noexcept {
@@ -55,7 +55,7 @@ std::string World::toString() const noexcept {
 
     for (uint32_t y = 0; y < rows; ++y) {
         for (uint32_t x = 0; x < ROW_SIZE_; ++x) {
-            out += map_[convert_to_1D_({x, y})].toChar();
+            out += map_[convert_to_1D_({x, y})]->toChar();
         }
 
         if (y + 1 < rows)
@@ -75,9 +75,9 @@ void World::saveToFile(const std::filesystem::path& path) const {
         if (i % ROW_SIZE_ == 0 && i != 0)
             file << std::endl;
         
-        Transform t = map_[i].transform();
+        Transform t = map_[i]->transform();
 
-        file << t.position.x << "," << t.position.y << "," << t.rotation << "," << static_cast<int>(map_[i].getType()) << ";";
+        file << t.position.x << "," << t.position.y << "," << t.rotation << "," << static_cast<int>(map_[i]->getType()) << ";";
     }
     
     file.close();
@@ -160,8 +160,14 @@ void World::construct_from_string_(const std::string& world) {
     uint32_t totalRows = max_y + 1;
     map_.resize(ROW_SIZE_ * totalRows);
 
+    /*
+    TODO:
+    Make the std::make_unique<Object> below change based off the
+    type of object we are constructing. 
+    */
+
     for (const auto& obj : parsedObjects) {
         uint32_t index = obj.y * ROW_SIZE_ + obj.x;
-        map_[index] = Object(*this, Transform({obj.x, obj.y}, obj.rotation), obj.typeChar);
+        map_[index] = std::make_unique<Object>(*this, Transform({obj.x, obj.y}, obj.rotation), obj.typeChar);
     }
 }

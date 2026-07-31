@@ -23,3 +23,8 @@ If getting/creating a device was unsuccessful, it will throw an exception.
 
 - [Object](Object.md)
 - [Device](Device.md)
+
+### TODO
+
+ - Make a file saving system for the robot, where it saves the robot's information to a file
+ - Once a file saving system is made for the robot make a construction system for the robot based off a file

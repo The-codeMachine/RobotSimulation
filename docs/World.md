@@ -65,8 +65,10 @@ Would construct something like this:
 You can access a copy of the ```Object``` using the ```at``` function. This takes a ```Vector2``` position
 as a parameter. 
 
+Internally, the Objects are stored as a vector of unique pointers; ```std::vector<std::unique_ptr<Object>>```.
+
 You can update a location using the ```update``` function. This allows you to change which object
-is at that location. This function only takes an ```Object``` as a parameter because Objects own where
+is at that location. This function only takes an ```std::unique_ptr<Object>``` as a parameter because Objects own where
 they are located, and that can simply be accessed. 
 
 ## To String
