@@ -119,6 +119,7 @@ void World::construct_from_string_(const std::string& world) {
         uint32_t x, y;
         double rotation;
         ObjectType typeChar;
+        std::unordered_map<uint32_t, std::string> parameters;
     };
     std::vector<ParsedObject> parsedObjects;
     
@@ -160,14 +161,9 @@ void World::construct_from_string_(const std::string& world) {
     uint32_t totalRows = max_y + 1;
     map_.resize(ROW_SIZE_ * totalRows);
 
-    /*
-    TODO:
-    Make the std::make_unique<Object> below change based off the
-    type of object we are constructing. 
-    */
-
     for (const auto& obj : parsedObjects) {
-        uint32_t index = obj.y * ROW_SIZE_ + obj.x;
+        uint32_t index = convert_to_1D_({obj.x, obj.y});
         map_[index] = std::make_unique<Object>(*this, Transform({obj.x, obj.y}, obj.rotation), obj.typeChar);
+        map_[index]->deserialize(obj.parameters);
     }
 }

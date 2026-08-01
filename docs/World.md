@@ -59,6 +59,7 @@ Would construct something like this:
 #####
 ```
 
+After construction of the object from the file, we deserialize the Object.  
 
 ## Object-Accessing
 

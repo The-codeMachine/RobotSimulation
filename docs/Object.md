@@ -5,7 +5,14 @@ positional, rotational, and graphical information about every object
 inside the world. 
 
 You can construct an object from nothing, or a specified ```Transform```, and
-```ObjectType```. 
+```ObjectType```. All Objects and their subclasses require a default constructor
+and a deserialization function. After initial construction, the object will be 
+deserialized. Deserialization paramters are passed as ```std::unordered_map<uint32_t, std::string>```. 
+
+Serialization can also be done. We expect this to be one continuous string. It will
+follow this format:
+ - all arguments are separated by ```,```
+ - arguments where they take arguments, e.g. Devices arguments are specified by ```[```; you can escape using ```]```. 
 
 You can access an object's specific transform, type, and world reference through
 the functions:

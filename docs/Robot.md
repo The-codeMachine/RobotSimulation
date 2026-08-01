@@ -19,6 +19,14 @@ The id is a ```std::vector<unsigned char>```, this is so you can use numbers as 
 
 If getting/creating a device was unsuccessful, it will throw an exception. 
 
+## File Loading
+
+When loading from files each device is separated by a ```:```. Where each parameter for this Robot
+is separated by a ```,``` as well as the arguments for a device. These arguments are passed as:
+```std::unordered_map<uint32_t, std::string>```. 
+
+To pass arguments for the device use ```[```; to escape use ```]```. 
+
 ## References
 
 - [Object](Object.md)
