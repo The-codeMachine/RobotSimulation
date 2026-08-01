@@ -4,7 +4,7 @@ from pathlib import Path
 OBJECT_TYPES = {
     " ": 0,  # EMPTY
     "#": 1,  # WALL
-    "R": 2   # ROBOT
+    "Robot": 2   # ROBOT
 }
 
 def convert_world_file(input_path: str, output_path: str) -> None:

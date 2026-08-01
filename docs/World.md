@@ -12,54 +12,41 @@ The world owns the objects. The world is copyable and moveable.
 
 ## Construction
 
-You can construct this world from a string, or a file. The constructor will throw if
-there are any parsing issues. Example of valid strings include:
+The world can be constructed from a JSON file or object. We use ```nlohmann::json``` for our JSON
+parsing. The world files will follow formats similar to that of the following:
 
+```json
+{
+    "version": 1,
+    "ROW_SIZE": 32,
+    "objects": [
+        {
+            "type": "Wall",
+            "transform": {
+                "x": 0,
+                "y": 0,
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "transform": {
+                "x": 1,
+                "y": 0,
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "transform": {
+                "x": 2,
+                "y": 0,
+                "rotation": 0
+            }
+        },
+    ]
+}
 ```
-#########
-#       #
-#       #
-#       #
-#########
-```
-
-```
-#########
-#       #
-#   R   #
-#       #
-#########
-```
-
-When constructing from a file, the world expects a file similar to this:
-
-```
-0,0,0,1;1,0,0,1;2,0,0,1;3,0,0,1;4,0,0,1;
-0,0,0,1;1,1,0,0;2,1,0,0;3,1,0,0;4,1,0,1;
-0,0,0,1;1,2,0,0;2,2,0,0;3,2,0,0;4,2,0,1;
-0,0,0,1;1,3,0,0;2,3,0,0;3,3,0,0;4,3,0,1;
-0,0,0,1;1,4,0,0;2,4,0,0;3,4,0,0;4,4,0,1;
-0,0,0,1;1,5,0,0;2,5,0,0;3,5,0,0;4,5,0,1;
-0,0,0,1;1,6,0,0;2,6,0,0;3,6,0,0;4,6,0,1;
-0,0,0,1;1,7,0,0;2,7,0,0;3,7,0,0;4,7,0,1;
-0,0,0,1;1,8,0,1;2,8,0,1;3,8,0,1;4,8,0,1;
-```
-
-Would construct something like this:
-
-```
-#####
-#   #
-#   #
-#   #
-#   #
-#   #
-#   #
-#   #
-#####
-```
-
-After construction of the object from the file, we deserialize the Object.  
 
 ## Object-Accessing
 

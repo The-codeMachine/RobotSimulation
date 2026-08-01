@@ -20,7 +20,7 @@
 ///
 class World {
 public:
-    explicit World(const std::string& world);
+    explicit World(const nlohmann::json& world);
     explicit World(const std::filesystem::path& worldFile);
 
     /// @brief Gets the current object at that position
@@ -59,11 +59,18 @@ private:
 
     /// @brief constructs the world from a string
     /// @param world 
-    void construct_from_string_(const std::string& world);
+    void construct_from_json_(const nlohmann::json& world);
+
+    /// @brief converts this world and all its information to JSON
+    /// @return this world's JSON representation
+    nlohmann::json serialize() const;
 
 private:
     std::vector<std::unique_ptr<Object>> map_;
 
     uint32_t ROW_SIZE_;
+
+private:
+    uint32_t WORLD_FILE_VERSION = 1;
 
 };

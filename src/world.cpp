@@ -5,8 +5,8 @@
 #include <stdexcept>
 #include <iostream>
 
-World::World(const std::string& world) : ROW_SIZE_(-1) {
-    construct_from_string_(world);
+World::World(const nlohmann::json& world) : ROW_SIZE_(-1) {
+    construct_from_json_(world);
 }
 
 World::World(const std::filesystem::path& worldFile) : ROW_SIZE_(-1) {
@@ -20,10 +20,7 @@ World::World(const std::filesystem::path& worldFile) : ROW_SIZE_(-1) {
         throw std::runtime_error("Cannot open file (check permissions)");
     }
 
-    std::stringstream buffer;
-    buffer << file.rdbuf();
-
-    construct_from_string_(buffer.str());
+    construct_from_json_(nlohmann::json::parse(file));
 }
 
 Object& World::at(Vector2 pos) {
@@ -71,14 +68,7 @@ void World::saveToFile(const std::filesystem::path& path) const {
     if (!file)
         throw std::runtime_error("Could not open file at: " + path.string());
     
-    for (size_t i = 0; i < map_.size(); ++i) {
-        if (i % ROW_SIZE_ == 0 && i != 0)
-            file << std::endl;
-        
-        Transform t = map_[i]->transform();
-
-        file << t.position.x << "," << t.position.y << "," << t.rotation << "," << map_[i]->name() << ";";
-    }
+    file << serialize();
     
     file.close();
 }
@@ -98,55 +88,35 @@ bool World::valid_position_(Vector2 vec) const noexcept {
     return true;
 }
 
-void World::construct_from_string_(const std::string& world) {
-    if (world.empty()) return;
+void World::construct_from_json_(const nlohmann::json& world) {
+    if (world.at("version") != WORLD_FILE_VERSION)
+        throw std::runtime_error("Invalid world file version");
 
-    struct ParsedObject {
-        uint32_t x, y;
-        double rotation;
-        std::string name;
-    };
-    std::vector<ParsedObject> parsedObjects;
-    
-    uint32_t max_x = 0;
-    uint32_t max_y = 0;
+    ROW_SIZE_ = world.at("ROW_SIZE");
 
-    std::stringstream ss(world);
-    std::string objectBlock;
+    size_t i = 0;
+    for (const auto j : world.at("objects")) {
+        std::string name = j.at("type");
+        Transform t(j.at("transform"));
 
-    while (std::getline(ss, objectBlock, ';')) {
-        if (objectBlock.find_first_not_of(" \t\n\r") == std::string::npos) {
-            continue;
-        }
+        map_.push_back(Object::Object_Factory.create(name, *this, t));
+        map_[i]->deserialize(j);
+        i++;
+    }
+}
 
-        std::stringstream blockStream(objectBlock);
-        std::string xStr, yStr, rotStr, charStr;
+nlohmann::json World::serialize() const {
+    nlohmann::json json;
 
-        if (std::getline(blockStream, xStr, ',') &&
-            std::getline(blockStream, yStr, ',') &&
-            std::getline(blockStream, rotStr, ',') &&
-            std::getline(blockStream, charStr)) {
+    json["version"] = WORLD_FILE_VERSION;
+    json["ROW_SIZE"] = ROW_SIZE_;
 
-            ParsedObject obj;
-            obj.x = std::stoul(xStr);
-            obj.y = std::stoul(yStr);
-            obj.rotation = std::stod(rotStr);
-            
-            obj.name = charStr;
-
-            if (obj.x > max_x) max_x = obj.x;
-            if (obj.y > max_y) max_y = obj.y;
-
-            parsedObjects.push_back(obj);
-        }
+    nlohmann::json objects;
+    for (const auto& o : map_) {
+        objects.push_back(o->serialize());
     }
 
-    ROW_SIZE_ = max_x + 1;
-    uint32_t totalRows = max_y + 1;
-    map_.resize(ROW_SIZE_ * totalRows);
+    json["objects"] = objects;
 
-    for (const auto& obj : parsedObjects) {
-        uint32_t index = convert_to_1D_({obj.x, obj.y});
-        map_[index] = Object::Object_Factory.create(obj.name, *this, Transform({obj.x, obj.y}, obj.rotation));
-    }
+    return json;
 }

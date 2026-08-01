@@ -5,37 +5,57 @@ positional, rotational, and graphical information about every object
 inside the world. 
 
 You can construct an object from nothing, or a specified ```Transform```, and
-```ObjectType```. All Objects and their subclasses require a default constructor
+```name```. All Objects and their subclasses require a default constructor
 and a deserialization function. After initial construction, the object will be 
-deserialized. Deserialization paramters are passed as ```std::unordered_map<uint32_t, std::string>```. 
+deserialized. Deserialization paramters are passed as JSON objects. 
 
-Serialization can also be done. We expect this to be one continuous string. It will
-follow this format:
- - all arguments are separated by ```,```
- - arguments where they take arguments, e.g. Devices arguments are specified by ```[```; you can escape using ```]```. 
+## File Saving, Loading & Serialization
+
+File saving and loading is handled through the ```World``` class. The ```World``` class will 
+construct all Objects necessary, with help from the ```Factory``` class. 
+
+However, serialization and deserialization must be handled through this class, and its respected
+subclasses. Because we use JSON files to save the world, serialization must return JSON objects.
+We use ```nlohmann::json``` for our parsing. Deserialization expects JSON objects as well. 
+
+An example of a Robot represented in JSON might look like the following:
+
+```json
+{
+    "type": "Robot",
+    "transform": {
+        "x": 5,
+        "y": 2,
+        "rotation": 0
+    },
+    "data": {
+        "devices": [
+            {
+                "type": "Motor",
+                "id": [0],
+                "power": 0.75
+            },
+            {
+                "type": "Camera",
+                "id": [1],
+                "fov": 90
+            }
+        ]
+    }
+}
+```
+
+## Object Access Functions 
 
 You can access an object's specific transform, type, and world reference through
 the functions:
 
  - ```transform```
  - ```world```
- - ```getType```
+ - ```name```
 
-respectfully. The ```transform``` and ```world``` functions can return a constant 
-or non-constant reference. This differes from ```getType``` which returns a copy
-of the object's type.
-
-You can also access what this Object would look like as a character (for graphic 
-representation). This is through the ```toChar``` function. 
-
-## ObjectType
-
-```ObjectType``` represents a type of object. It encapsulates a ```uint8_t```. 
-Current list of all types with their graphical representation is below:
-
- - EMPTY: (' ')
- - WALL: ('#')
- - ROBOT ('R')
+respectfully. The ```transform```, ```world```, and ```name``` functions can return a constant 
+or non-constant reference. 
 
 # Vector2
 
@@ -52,3 +72,4 @@ North and 45 is NW.
 ## References
 
 - [World](World.md)
+- [Factory](Factory.md)

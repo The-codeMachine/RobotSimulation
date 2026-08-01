@@ -21,11 +21,38 @@ If getting/creating a device was unsuccessful, it will throw an exception.
 
 ## File Loading
 
-When loading from files each device is separated by a ```:```. Where each parameter for this Robot
-is separated by a ```,``` as well as the arguments for a device. These arguments are passed as:
-```std::unordered_map<uint32_t, std::string>```. 
+File loading and saving is done through JSON files. Json is parsed through ```nlohmann::json```. An
+example of a robot would look like the following:
 
-To pass arguments for the device use ```[```; to escape use ```]```. 
+```json
+{
+    "type": "Robot",
+    "transform": {
+        "x": 5,
+        "y": 2,
+        "rotation": 0
+    },
+    "data": {
+        "devices": [
+            {
+                "type": "Motor",
+                "id": [0],
+                "power": 0.75
+            },
+            {
+                "type": "Camera",
+                "id": [1],
+                "fov": 90
+            }
+        ]
+    }
+
+}
+```
+
+All file parsing is done by the ```World``` class. Specific construction is done by the ```Factory``` class.
+Each object is responsible for serialization and deserialization. As such, ```Robot``` also has these functions,
+as well as all devices.
 
 ## References
 

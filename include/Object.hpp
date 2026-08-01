@@ -2,6 +2,8 @@
 
 #include "Factory.hpp"
 
+#include <nlohmann/json.hpp>
+
 #include <cstdint>
 
 class World;
@@ -21,6 +23,9 @@ struct Transform {
     Transform();
     Transform(Vector2 vec, double rot);
     Transform(uint32_t x, uint32_t y, double rot);
+    Transform(const nlohmann::json& json);
+
+    nlohmann::json serialize() const;
 
     Vector2 position;
     double rotation;
@@ -45,6 +50,14 @@ public:
     Object(World& world, Transform transform = Transform(), const std::string& name = "");
 
     virtual ~Object();
+
+    /// @brief Serializes an object's data to JSON (the base does nothing)
+    /// @return empty JSON
+    virtual nlohmann::json serialize() const;
+    
+    /// @brief constructs an object from JSON (this does nothing)
+    /// @param json 
+    virtual void deserialize(const nlohmann::json& json);
 
     /// @brief Gets this object's current transform
     /// @return this object's current transform (reference)
