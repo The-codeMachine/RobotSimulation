@@ -152,7 +152,6 @@ registrations typically remain unchanged for the lifetime of the application.
 
 ### TODO
 
- - Implement ```Factory```
  - Implement ```Serialzation``` and ```Deserialization``` classes (including designing it too)
  - Change Object and Device to use this system
 

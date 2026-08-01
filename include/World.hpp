@@ -45,11 +45,6 @@ public:
     void saveToFile(const std::filesystem::path& path) const;
 
 private:
-    /// @brief converts c to an ObjectType if possible
-    /// @param c 
-    /// @return c as an ObjectType
-    static ObjectType convert_to_objecttype_(char c);
-
     /// @brief converts (x, y) to a 1D index
     /// @param x as base-0
     /// @param y as base-0

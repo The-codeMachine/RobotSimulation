@@ -4,9 +4,11 @@ Transform::Transform() : position({0, 0}), rotation(0) {}
 Transform::Transform(Vector2 vec, double rot) : position(vec), rotation(rot) {}
 Transform::Transform(uint32_t x, uint32_t y, double rot) : position({x, y}), rotation(rot) {}
 
-Object::Object() : world_(nullptr), transform_(Transform()), type_(ObjectType::EMPTY) {}
+Object::Object() : world_(nullptr), transform_(Transform()), name_("") {}
 
-Object::Object(World& world, Transform transform, ObjectType type) : world_(&world), transform_(transform), type_(type) {}
+Object::Object(World& world, Transform transform, const std::string& name) : world_(&world), transform_(transform), name_(name) {}
+
+Object::~Object() = default;
 
 Transform& Object::transform() {
     return transform_;
@@ -24,10 +26,10 @@ const World& Object::world() const {
     return *world_;
 }
 
-ObjectType Object::getType() const noexcept {
-    return type_;
+std::string& Object::name() {
+    return name_;
 }
 
-char Object::toChar() const noexcept {
-    return OBJECT_REPRESENTATION[static_cast<uint8_t>(type_)];
+const std::string& Object::name() const {
+    return name_;
 }

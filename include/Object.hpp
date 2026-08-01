@@ -27,25 +27,6 @@ struct Transform {
 };
 
 /// @brief 
-///
-/// Represents an object. Specifies which
-/// type of object it is. 
-///
-enum class ObjectType : uint8_t {
-    EMPTY = 0,
-    WALL,
-    ROBOT
-};
-
-/*
-This correlates to the ObjectType. At the
-index of the ObjectType, it's object 
-representation as a character. We recommend
-a padding of a space (' ').
-*/
-static inline constexpr const char* OBJECT_REPRESENTATION = " #R";
-
-/// @brief 
 /// This represents an object in the world. It holds 
 /// position, rotational, and graphical information. 
 /// It allows you to update, and get all of the 
@@ -61,36 +42,38 @@ public:
 
 public:
     Object();
-    Object(World& world, Transform transform = Transform(), ObjectType type = ObjectType::EMPTY);
+    Object(World& world, Transform transform = Transform(), const std::string& name = "");
 
-    /// @brief Gets this robot's current transform
-    /// @return this robot's current transform (reference)
+    virtual ~Object();
+
+    /// @brief Gets this object's current transform
+    /// @return this object's current transform (reference)
     Transform& transform();
 
-    /// @brief Gets this robot's current transform
-    /// @return this robot's current transform (const reference)
+    /// @brief Gets this object's current transform
+    /// @return this object's current transform (const reference)
     const Transform& transform() const;
 
-    /// @brief Gets the current world this robot is in
-    /// @return the current world this robot is it (reference)
+    /// @brief Gets the current world this object is in
+    /// @return the current world this object is it (reference)
     World& world();
 
-    /// @brief Gets the current world this robot is in
-    /// @return the current world this robot is it (const reference)
+    /// @brief Gets the current world this object is in
+    /// @return the current world this object is it (const reference)
     const World& world() const;
 
-    /// @brief Get's which type of object this is
-    /// @return which type of object this is
-    ObjectType getType() const noexcept;
+    /// @brief Gets the current name of this object
+    /// @return the current name of this object (reference)
+    std::string& name();
 
-    /// @brief Converts this object into a representable char (for the world)
-    /// @return this object as a char
-    char toChar() const noexcept;
+    /// @brief Gets the current name of this object
+    /// @return the current name of this object (const reference)
+    const std::string& name() const;
 
 private:
     World* world_;
 
     Transform transform_;
-    ObjectType type_;
+    std::string name_;
 
 };

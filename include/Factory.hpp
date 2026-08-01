@@ -19,7 +19,7 @@ namespace Factory {
     template<typename Base, typename... Args>
     class Factory {
     public:
-        Factory() {}
+        Factory() = default;
 
         /// @brief Registers type Derived where Derived must be a subclass of Base. 
         /// @tparam Derived 
@@ -27,7 +27,7 @@ namespace Factory {
         template <typename Derived> 
             requires std::derived_from<Derived, Base>
         void registerType(std::string_view name) {
-            auto [it, inserted] = creators_.try_emplace(std::string(name), &createImpl<Derived);
+            auto [it, inserted] = creators_.try_emplace(std::string(name), &createImpl<Derived>);
 
             if (!inserted)
                 throw std::runtime_error("Type already registered: " + std::string(name));
@@ -37,8 +37,8 @@ namespace Factory {
         /// @param name 
         /// @param ...args 
         /// @return nullptr if that type is not registered, else a unique_ptr to the Base class
-        std::unique_ptr<Base> create(std::string_view name, Args&&... args) const {
-            auto it = creators_.find(name);
+        std::unique_ptr<Base> create(std::string_view name, Args... args) const {
+            auto it = creators_.find(std::string(name));
 
             if (it == creators_.end())
                 return nullptr;
@@ -47,7 +47,7 @@ namespace Factory {
         }
 
         bool contains(std::string_view name) const {
-            return creators_.contains(name);
+            return creators_.find(std::string(name)) != creators_.end();
         }
 
     private:
@@ -56,12 +56,12 @@ namespace Factory {
         /// @param ...args 
         /// @return a unique pointer of the base class
         template<typename Derived>
-        static std::unique_ptr<Base> createImpl(Args&&... args) {
+        static std::unique_ptr<Base> createImpl(Args... args) {
             return std::make_unique<Derived>(std::forward<Args>(args)...);
         }
 
     private:
-        using Creator = std::unique_ptr<Base> (*)(Args&&...);
+        using Creator = std::unique_ptr<Base> (*)(Args...);
 
     private:
         std::unordered_map<std::string, Creator> creators_;

@@ -27,6 +27,9 @@ class Robot : public Object {
 public:
     Robot(World& world, Transform t);
 
+    /// @brief Registers the robot to Objects. 
+    static void registerRobot();
+
     /// @brief Constructs and adds a device to the Robot
     /// @tparam T 
     /// @tparam ...Args 

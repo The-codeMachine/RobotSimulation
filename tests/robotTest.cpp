@@ -1,5 +1,6 @@
 #include <Robot.hpp>
 #include <World.hpp>
+#include <Registration.hpp>
 
 #include <iostream>
 #include <cassert>
@@ -15,10 +16,12 @@ public:
 
 int main() {
 
+    registerBuiltinObjects();
+
     World world(std::filesystem::path("assets/tests/robotWorldConstruction.txt"));
     Robot robot(world, Transform({10, 5}, 0));
 
-    assert(world.at({10, 5}).getType() == ObjectType::ROBOT);
+    assert(world.at({10, 5}).name() == "Robot");
 
     std::string str = "test_id";
     std::vector<unsigned char> id(str.begin(), str.end());

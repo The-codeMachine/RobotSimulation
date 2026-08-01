@@ -55,7 +55,7 @@ std::string World::toString() const noexcept {
 
     for (uint32_t y = 0; y < rows; ++y) {
         for (uint32_t x = 0; x < ROW_SIZE_; ++x) {
-            out += map_[convert_to_1D_({x, y})]->toChar();
+            out += map_[convert_to_1D_({x, y})]->name();
         }
 
         if (y + 1 < rows)
@@ -77,24 +77,10 @@ void World::saveToFile(const std::filesystem::path& path) const {
         
         Transform t = map_[i]->transform();
 
-        file << t.position.x << "," << t.position.y << "," << t.rotation << "," << static_cast<int>(map_[i]->getType()) << ";";
+        file << t.position.x << "," << t.position.y << "," << t.rotation << "," << map_[i]->name() << ";";
     }
     
     file.close();
-}
-
-ObjectType World::convert_to_objecttype_(char c) {
-    switch (c) {
-        case ' ':
-            return ObjectType::EMPTY;
-        case '#':
-            return ObjectType::WALL;
-        case 'R':
-            return ObjectType::ROBOT;
-
-        default:
-            throw std::runtime_error("Invalid ObjectType conversion to char (character is invalid)");
-    }
 }
 
 uint32_t World::convert_to_1D_(Vector2 vec) const noexcept {
@@ -118,8 +104,7 @@ void World::construct_from_string_(const std::string& world) {
     struct ParsedObject {
         uint32_t x, y;
         double rotation;
-        ObjectType typeChar;
-        std::unordered_map<uint32_t, std::string> parameters;
+        std::string name;
     };
     std::vector<ParsedObject> parsedObjects;
     
@@ -147,8 +132,7 @@ void World::construct_from_string_(const std::string& world) {
             obj.y = std::stoul(yStr);
             obj.rotation = std::stod(rotStr);
             
-            size_t firstChar = charStr.find_first_not_of(" \t\n\r");
-            obj.typeChar = static_cast<ObjectType>(charStr[firstChar] - '0');
+            obj.name = charStr;
 
             if (obj.x > max_x) max_x = obj.x;
             if (obj.y > max_y) max_y = obj.y;
@@ -163,6 +147,6 @@ void World::construct_from_string_(const std::string& world) {
 
     for (const auto& obj : parsedObjects) {
         uint32_t index = convert_to_1D_({obj.x, obj.y});
-        map_[index] = std::make_unique<Object>(*this, Transform({obj.x, obj.y}, obj.rotation), obj.typeChar);
+        map_[index] = Object::Object_Factory.create(obj.name, *this, Transform({obj.x, obj.y}, obj.rotation));
     }
 }
