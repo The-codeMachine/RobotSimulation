@@ -7,7 +7,7 @@ knowledge of their concrete type.
 The factory itself does not know about any of the subclasses. Instead, each subclass is registered with a unique name. Once
 registered, objects can be constructed by providing that name.
 
-The ```Factory``` is a class tepmplate and can thereforce be used for any inheritance hierarchy. Typical uses include:
+The ```Factory``` is a class template and can thereforce be used for any inheritance hierarchy. Typical uses include:
 
  - ```Device```
  - ```Object```

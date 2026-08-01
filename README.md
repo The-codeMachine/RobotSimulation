@@ -1,6 +1,6 @@
 # Robot Simulation
 
-This is a C++17 library built with CMake. It provides you with a system able to simulate robots.
+This is a C++20 library built with CMake. It provides you with a system able to simulate robots.
 Currently, this project is pretty new. This means that it only supports 2D enviroments with a limited
 list of devices. The only objects that can populate a world consist of:
 

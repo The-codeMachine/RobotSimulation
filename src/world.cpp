@@ -164,6 +164,5 @@ void World::construct_from_string_(const std::string& world) {
     for (const auto& obj : parsedObjects) {
         uint32_t index = convert_to_1D_({obj.x, obj.y});
         map_[index] = std::make_unique<Object>(*this, Transform({obj.x, obj.y}, obj.rotation), obj.typeChar);
-        map_[index]->deserialize(obj.parameters);
     }
 }

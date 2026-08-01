@@ -1,8 +1,8 @@
 #pragma once
 
+#include "Factory.hpp"
+
 #include <cstdint>
-#include <string>
-#include <unordered_map>
 
 class World;
 
@@ -57,16 +57,11 @@ static inline constexpr const char* OBJECT_REPRESENTATION = " #R";
 /// world. 
 class Object {
 public:
+    static inline Factory::Factory<Object, World&, Transform> Object_Factory;
+
+public:
     Object();
     Object(World& world, Transform transform = Transform(), ObjectType type = ObjectType::EMPTY);
-
-    /// @brief Deserializes an object from parameters
-    /// @param parameters 
-    virtual void deserialize(const std::unordered_map<uint32_t, std::string>& parameters);
-
-    /// @brief serializes an Object, returns the serilization as a string
-    /// @return the serialized Object as a string
-    virtual std::string serialize();
 
     /// @brief Gets this robot's current transform
     /// @return this robot's current transform (reference)
