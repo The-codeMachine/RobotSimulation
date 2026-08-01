@@ -27,6 +27,9 @@ class Robot : public Object {
 public:
     Robot(World& world, Transform t);
 
+    void deserialize(const nlohmann::json& json) override;
+    nlohmann::json serialize() const override;
+
     /// @brief Registers the robot to Objects. 
     static void registerRobot();
 
