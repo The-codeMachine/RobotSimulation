@@ -1,4 +1,5 @@
 #include <World.hpp>
+#include <Registration.hpp>
 
 #include <iostream>
 #include <cassert>
@@ -6,41 +7,43 @@
 
 int main() {
 
+    registerBuiltinObjects();
+
     World world(std::filesystem::path("assets/tests/worldInitConstruction.json"));
 
     assert(world.toString() == 
-        "WallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWall\n"
-        "Wall                    Wall\n"
-        "Wall                    Wall\n"
-        "Wall     WallWallWallWallWallWallWallWallWallWall     Wall\n"
-        "Wall              Wall     Wall\n"
-        "Wall              Wall     Wall\n"
-        "Wall       Robot      Wall     Wall\n"
-        "Wall              WallWallWall WallWallWall\n"
-        "Wall               Wall    Wall\n"
-        "Wall               Wall    Wall\n"
-        "WallWallWallWallWallWallWallWallWall       WallWallWallWallWallWall\n"
-        "Wall                    Wall\n"
-        "WallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWall"
+        "#######################\n"
+        "#                     #\n"
+        "#                     #\n"
+        "#     ##########      #\n"
+        "#              #      #\n"
+        "#              #      #\n"
+        "#       R      #      #\n"
+        "#              ### ####\n"
+        "#               #     #\n"
+        "#               #     #\n"
+        "#########       #######\n"
+        "#                     #\n"
+        "#######################"
     );
 
-    world.update(std::make_unique<Object>(world, Transform({16, 8}, 0), " "));
-    world.update(std::make_unique<Object>(world, Transform({16, 9}, 0), " "));
+    world.update(std::make_unique<Empty>(world, Transform({16, 8}, 0), "Empty"));
+    world.update(std::make_unique<Empty>(world, Transform({16, 9}, 0), "Empty"));
 
     assert(world.toString() == 
-        "WallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWall\n"
-        "Wall                    Wall\n"
-        "Wall                    Wall\n"
-        "Wall     WallWallWallWallWallWallWallWallWallWall     Wall\n"
-        "Wall              Wall     Wall\n"
-        "Wall              Wall     Wall\n"
-        "Wall       Robot      Wall     Wall\n"
-        "Wall              WallWallWall WallWallWall\n"
-        "Wall                    Wall\n"
-        "Wall                    Wall\n"
-        "WallWallWallWallWallWallWallWallWall       WallWallWallWallWallWall\n"
-        "Wall                    Wall\n"
-        "WallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWall"
+        "#######################\n"
+        "#                     #\n"
+        "#                     #\n"
+        "#     ##########      #\n"
+        "#              #      #\n"
+        "#              #      #\n"
+        "#       R      #      #\n"
+        "#              ### ####\n"
+        "#                     #\n"
+        "#                     #\n"
+        "#########       #######\n"
+        "#                     #\n"
+        "#######################"
     );
 
     std::filesystem::remove("assets/tests/worldSaveTest.json");
@@ -48,19 +51,19 @@ int main() {
 
     World w(std::filesystem::path("assets/tests/worldSaveTest.json"));
     assert(w.toString() == 
-        "WallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWall\n"
-        "Wall                    Wall\n"
-        "Wall                    Wall\n"
-        "Wall     WallWallWallWallWallWallWallWallWallWall     Wall\n"
-        "Wall              Wall     Wall\n"
-        "Wall              Wall     Wall\n"
-        "Wall       R      Wall     Wall\n"
-        "Wall              WallWallWall WallWallWall\n"
-        "Wall                    Wall\n"
-        "Wall                    Wall\n"
-        "WallWallWallWallWallWallWallWallWall       WallWallWallWallWallWall\n"
-        "Wall                    Wall\n"
-        "WallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWallWall"
+        "#######################\n"
+        "#                     #\n"
+        "#                     #\n"
+        "#     ##########      #\n"
+        "#              #      #\n"
+        "#              #      #\n"
+        "#       R      #      #\n"
+        "#              ### ####\n"
+        "#                     #\n"
+        "#                     #\n"
+        "#########       #######\n"
+        "#                     #\n"
+        "#######################"
     );
 
     return 0;

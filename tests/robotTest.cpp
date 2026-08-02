@@ -19,7 +19,7 @@ int main() {
     registerBuiltinObjects();
     Device::Device_Factory.registerType<TestDevice>("TestDevice");
 
-    World world(std::filesystem::path("assets/tests/robotWorldConstruction.txt"));
+    World world(std::filesystem::path("assets/tests/robotWorldConstruction.json"));
     Robot robot(world, Transform({10, 5}, 0));
 
     assert(world.at({10, 5}).name() == "Robot");

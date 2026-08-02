@@ -17,16 +17,23 @@ nlohmann::json Transform::serialize() const {
 
 Object::Object() : world_(nullptr), transform_(Transform()), name_("") {}
 
-Object::Object(World& world, Transform transform, const std::string& name) : world_(&world), transform_(transform), name_(name) {}
+Object::Object(World& world, Transform transform, const std::string& name, char glyph) : world_(&world), transform_(transform), name_(name), glyph_(glyph) {}
 
 Object::~Object() = default;
 
 nlohmann::json Object::serialize() const {
-    return {};
+    return {
+        {"type", name_}, 
+        {"glyph", std::string(1, glyph_)},
+        {"transform", transform_.serialize()}
+    };
 }
 
 void Object::deserialize(const nlohmann::json& json) {
-
+    name_ = json.at("type");
+    std::string s = json.at("glyph");
+    glyph_ = s[0];
+    transform_ = Transform(json.at("transform"));
 }
 
 Transform& Object::transform() {
@@ -51,4 +58,36 @@ std::string& Object::name() {
 
 const std::string& Object::name() const {
     return name_;
+}
+
+char& Object::glyph() {
+    return glyph_;
+}
+
+const char& Object::glyph() const {
+    return glyph_;
+}
+
+bool Object::isEmpty() const noexcept {
+    return true;
+}
+
+Empty::Empty(World& world, Transform transform, const std::string& name) : Object(world, transform, name) {}
+
+void Empty::registerEmpty() {
+    Object::Object_Factory.registerType<Empty>("Empty");
+}
+
+bool Empty::isEmpty() const noexcept {
+    return true;
+}
+
+Wall::Wall(World& world, Transform transform, const std::string& name) : Object(world, transform, name) {}
+
+void Wall::registerWall() {
+    Object::Object_Factory.registerType<Wall>("Wall");
+}
+
+bool Wall::isEmpty() const noexcept {
+    return false;
 }

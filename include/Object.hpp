@@ -47,7 +47,7 @@ public:
 
 public:
     Object();
-    Object(World& world, Transform transform = Transform(), const std::string& name = " ");
+    Object(World& world, Transform transform = Transform(), const std::string& name = " ", char glyph = ' ');
 
     virtual ~Object();
 
@@ -83,10 +83,43 @@ public:
     /// @return the current name of this object (const reference)
     const std::string& name() const;
 
+    /// @brief Gets the current glyph of this object
+    /// @return the current glyph of this object (reference)
+    char& glyph();
+
+    /// @brief Gets the current glyph of this object
+    /// @return the current glyph of this object (const reference)
+    const char& glyph() const;
+
+    /// @brief Gets whether this object is empty or not
+    /// @return true if it is empty false if not
+    virtual bool isEmpty() const noexcept;
+
 private:
     World* world_;
 
     Transform transform_;
     std::string name_;
 
+    char glyph_;
+};
+
+/// @brief An empty square, sublass of Object, does nothing
+class Empty : public Object {
+public:
+    Empty(World& world, Transform transform = Transform(), const std::string& name = "Empty");
+
+    static void registerEmpty();
+
+    bool isEmpty() const noexcept override;
+};
+
+/// @brief A wall, subclass of Object something to run into
+class Wall : public Object {
+public:
+    Wall(World& world, Transform transform = Transform(), const std::string& name = "Wall");
+
+    static void registerWall();
+
+    bool isEmpty() const noexcept override;
 };

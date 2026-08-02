@@ -52,7 +52,7 @@ std::string World::toString() const noexcept {
 
     for (uint32_t y = 0; y < rows; ++y) {
         for (uint32_t x = 0; x < ROW_SIZE_; ++x) {
-            out += map_[convert_to_1D_({x, y})]->name();
+            out += map_[convert_to_1D_({x, y})]->glyph();
         }
 
         if (y + 1 < rows)
@@ -94,21 +94,24 @@ void World::deserialize_(const nlohmann::json& world) {
 
     ROW_SIZE_ = world.at("ROW_SIZE");
     size_t ROW_AMOUNT_ = world.at("ROW_AMOUNT");
-    
+    map_.reserve(ROW_SIZE_ * ROW_AMOUNT_);
+
     // set all objects in the world to empty 
-    for (size_t i = 0; i < ROW_AMOUNT_; ++i) {
+    for (size_t i = 0; i < ROW_AMOUNT_ * ROW_SIZE_; ++i) {
         Transform t(i % ROW_SIZE_, i / ROW_SIZE_, 0);
-        map_.push_back(std::make_unique<Object>(*this, t));
+        map_.push_back(Object::Object_Factory.create("Empty", *this, t));
     }
 
-    size_t i = 0;
     for (const auto j : world.at("objects")) {
         std::string name = j.at("type");
         Transform t(j.at("transform"));
+        size_t i = convert_to_1D_(t.position);
 
         map_[i] = Object::Object_Factory.create(name, *this, t);
+        if (map_[i] == nullptr)
+            throw std::runtime_error("Failed to construct map, no conversion for: " + name + ". Check that you registered types before construction");
+
         map_[i]->deserialize(j);
-        i++;
     }
 }
 
@@ -117,6 +120,7 @@ nlohmann::json World::serialize_() const {
 
     json["version"] = WORLD_FILE_VERSION;
     json["ROW_SIZE"] = ROW_SIZE_;
+    json["ROW_AMOUNT"] = map_.size() / ROW_SIZE_;
 
     nlohmann::json objects;
     for (const auto& o : map_) {

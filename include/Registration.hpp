@@ -8,4 +8,6 @@
 void registerBuiltinObjects() {
     Motor::registerMotor();
     Robot::registerRobot();
+    Empty::registerEmpty();
+    Wall::registerWall();
 }
