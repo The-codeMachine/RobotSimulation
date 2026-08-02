@@ -9,6 +9,10 @@ You can construct an object from nothing, or a specified ```Transform```, and
 and a deserialization function. After initial construction, the object will be 
 deserialized. Deserialization paramters are passed as JSON objects. 
 
+The ```glyph``` is used to print the World with prettier formatting. The name is
+used for construction specification and must be unique to all subclasses, while a 
+glyph can be reused as many times as possible, it is simply for pretty printing. 
+
 ## File Saving, Loading & Serialization
 
 File saving and loading is handled through the ```World``` class. The ```World``` class will 
@@ -22,26 +26,15 @@ An example of a Robot represented in JSON might look like the following:
 
 ```json
 {
-    "type": "Robot",
-    "transform": {
-        "x": 5,
-        "y": 2,
-        "rotation": 0
+    {
+        "type": "Wall",
+        "glyph": "#",
+        "transform": {
+            "x": 0,
+            "y": 5,
+            "rotation": 0
+        }
     },
-    "data": {
-        "devices": [
-            {
-                "type": "Motor",
-                "id": [0],
-                "power": 0.75
-            },
-            {
-                "type": "Camera",
-                "id": [1],
-                "fov": 90
-            }
-        ]
-    }
 }
 ```
 
@@ -53,8 +46,9 @@ the functions:
  - ```transform```
  - ```world```
  - ```name```
+ - ```glyph```
 
-respectfully. The ```transform```, ```world```, and ```name``` functions can return a constant 
+respectfully. The ```transform```, ```world```, ```name```, and ```glyph``` functions can return a constant 
 or non-constant reference. 
 
 # Vector2

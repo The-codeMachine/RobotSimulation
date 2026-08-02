@@ -18,10 +18,12 @@ parsing. The world files will follow formats similar to that of the following:
 ```json
 {
     "version": 1,
-    "ROW_SIZE": 32,
+    "ROW_SIZE": 20,
+    "ROW_AMOUNT": 10,
     "objects": [
         {
             "type": "Wall",
+            "glyph": "#",
             "transform": {
                 "x": 0,
                 "y": 0,
@@ -30,6 +32,7 @@ parsing. The world files will follow formats similar to that of the following:
         },
         {
             "type": "Wall",
+            "glyph": "#",
             "transform": {
                 "x": 1,
                 "y": 0,
@@ -38,12 +41,13 @@ parsing. The world files will follow formats similar to that of the following:
         },
         {
             "type": "Wall",
+            "glyph": "#",
             "transform": {
                 "x": 2,
                 "y": 0,
                 "rotation": 0
             }
-        },
+        }
     ]
 }
 ```
@@ -61,15 +65,13 @@ they are located, and that can simply be accessed.
 
 ## To String
 
-The string conversion function converts the current world's situation into a string. This string can be loaded
-into a file to save it. It will be able to construct all objects from the string. However, if the string includes
-things like ```R``` for robot, it will not construct a robot object. 
+The string conversion function converts the current world's situation into a string. It will not be as detailed as the
+JSON output, and the glyphs used to print are not unique and may be reused since they are only characters. We expect
+to be making a true renderer on top of this library later that will base its rendering off JSON output, and we will 
+include things like updates packets in JSON. Currently, however the ```toString``` function is used exclusively for
+debugging and simple conversions. 
 
 ## References
 
 - [Object](Object.md)
 - [Robot](Robot.md)
-
-### TODO
-
- - During string construction, make it so that based off the character the specific Object will be constructed, e.g. ```R``` would construct a robot 

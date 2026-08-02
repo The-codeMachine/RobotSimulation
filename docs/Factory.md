@@ -150,11 +150,6 @@ This provides several advantages:
 The factory is intended for one-time registration during application startup. Once initialization is complete, 
 registrations typically remain unchanged for the lifetime of the application.
 
-### TODO
-
- - Implement ```Serialzation``` and ```Deserialization``` classes (including designing it too)
- - Change Object and Device to use this system
-
 ### References
 
  - [Object](Object.md)

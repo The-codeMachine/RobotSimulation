@@ -27,9 +27,10 @@ example of a robot would look like the following:
 ```json
 {
     "type": "Robot",
+    "glyph": "R",
     "transform": {
-        "x": 5,
-        "y": 2,
+        "x": 10,
+        "y": 5,
         "rotation": 0
     },
     "data": {
@@ -46,7 +47,6 @@ example of a robot would look like the following:
             }
         ]
     }
-
 }
 ```
 
@@ -58,8 +58,3 @@ as well as all devices.
 
 - [Object](Object.md)
 - [Device](Device.md)
-
-### TODO
-
- - Make a file saving system for the robot, where it saves the robot's information to a file
- - Once a file saving system is made for the robot make a construction system for the robot based off a file

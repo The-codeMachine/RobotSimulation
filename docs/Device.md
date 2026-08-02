@@ -20,7 +20,3 @@ update something about the device, or robot.
 ## References
 
 - [Robot](Robot.md)
-
-### TODO
-
- - Because Robot is getting a file saving/loading system, devices need to be able to convert their information to files as well. This will not be a separate file, but rather built on top of the robot's file
