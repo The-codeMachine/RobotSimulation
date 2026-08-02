@@ -25,18 +25,24 @@ public:
     static inline Factory::Factory<Device, const std::string&> Device_Factory;
 
 public:
-    Device(const std::string& id) : id_(id) {}
+    Device(const std::string& id, const std::string& type) : id_(id), type_(type) {}
     virtual ~Device() = default;
 
     /// @brief Serializes a device to json
     /// @return the device serialized to json
     virtual nlohmann::json serialize() const {
-        return {{"id", id_}};
+        return {
+            {"id", id_}, 
+            {"type", type_},
+        };
     }
     
     /// @brief deserializes a device from json
     /// @param json 
-    virtual void deserialize(const nlohmann::json& json) {}
+    virtual void deserialize(const nlohmann::json& json) {
+        id_ = json.at("id");
+        type_ = json.at("type");
+    }
 
     /// @brief Called when attached to a robot
     /// @param robot 
@@ -60,6 +66,7 @@ protected:
 
 private:
     std::string id_;
+    std::string type_;
     
     friend class Robot;
     

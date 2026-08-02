@@ -15,13 +15,13 @@
 ///
 class Motor : public Device {
 public:
-    Motor(const std::string& id);
+    Motor(const std::string& id, const std::string& type = "Motor");
     
     /// @brief constructs the motor based off limits
     /// @param id 
     /// @param maxAngularVelocity Maximum shaft speed (rad/s) 
     /// @param maxAngularAcceleration Maximum acceleration (rad/s^2) 
-    Motor(const std::string& id, double maxAngularVelocity, double maxAngularAcceleration);
+    Motor(const std::string& id, double maxAngularVelocity, double maxAngularAcceleration, const std::string& type = "Motor");
 
     /// @brief Registers the Motor class in the Device factory
     static void registerMotor() {

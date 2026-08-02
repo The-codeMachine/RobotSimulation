@@ -7,7 +7,7 @@ void Robot::deserialize(const nlohmann::json& json) {
 
     size_t i = 0;
     for (const auto& j : json["data"]["devices"]) {
-        devices_.push_back(Device::Device_Factory.create(j["type"], j["id"]));
+        devices_.push_back(std::move(Device::Device_Factory.create(j["type"], j["id"])));
         devices_[i]->deserialize(j);
         i++;
     }
@@ -16,8 +16,11 @@ void Robot::deserialize(const nlohmann::json& json) {
 nlohmann::json Robot::serialize() const {
     nlohmann::json json = Object::serialize();
     
-    nlohmann::json data;
+    nlohmann::json data = nlohmann::json::array();
     for (const auto& d : devices_) {
+        if (d == nullptr)
+            continue;
+
         data.push_back(d->serialize());
     }
 

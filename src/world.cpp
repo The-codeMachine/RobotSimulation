@@ -125,7 +125,7 @@ nlohmann::json World::serialize_() const {
     nlohmann::json objects;
     for (const auto& o : map_) {
         // skip empty objects
-        if (o->name() == " ")
+        if (o->name() == "Empty")
             continue;
 
         objects.push_back(o->serialize());
