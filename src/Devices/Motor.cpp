@@ -1,36 +1,57 @@
 #include <Devices/Motor.hpp>
 
-Motor::Motor(const std::vector<unsigned char>& id, double maxAngularVelocity, double maxAngularAcceleration) 
+Motor::Motor(const std::string& id) : Device(id) {}
+
+Motor::Motor(const std::string& id, double maxAngularVelocity, double maxAngularAcceleration) 
     : Device(id), throttle_(0.0), angularPosition_(0.0),
       angularVelocity_(0.0), angularAcceleration_(0.0), maxAngularVelocity_(maxAngularVelocity),
       maxAngularAcceleration_(maxAngularAcceleration)
     {}
 
+nlohmann::json Motor::serialize() const {
+    nlohmann::json json = Device::serialize();
+    
+    json["type"] = "Motor";
+
+    json["data"] = {
+        {"angular_position", angularPosition_},
+        {"angular_velocity", angularVelocity_},
+        {"angular_acceleration", angularAcceleration_},
+        {"max_angular_velocity", maxAngularVelocity_},
+        {"max_angular_acceleration", maxAngularAcceleration_}
+    };
+
+    return json;
+}
+
+void Motor::deserialize(const nlohmann::json& json) {
+    angularPosition_        = json.at("angular_position");
+    angularVelocity_        = json.at("angular_velocity");
+    angularAcceleration_    = json.at("angular_acceleration");
+
+    maxAngularVelocity_     = json.at("max_angular_velocity");
+    maxAngularAcceleration_ = json.at("max_angular_acceleration");
+}
 
 void Motor::setThrottle(double power) {
     throttle_ = std::clamp(power, -1.0, 1.0);
 }
 
-
 double Motor::getThrottle() const noexcept {
     return throttle_;
 }
-
 
 double Motor::getAngularPosition() const noexcept {
     return angularPosition_;
 }
 
-
 double Motor::getAngularVelocity() const noexcept {
     return angularVelocity_;
 }
 
-
 double Motor::getAngularAcceleration() const noexcept {
     return angularAcceleration_;
 }
-
 
 void Motor::update(long long deltaTime) {
     // Convert milliseconds to seconds

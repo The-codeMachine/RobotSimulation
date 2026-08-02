@@ -7,7 +7,7 @@
 
 class TestDevice : public Device {
 public:
-    TestDevice(const std::vector<unsigned char>& id) : Device(id) {}
+    TestDevice(const std::string& id) : Device(id) {}
 
     void update(long long deltaTime) override {
         std::cout << "Update: " << deltaTime << "\n";

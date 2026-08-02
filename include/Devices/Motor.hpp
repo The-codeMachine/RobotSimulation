@@ -15,11 +15,26 @@
 ///
 class Motor : public Device {
 public:
+    Motor(const std::string& id);
+    
     /// @brief constructs the motor based off limits
     /// @param id 
     /// @param maxAngularVelocity Maximum shaft speed (rad/s) 
     /// @param maxAngularAcceleration Maximum acceleration (rad/s^2) 
-    Motor(const std::vector<unsigned char>& id, double maxAngularVelocity, double maxAngularAcceleration);
+    Motor(const std::string& id, double maxAngularVelocity, double maxAngularAcceleration);
+
+    /// @brief Registers the Motor class in the Device factory
+    static void registerMotor() {
+        Device::Device_Factory.registerType<Motor>("Motor");
+    }
+
+    /// @brief serializes the Motor's variables include limits and current states
+    /// @return the Motor's current state and limitations as json
+    nlohmann::json serialize() const override;
+
+    /// @brief constructs a motor from JSON including limits and current state
+    /// @param json 
+    void deserialize(const nlohmann::json& json) override;
 
     /// @brief Sets the motor output, -1.0 = full reverse, 0 = stop, 1.0 = full forward
     /// @param throttle 

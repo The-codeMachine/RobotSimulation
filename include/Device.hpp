@@ -1,6 +1,10 @@
 #pragma once
 
-#include <vector>
+#include <Factory.hpp>
+
+#include <nlohmann/json.hpp>
+
+#include <string>
 
 class Robot;
 class World;
@@ -18,8 +22,21 @@ class World;
 ///
 class Device {
 public:
-    Device(std::vector<unsigned char> id) : id_(id) {}
+    static inline Factory::Factory<Device, const std::string&> Device_Factory;
+
+public:
+    Device(const std::string& id) : id_(id) {}
     virtual ~Device() = default;
+
+    /// @brief Serializes a device to json
+    /// @return the device serialized to json
+    virtual nlohmann::json serialize() const {
+        return {{"id", id_}};
+    }
+    
+    /// @brief deserializes a device from json
+    /// @param json 
+    virtual void deserialize(const nlohmann::json& json) {}
 
     /// @brief Called when attached to a robot
     /// @param robot 
@@ -34,7 +51,7 @@ public:
 
     /// @brief Gets the id 
     /// @return a copy of the id
-    std::vector<unsigned char> id() const {
+    std::string id() const {
         return id_;
     }
 
@@ -42,7 +59,7 @@ protected:
     Robot* robot_ = nullptr;
 
 private:
-    std::vector<unsigned char> id_;
+    std::string id_;
     
     friend class Robot;
     
