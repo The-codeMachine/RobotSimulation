@@ -2,7 +2,6 @@
 #include <World.hpp>
 #include <Registration.hpp>
 
-#include <iostream>
 #include <cassert>
 
 class TestDevice : public Device {

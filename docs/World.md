@@ -7,8 +7,8 @@ The world class encapsulates all objects within a world. This includes:
  - Interactable objects
  - Custom objects
 
-All objects are accessible based off their Transform (specifically the ```Vector2``` location).
-The world owns the objects. The world is copyable and moveable. 
+All objects are accessible based off their ```Transform``` (specifically the ```Vector2``` location).
+The world owns the objects. The world is non-copyable and non-moveable. 
 
 ## Construction
 
@@ -71,7 +71,13 @@ to be making a true renderer on top of this library later that will base its ren
 include things like updates packets in JSON. Currently, however the ```toString``` function is used exclusively for
 debugging and simple conversions. 
 
-## References
+### TODO
+
+ - Improve errors 
+ - Catch serialization and deserialization errors and return better errors
+ - Improve general safety of the world loading/saving
+
+### References
 
 - [Object](Object.md)
 - [Robot](Robot.md)

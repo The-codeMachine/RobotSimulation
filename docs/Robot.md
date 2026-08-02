@@ -15,13 +15,23 @@ To access, or create a device you must specific what type of Device it is, as we
 The id is unique only to that type of device. E.g. you can have one ```Motor``` named "Left Motor", 
 but can also have a ```SpecialMotor``` called "Left Motor." 
 
-The id is a ```std::vector<unsigned char>```, this is so you can use numbers as well as strings. 
+Id is represented as a string. 
 
-If getting/creating a device was unsuccessful, it will throw an exception. 
+Device creational and retrival might be dangerous. They explore invalid states differently: 
+
+- Device creation will always throw exceptions if anything fails (including two ```Device```s with the same name).
+- Device retrival will return ```nullptr``` if it fails. 
+
+You can create a ```Device``` through the following functions:
+
+  - ```addDevice(const std::string& id, Args&&... args)```: this will create and insert the Device into
+   the Robot and return a reference (if possible)
+  - ```addDevice(std::unique_ptr<Device> device)```: this will insert the Device into the Robot and return 
+    a reference (if possible)
 
 ## File Loading
 
-File loading and saving is done through JSON files. Json is parsed through ```nlohmann::json```. An
+File loading and saving is done through JSON files. JSON is parsed through ```nlohmann::json```. An
 example of a robot would look like the following:
 
 ```json
@@ -54,7 +64,7 @@ All file parsing is done by the ```World``` class. Specific construction is done
 Each object is responsible for serialization and deserialization. As such, ```Robot``` also has these functions,
 as well as all devices.
 
-## References
+### References
 
 - [Object](Object.md)
 - [Device](Device.md)
