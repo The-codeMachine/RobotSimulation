@@ -6,7 +6,7 @@
 #include <iostream>
 
 World::World(const nlohmann::json& world) : ROW_SIZE_(-1) {
-    construct_from_json_(world);
+    deserialize_(world);
 }
 
 World::World(const std::filesystem::path& worldFile) : ROW_SIZE_(-1) {
@@ -20,7 +20,7 @@ World::World(const std::filesystem::path& worldFile) : ROW_SIZE_(-1) {
         throw std::runtime_error("Cannot open file (check permissions)");
     }
 
-    construct_from_json_(nlohmann::json::parse(file));
+    deserialize_(nlohmann::json::parse(file));
 }
 
 Object& World::at(Vector2 pos) {
@@ -68,7 +68,7 @@ void World::saveToFile(const std::filesystem::path& path) const {
     if (!file)
         throw std::runtime_error("Could not open file at: " + path.string());
     
-    file << serialize();
+    file << serialize_();
     
     file.close();
 }
@@ -88,24 +88,31 @@ bool World::valid_position_(Vector2 vec) const noexcept {
     return true;
 }
 
-void World::construct_from_json_(const nlohmann::json& world) {
+void World::deserialize_(const nlohmann::json& world) {
     if (world.at("version") != WORLD_FILE_VERSION)
         throw std::runtime_error("Invalid world file version");
 
     ROW_SIZE_ = world.at("ROW_SIZE");
+    size_t ROW_AMOUNT_ = world.at("ROW_AMOUNT");
+    
+    // set all objects in the world to empty 
+    for (size_t i = 0; i < ROW_AMOUNT_; ++i) {
+        Transform t(i % ROW_SIZE_, i / ROW_SIZE_, 0);
+        map_.push_back(std::make_unique<Object>(*this, t));
+    }
 
     size_t i = 0;
     for (const auto j : world.at("objects")) {
         std::string name = j.at("type");
         Transform t(j.at("transform"));
 
-        map_.push_back(Object::Object_Factory.create(name, *this, t));
+        map_[i] = Object::Object_Factory.create(name, *this, t);
         map_[i]->deserialize(j);
         i++;
     }
 }
 
-nlohmann::json World::serialize() const {
+nlohmann::json World::serialize_() const {
     nlohmann::json json;
 
     json["version"] = WORLD_FILE_VERSION;
@@ -113,6 +120,10 @@ nlohmann::json World::serialize() const {
 
     nlohmann::json objects;
     for (const auto& o : map_) {
+        // skip empty objects
+        if (o->name() == " ")
+            continue;
+
         objects.push_back(o->serialize());
     }
 

@@ -40,7 +40,7 @@ public:
     /// @param ...args 
     /// @return a reference to the device constructed
     template<typename T, typename... Args>
-    T& addDevice(const std::vector<unsigned char>& id, Args&&... args) {
+    T& addDevice(const std::string& id, Args&&... args) {
         return addDevice<T>(std::make_unique<T>(id, std::forward<Args>(args)...));
     }
 
@@ -70,7 +70,7 @@ public:
     /// @param id
     /// @return device T if it exists
     template<typename T> 
-    T* getDevice(const std::vector<unsigned char>& id) const {
+    T* getDevice(const std::string& id) const {
         for (const auto& d : devices_) {
             T* device = dynamic_cast<T*>(d.get());
             

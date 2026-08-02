@@ -47,7 +47,7 @@ public:
 
 public:
     Object();
-    Object(World& world, Transform transform = Transform(), const std::string& name = "");
+    Object(World& world, Transform transform = Transform(), const std::string& name = " ");
 
     virtual ~Object();
 
