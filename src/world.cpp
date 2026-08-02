@@ -3,7 +3,6 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
-#include <iostream>
 
 World::World(const nlohmann::json& world) : ROW_SIZE_(-1) {
     deserialize_(world);
@@ -48,14 +47,12 @@ void World::update(std::unique_ptr<Object> value) {
 std::string World::toString() const noexcept {
     std::string out;
 
-    const uint32_t rows = map_.size() / ROW_SIZE_;
-
-    for (uint32_t y = 0; y < rows; ++y) {
+    for (uint32_t y = 0; y < ROW_AMOUNT_; ++y) {
         for (uint32_t x = 0; x < ROW_SIZE_; ++x) {
             out += map_[convert_to_1D_({x, y})]->glyph();
         }
 
-        if (y + 1 < rows)
+        if (y + 1 < ROW_AMOUNT_)
             out += '\n';
     }
 
@@ -78,14 +75,7 @@ uint32_t World::convert_to_1D_(Vector2 vec) const noexcept {
 }
 
 bool World::valid_position_(Vector2 vec) const noexcept {
-    if (vec.x >= ROW_SIZE_)
-        return false;
-
-    uint32_t rows = map_.size() / ROW_SIZE_;
-    if (vec.y >= rows)
-        return false;
-
-    return true;
+    return vec.x < ROW_SIZE_ && vec.y < ROW_AMOUNT_;
 }
 
 void World::deserialize_(const nlohmann::json& world) {
@@ -93,7 +83,7 @@ void World::deserialize_(const nlohmann::json& world) {
         throw std::runtime_error("Invalid world file version");
 
     ROW_SIZE_ = world.at("ROW_SIZE");
-    size_t ROW_AMOUNT_ = world.at("ROW_AMOUNT");
+    ROW_AMOUNT_ = world.at("ROW_AMOUNT");
     map_.reserve(ROW_SIZE_ * ROW_AMOUNT_);
 
     // set all objects in the world to empty 
@@ -105,13 +95,16 @@ void World::deserialize_(const nlohmann::json& world) {
     for (const auto j : world.at("objects")) {
         std::string name = j.at("type");
         Transform t(j.at("transform"));
-        size_t i = convert_to_1D_(t.position);
-
-        map_[i] = Object::Object_Factory.create(name, *this, t);
-        if (map_[i] == nullptr)
+        
+        if (!valid_position_(t.position))
+            throw std::runtime_error("Invalid object position according to Row size and amount");
+        
+        std::unique_ptr<Object> obj = Object::Object_Factory.create(name, *this, t);
+        if (obj == nullptr)
             throw std::runtime_error("Failed to construct map, no conversion for: " + name + ". Check that you registered types before construction");
 
-        map_[i]->deserialize(j);
+        update(std::move(obj));
+        map_[convert_to_1D_(t.position)]->deserialize(j);
     }
 }
 

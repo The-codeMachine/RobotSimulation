@@ -13,6 +13,20 @@ class World;
 
 namespace Factory {
 
+    inline std::string toLower(const std::string& str) {
+        std::string out = str;
+        
+        for (char& c : out) {
+            c = std::tolower(c);
+        }
+
+        return out;
+    }
+
+    inline std::string toLower(std::string_view str) {
+        return toLower(std::string(str));
+    }
+
     /// @brief The Factory class is responsible for constructing subclasses of a common base class from a common string identifier. 
     /// @tparam Base 
     /// @tparam ...Args 
@@ -27,7 +41,7 @@ namespace Factory {
         template <typename Derived> 
             requires std::derived_from<Derived, Base>
         void registerType(std::string_view name) {
-            auto [it, inserted] = creators_.try_emplace(std::string(name), &createImpl<Derived>);
+            auto [it, inserted] = creators_.try_emplace(toLower(name), &createImpl<Derived>);
 
             if (!inserted)
                 throw std::runtime_error("Type already registered: " + std::string(name));
@@ -38,7 +52,7 @@ namespace Factory {
         /// @param ...args 
         /// @return nullptr if that type is not registered, else a unique_ptr to the Base class
         std::unique_ptr<Base> create(std::string_view name, Args... args) const {
-            auto it = creators_.find(std::string(name));
+            auto it = creators_.find(toLower(name));
 
             if (it == creators_.end())
                 return nullptr;
@@ -47,7 +61,7 @@ namespace Factory {
         }
 
         bool contains(std::string_view name) const {
-            return creators_.find(std::string(name)) != creators_.end();
+            return creators_.find(toLower(name)) != creators_.end();
         }
 
     private:

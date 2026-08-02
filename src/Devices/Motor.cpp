@@ -1,6 +1,10 @@
 #include <Devices/Motor.hpp>
 
-Motor::Motor(const std::string& id, const std::string& type) : Device(id, type) {}
+Motor::Motor(const std::string& id, const std::string& type) 
+    : Device(id, type), throttle_(0.0), angularPosition_(0.0),
+      angularVelocity_(0.0), angularAcceleration_(0.0), maxAngularVelocity_(100.0),
+      maxAngularAcceleration_(100.0)
+    {}
 
 Motor::Motor(const std::string& id, double maxAngularVelocity, double maxAngularAcceleration, const std::string& type) 
     : Device(id, type), throttle_(0.0), angularPosition_(0.0),

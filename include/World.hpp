@@ -69,6 +69,7 @@ private:
     std::vector<std::unique_ptr<Object>> map_;
 
     uint32_t ROW_SIZE_;
+    uint32_t ROW_AMOUNT_;
 
 private:
     uint32_t WORLD_FILE_VERSION = 1;

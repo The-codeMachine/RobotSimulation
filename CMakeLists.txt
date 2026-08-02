@@ -19,12 +19,12 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(nlohmann_json)
 
-add_library(RobotSimulationLib
-    src/world.cpp
-    src/robot.cpp
-    src/object.cpp
-    src/Devices/Motor.cpp
+file(GLOB_RECURSE SOURCE_FILES
+    CONFIGURE_DEPENDS 
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
 )
+
+add_library(RobotSimulationLib ${SOURCE_FILES})
 
 target_include_directories(RobotSimulationLib
     PUBLIC

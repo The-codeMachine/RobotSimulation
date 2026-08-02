@@ -51,7 +51,8 @@ Only subclasses of the factory's base class may be registere. Attempting the reg
 error.
 
 Identifiers should be unique within a factory. Registering the same identifier multiple times is considered an error (and might cause
-race conditions).
+race conditions). All identifiers are turned into lowercases. This is not case sensitive. "Robot", "robot", and "roBoT" are all the
+same according to the ```Factory```.
 
 ## Construction
 

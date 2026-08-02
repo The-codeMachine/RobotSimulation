@@ -8,9 +8,7 @@ foreach(TEST_FILE_PATH ${TEST_FILES})
 
     add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
 
-    set_tests_properties(${TEST_NAME} PROPERTIES 
+    set_tests_properties(${TEST_NAME} PROPERTIES
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     )
 endforeach()
-
-add_subdirectory(devices)

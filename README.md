@@ -10,7 +10,7 @@ list of devices. The only objects that can populate a world consist of:
 
 ### Design & Documentation
 
-Design notes and documentation are found in the docs directory. Code comments can be found in the header. Design notes are described in documents, while implementations are described in code files. 
+Design notes and documentation are found in the docs directory. Code comments can be found in the header. Design notes are described in documents, while implementations are described in code files. The docs/ subdirectory is here: [docs/](docs/)
 
 ### Compilation & Running tests
 
@@ -37,3 +37,10 @@ cmake --build build
 # runs the tests
 ctest --test-dir build -C Debug --output-on-failure
 ```
+
+### Notes
+
+ - Release and distribution code has not been released, created, or tested. Once distribution code has been released, you will be able to simply
+  download the ```lib```/```a``` file. 
+ - Ctests have been made and every release ensures they all past. But, GitHub Actions has not been setup yet. 
+ - The CMakeLists.txt will attempt to fetch all of its dependencies. Currently, this is only ```nlohmann::json``` but may be more later. 
