@@ -65,6 +65,11 @@ public:
         return *ptr;
     }
 
+    /// @brief Adds a device based off a constructed unique pointer
+    /// @param device 
+    /// @return a device reference to the object that was inserted
+    Device& addDevice(std::unique_ptr<Device> device);
+
     /// @brief Gets device T. Returns nullptr if it does not exist
     /// @tparam T 
     /// @param id
@@ -84,6 +89,9 @@ public:
     /// @brief This updates the robot based off deltaTime 
     /// @param deltaTime 
     void update(long long deltaTime);
+
+private:
+    void sortDevices();
 
 private:
     std::vector<std::unique_ptr<Device>> devices_;

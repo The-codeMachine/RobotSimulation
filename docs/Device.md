@@ -27,6 +27,10 @@ in the destructor).
 ```update``` is where most of the functionality occurs, based off the ```deltaTime``` it should
 update something about the device, or robot. 
 
+```updatePriority``` outputs the Device's update priority. This ensures that the devices are updated
+sequentially. Currently, this is a non-static function but works in a similar way to a static function.
+Perhaps we will give the user the ability to specify it, I am not sure yet. Default = 0. 
+
 ### References
 
 - [Robot](Robot.md)

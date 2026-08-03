@@ -61,6 +61,12 @@ public:
         return id_;
     }
 
+    /// @brief Gets and returns the objects update priority. This is so the updates are done sequentially
+    /// @return the object's update priority (default = 0)
+    virtual int updatePriority() const noexcept {
+        return 0;
+    }
+
 protected:
     Robot* robot_ = nullptr;
 

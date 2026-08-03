@@ -5,11 +5,13 @@ Robot::Robot(World& world, Transform t) : Object(world, t, "Robot") {}
 void Robot::deserialize(const nlohmann::json& json) {
     Object::deserialize(json);
 
-    size_t i = 0;
-    for (const auto& j : json["data"]["devices"]) {
-        devices_.push_back(std::move(Device::Device_Factory.create(j["type"], j["id"])));
-        devices_[i]->deserialize(j);
-        i++;
+    devices_.clear();
+
+    for (const auto& j : json.at("data").at("devices")) {
+        auto device = Device::Device_Factory.create(j.at("type"), j.at("id"));
+        device->deserialize(j);
+
+        addDevice<Device>(std::move(device));
     }
 }
 
@@ -33,7 +35,15 @@ void Robot::registerRobot() {
     Object::Object_Factory.registerType<Robot>("Robot");
 }
 
+Device& Robot::addDevice(std::unique_ptr<Device> device) {
+    return addDevice<Device>(std::move(device));
+}
+
 void Robot::update(long long deltaTime) {
     for (auto& d : devices_) 
         d->update(deltaTime);
+}
+
+void Robot::sortDevices() {
+    std::ranges::sort(devices_, {}, &Device::updatePriority);
 }

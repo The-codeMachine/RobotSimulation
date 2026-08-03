@@ -6,6 +6,8 @@ Construction requires you to define its limits like max angular velocity and max
 
 Either than limit construction you only have control over throttle from ```-1.0``` to ```1.0```. 1 being full forward and -1 being full backwards. 
 
+Default updatePriority is 0, just as ```Device``` specifies. 
+
 ## References
 
 - [Device](../Device.md)
