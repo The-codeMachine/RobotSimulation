@@ -1,9 +1,55 @@
 #include <Devices/DifferentialDrive.hpp>
 
+#include <World.hpp>
 #include <Robot.hpp>
 
 #include <cmath>
 #include <stdexcept>
+
+DifferentialDriveTrajectory::DifferentialDriveTrajectory(
+    Vector2 position, double rotation, double linearVelocity,
+    double angularVelocity, double deltaTime
+) : position_(position), rotation_(rotation), linearVelocity_(linearVelocity),
+    angularVelocity_(angularVelocity), deltaTime_(deltaTime) 
+{
+    if (deltaTime < 0.0)
+        throw std::invalid_argument("Trajectory delta time cannot be negative");
+}
+
+Vector2 DifferentialDriveTrajectory::position(double t) const {
+    const double time = t * deltaTime_;
+    const double theta = rotation_;
+    const double omega = angularVelocity_;
+
+    if (std::abs(omega) < 1e-9) {
+        double x = position_.x + linearVelocity_ * std::cos(theta) * time;
+        double y = position_.y + linearVelocity_ * std::sin(theta) * time;
+        
+        return {x, y};
+    }
+
+    const double radius = linearVelocity_ / omega;
+    const double newTheta = theta + omega * time;
+
+    return {
+        position_.x + radius * (std::sin(newTheta) - std::sin(theta)),
+        position_.y + radius * (std::cos(theta) - std::cos(newTheta))
+    };
+}
+
+Vector2 DifferentialDriveTrajectory::velocity(double t) const {
+    const double time = t * deltaTime_;
+    const double theta = rotation_ + angularVelocity_ * time;
+
+    return {
+        linearVelocity_ * std::cos(theta),
+        linearVelocity_ * std::sin(theta)
+    };
+}
+
+double DifferentialDriveTrajectory::rotation(double t) const {
+    return rotation_ + angularVelocity_ * deltaTime_ * t;
+}
 
 DifferentialDrive::DifferentialDrive(const std::string& id, const std::string& type) : 
             DifferentialDrive(id, "__undefined__", "__undefined__", 0.001, 0.001, type) {}
@@ -38,7 +84,7 @@ void DifferentialDrive::onAttach(Robot& robot) {
         throw std::runtime_error("DifferentialDrive: right motor '" + rightMotorId_ + "' was not found");
 }
 
-void DifferentialDrive::update(long long deltaTime) {
+void DifferentialDrive::update(double deltaTime) {
     if (!robot_)
         throw std::runtime_error("DifferentialDrive is not attached to robot");
 
@@ -49,34 +95,39 @@ void DifferentialDrive::update(long long deltaTime) {
     if (deltaTime < 0)
         throw std::invalid_argument("deltaTime cannot be negative");
 
-    const double dt = static_cast<double>(deltaTime) / 1000.0;
+    const double dt = static_cast<double>(deltaTime);
 
     const double leftVelocity = leftMotor_->getAngularVelocity() * wheelRadius_;
-    const double rightVelocity = rightMotor_->getAngularAcceleration() * wheelRadius_;
+    const double rightVelocity = rightMotor_->getAngularVelocity() * wheelRadius_;
 
     linearVelocity_ = (rightVelocity + leftVelocity) / 2.0;
     angularVelocity_ = (rightVelocity - leftVelocity) / wheelBase_;
 
-    Transform transform = robot_->transform();
+    const Transform& transform = robot_->transform();
     
-    const double theta = transform.rotation;
+    DifferentialDriveTrajectory trajectory(
+        transform.position, transform.rotation,
+        linearVelocity_, angularVelocity_, dt
+    );
 
-    if (std::abs(angularVelocity_) < 1e-9) {
-        // straight line movement
-        transform.position.x += linearVelocity_ * std::cos(theta) * dt;
-        transform.position.y += linearVelocity_ * std::sin(theta) * dt;
-    } else {
-        // follows in a circular arc
-        const double radius = linearVelocity_ / angularVelocity_;
-        const double newTheta  = theta + angularVelocity_ * dt;
+    auto collision = robot_->world().cast(trajectory, *robot_);
+    
+    if (collision) {
+        Transform newTransform = transform;
 
-        transform.position.x += radius * (std::sin(newTheta) - std::sin(theta));
-        transform.position.y += radius * (-std::cos(newTheta) + std::cos(theta));
+        newTransform.position = collision->position;
+        newTransform.rotation = trajectory.rotation(collision->time);
+        robot_->setTransform(newTransform);
 
-        transform.rotation = newTheta;
-    } 
+        // collision response comes here later
+        return;
+    }
 
-    robot_->setTransform(transform);
+    Transform newTransform = transform;
+    newTransform.position = trajectory.position(1.0);
+    newTransform.rotation = trajectory.rotation(1.0);
+
+    robot_->setTransform(newTransform);
 }
 
 nlohmann::json DifferentialDrive::serialize() const {

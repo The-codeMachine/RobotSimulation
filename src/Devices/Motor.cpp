@@ -57,7 +57,7 @@ double Motor::getAngularAcceleration() const noexcept {
     return angularAcceleration_;
 }
 
-void Motor::update(long long deltaTime) {
+void Motor::update(double deltaTime) {
     // Convert milliseconds to seconds
     double dt = static_cast<double>(deltaTime) / 1000.0;
 

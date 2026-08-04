@@ -88,7 +88,7 @@ public:
 
     /// @brief This updates the robot based off deltaTime 
     /// @param deltaTime 
-    void update(long long deltaTime);
+    void update(double deltaTime);
 
 private:
     void sortDevices();

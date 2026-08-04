@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+#include <iostream>
 
 World::World(const nlohmann::json& world) : ROW_SIZE_(-1) {
     deserialize_(world);
@@ -45,6 +46,9 @@ void World::moveObject(Object& obj, const Transform& newTransform) {
 
     uint32_t oldIndex = convert_to_1D_(oldPosition);
     uint32_t newIndex = convert_to_1D_(newPosition);
+    
+    std::cout << "old index: " << oldIndex << "\n";
+    std::cout << "new index: " << newIndex << "\n";
 
     if (&*map_[oldIndex] != &obj)
         throw std::runtime_error("Object is not located at its recorded position");
@@ -54,11 +58,15 @@ void World::moveObject(Object& obj, const Transform& newTransform) {
         return;
     }
 
+    std::cout << oldPosition.x << ", " << oldPosition.y << "\n";
+    std::cout << newPosition.x << ", " << newPosition.y << "\n";
+
     if (!map_[newIndex]->isEmpty())
         throw std::runtime_error("Cannot move object into an occupied position");
 
     map_[newIndex] = std::move(map_[oldIndex]);
     map_[newIndex]->transform_ = newTransform;
+    map_[oldIndex] = std::move(Object::Object_Factory.create("Empty", *this, Transform(oldPosition, 0)));
 }
 
 std::optional<CollisionResult> World::cast(const Trajectory& trajectory, const Object& ignore) const {
@@ -124,7 +132,7 @@ void World::saveToFile(const std::filesystem::path& path) const {
 }
 
 uint32_t World::convert_to_1D_(Vector2 vec) const noexcept {
-    return (uint32_t)(vec.y * ROW_SIZE_ + vec.x);
+    return std::round(vec.y) * ROW_SIZE_ + std::round(vec.x);
 }
 
 bool World::valid_position_(Vector2 vec) const noexcept {

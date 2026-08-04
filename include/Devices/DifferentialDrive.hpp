@@ -1,9 +1,43 @@
 #pragma once
 
+#include <Collision.hpp>
+
 #include <Device.hpp>
 #include <Devices/Motor.hpp>
 
 #include <string>
+
+/// @brief Defines the DifferentialDrive's Trajectory. This
+/// extends from the Trajectory class. Calculates the
+/// location, velocity, and rotation of the DifferentialDrive. 
+class DifferentialDriveTrajectory final : public Trajectory {
+public:
+    DifferentialDriveTrajectory(Vector2 position, double rotation, double linearVelocity,
+                                double angularVelocity, double deltaTime);
+
+    /// @brief Gets the position of the trajectory based off the time
+    /// @param t 
+    /// @return the position of the trajectory based off the time
+    Vector2 position(double t) const override;
+
+    /// @brief Gets the velocity of the trajectory based off the time
+    /// @param t 
+    /// @return the velocity of the trajectory based off the time
+    Vector2 velocity(double t) const override;
+
+    /// @brief Gets the rotation of the trajectory based off the time
+    /// @param t 
+    /// @return the rotation of the trajectory based off the time
+    double rotation(double t) const;
+
+private:
+    Vector2 position_;
+    double rotation_;
+    double linearVelocity_;
+    double angularVelocity_;
+    double deltaTime_;
+
+};
 
 /// @brief This is a differential drive device. It references two motors which it converts
 /// their wheel velocities to linear/angular velocities which affect how the Robot moves.
@@ -23,7 +57,7 @@ public:
     
     /// @brief updates the Robot's transform, and the drive's velocities
     /// @param deltaTime 
-    void update(long long deltaTime) override;
+    void update(double deltaTime) override;
 
     nlohmann::json serialize() const override;
     void deserialize(const nlohmann::json& json) override;

@@ -58,7 +58,7 @@ public:
 
     /// @brief updates the motor based off delta time
     /// @param deltaTime 
-    void update(long long deltaTime) override;
+    void update(double deltaTime) override;
 
 private:
     double throttle_;

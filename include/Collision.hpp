@@ -147,7 +147,8 @@ struct CollisionResult {
 /// @param upper 
 /// @param epsilon 
 /// @return the numeric root of two values 
-std::optional<double> findRoot(const std::function<double(double)>& function, double lower, double upper, double epsilon = 1e-10);
+std::optional<double> findRoot(const std::function<double(double)>& function, 
+    double lower, double upper, double epsilon = 1e-10);
 
 /// @brief Casts a trajectory against a collider.
 ///

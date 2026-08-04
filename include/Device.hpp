@@ -53,7 +53,7 @@ public:
 
     /// @brief Updates this device
     /// @param deltaTime 
-    virtual void update(long long deltaTime) = 0;
+    virtual void update(double deltaTime) = 0;
 
     /// @brief Gets the id 
     /// @return a copy of the id

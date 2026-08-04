@@ -41,7 +41,7 @@ Device& Robot::addDevice(std::unique_ptr<Device> device) {
     return addDevice<Device>(std::move(device));
 }
 
-void Robot::update(long long deltaTime) {
+void Robot::update(double deltaTime) {
     for (auto& d : devices_) 
         d->update(deltaTime);
 }

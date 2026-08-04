@@ -21,16 +21,16 @@ public:
         counter_ = json.at("data").at("counter");
     }
 
-    void update(long long deltaTime) override {
+    void update(double deltaTime) override {
         counter_ = deltaTime;
     }
 
-    long long counter() const noexcept {
+    double counter() const noexcept {
         return counter_;
     }
 
 private:
-    long long counter_;
+    double counter_;
 
 };
 
@@ -52,7 +52,7 @@ int main() {
     assert(found != nullptr);
     assert(found == &d);
 
-    for (long long i = 0; i < 5; ++i) {
+    for (double i = 0; i < 5; ++i) {
         robot.update(i);
     }
 
