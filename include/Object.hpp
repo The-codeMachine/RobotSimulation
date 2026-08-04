@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Factory.hpp"
+#include <Factory.hpp>
+#include <Collision.hpp>
 
 #include <nlohmann/json.hpp>
 
@@ -8,23 +9,13 @@
 
 class World;
 
-/// @brief This is one position in the world. It 
-/// consists of an x and y value. They can be
-/// any real value that the world will support. 
-struct Vector2 { 
-    double x;
-    double y;
-
-    bool operator==(Vector2 other);
-};
-
 /// @brief This is the positional and rotational
 /// structure. Every object within the world has this.
 /// Rotation is represented as radians. 
 struct Transform {
     Transform();
     Transform(Vector2 vec, double rot);
-    Transform(uint32_t x, uint32_t y, double rot);
+    Transform(double x, double y, double rot);
     Transform(const nlohmann::json& json);
 
     nlohmann::json serialize() const;
@@ -108,8 +99,8 @@ private:
     World* world_;
 
     Transform transform_;
-    std::string name_;
 
+    std::string name_;
     char glyph_;
 
     friend class World;

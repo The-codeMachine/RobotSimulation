@@ -61,6 +61,34 @@ void World::moveObject(Object& obj, const Transform& newTransform) {
     map_[newIndex]->transform_ = newTransform;
 }
 
+std::optional<CollisionResult> World::cast(const Trajectory& trajectory, const Object& ignore) const {
+    std::optional<CollisionResult> closest;
+
+    for (const auto& object : map_) {
+        if (object.get() == &ignore)
+            continue;
+
+        if (object->isEmpty())
+            continue;
+
+        // Currently every non-empty object is treated
+        // as a 1x1 wall-like AABB.
+        const Vector2 position = object->transform().position;
+        
+        AABBCollider collider(position, {position.x + 1.0, position.y + 1.0});
+        auto collision = castTrajectory(trajectory, collider, object.get());
+
+        if (!collision)
+            continue;
+
+        if (!closest || collision->time < closest->time) {
+            closest = std::move(collision);
+        }
+    }
+
+    return closest;
+}
+
 void World::replaceObject(std::unique_ptr<Object> value) {
     Vector2 pos = value->transform().position;
     if (!valid_position_(pos))

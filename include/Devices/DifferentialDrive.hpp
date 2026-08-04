@@ -10,6 +10,7 @@
 /// The Motors and this drive work separately. 
 class DifferentialDrive : public Device {
 public:
+    DifferentialDrive(const std::string& id, const std::string& type = "DifferentialDrive");
     DifferentialDrive(const std::string& id, const std::string& leftMotorId, const std::string& rightMotorId,
                       double wheelRadius, double wheelBase, const std::string& type = "DifferentialDrive");
 

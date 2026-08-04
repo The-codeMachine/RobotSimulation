@@ -1,13 +1,9 @@
 #include <Object.hpp>
 #include <World.hpp>
 
-bool Vector2::operator==(Vector2 other) {
-    return other.x == x && other.y == y;
-}
-
 Transform::Transform() : position({0, 0}), rotation(0) {}
 Transform::Transform(Vector2 vec, double rot) : position(vec), rotation(rot) {}
-Transform::Transform(uint32_t x, uint32_t y, double rot) : position({x, y}), rotation(rot) {}
+Transform::Transform(double x, double y, double rot) : position({x, y}), rotation(rot) {}
 Transform::Transform(const nlohmann::json& json) : position({json.at("x"), json.at("y")}), rotation(json.at("rotation")) {}
 
 nlohmann::json Transform::serialize() const {

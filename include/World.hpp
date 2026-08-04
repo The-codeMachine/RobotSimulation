@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Object.hpp>
+#include <Collision.hpp>
 
 #include <string>
 #include <filesystem>
@@ -35,6 +36,12 @@ public:
     /// @param obj 
     /// @param newTransform 
     void moveObject(Object& obj, const Transform& newTransform);
+
+    /// @brief Casts a collision ray based off trajectory current treats everything like an AABB wall
+    /// @param trajectory 
+    /// @param ignore 
+    /// @return the result of the collision ray cast
+    std::optional<CollisionResult> cast(const Trajectory& trajectory, const Object& ignore) const;
 
     /// @brief changes the ObjectType at a position to the new value
     /// @param pos

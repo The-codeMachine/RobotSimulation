@@ -5,6 +5,9 @@
 #include <cmath>
 #include <stdexcept>
 
+DifferentialDrive::DifferentialDrive(const std::string& id, const std::string& type) : 
+            DifferentialDrive(id, "__undefined__", "__undefined__", 0.001, 0.001, type) {}
+
 DifferentialDrive::DifferentialDrive(const std::string& id, const std::string& leftMotorId, const std::string& rightMotorId,
                                     double wheelRadius, double wheelBase, const std::string& type) : 
                                     Device(id, type), leftMotorId_(leftMotorId), rightMotorId_(rightMotorId),
@@ -16,6 +19,10 @@ DifferentialDrive::DifferentialDrive(const std::string& id, const std::string& l
 
     if (wheelBase <= 0.0)
         throw std::invalid_argument("Wheel base must be greater than zero");
+}
+
+void DifferentialDrive::registerDifferentialDrive() {
+    Device::Device_Factory.registerType<DifferentialDrive>("DifferentialDrive");
 }
 
 void DifferentialDrive::onAttach(Robot& robot) {
