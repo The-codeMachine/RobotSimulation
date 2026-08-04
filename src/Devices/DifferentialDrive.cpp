@@ -50,7 +50,7 @@ void DifferentialDrive::update(long long deltaTime) {
     linearVelocity_ = (rightVelocity + leftVelocity) / 2.0;
     angularVelocity_ = (rightVelocity - leftVelocity) / wheelBase_;
 
-    Transform& transform = robot_->transform();
+    Transform transform = robot_->transform();
     
     const double theta = transform.rotation;
 
@@ -68,7 +68,40 @@ void DifferentialDrive::update(long long deltaTime) {
 
         transform.rotation = newTheta;
     } 
+
+    robot_->setTransform(transform);
 }
+
+nlohmann::json DifferentialDrive::serialize() const {
+    nlohmann::json json = Device::serialize();
+
+    json["data"]["LeftMotorId"] = leftMotorId_;
+    json["data"]["RightMotorId"] = rightMotorId_;
+
+    json["data"]["WheelRadius"] = wheelRadius_;
+    json["data"]["WheelBase"] = wheelBase_;
+
+    json["data"]["LinearVelocity"] = linearVelocity_;
+    json["data"]["AngularVelocity"] = angularVelocity_;
+
+    return json;
+}
+
+void DifferentialDrive::deserialize(const nlohmann::json& json) {
+    Device::deserialize(json);
+
+    nlohmann::json data = json.at("data");
+
+    leftMotorId_ = data.at("LeftMotorId");
+    rightMotorId_ = data.at("RightMotorId");
+
+    wheelRadius_ = data.at("WheelRadius");
+    wheelBase_ = data.at("WheelBase");
+
+    linearVelocity_ = data.at("LinearVelocity");
+    angularVelocity_ = data.at("AngularVelocity");
+}
+
 
 double DifferentialDrive::getLinearVelicity() const noexcept {
     return linearVelocity_;

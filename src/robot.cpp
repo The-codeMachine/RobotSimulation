@@ -1,5 +1,7 @@
 #include <Robot.hpp>
 
+#include <cmath>
+
 Robot::Robot(World& world, Transform t) : Object(world, t, "Robot") {}
 
 void Robot::deserialize(const nlohmann::json& json) {

@@ -36,7 +36,32 @@ const Object& World::at(Vector2 pos) const {
     return *map_[convert_to_1D_(pos)];
 }
 
-void World::update(std::unique_ptr<Object> value) {
+void World::moveObject(Object& obj, const Transform& newTransform) {
+    Vector2 oldPosition = obj.transform().position;
+    Vector2 newPosition = newTransform.position;
+
+    if (!valid_position_(newPosition))
+        throw std::runtime_error("(x, y) is an invalid position for this world");
+
+    uint32_t oldIndex = convert_to_1D_(oldPosition);
+    uint32_t newIndex = convert_to_1D_(newPosition);
+
+    if (&*map_[oldIndex] != &obj)
+        throw std::runtime_error("Object is not located at its recorded position");
+
+    if (oldIndex == newIndex) {
+        obj.transform_ = newTransform;
+        return;
+    }
+
+    if (!map_[newIndex]->isEmpty())
+        throw std::runtime_error("Cannot move object into an occupied position");
+
+    map_[newIndex] = std::move(map_[oldIndex]);
+    map_[newIndex]->transform_ = newTransform;
+}
+
+void World::replaceObject(std::unique_ptr<Object> value) {
     Vector2 pos = value->transform().position;
     if (!valid_position_(pos))
         throw std::runtime_error("(x, y) is an invalid position for this world");
@@ -47,8 +72,8 @@ void World::update(std::unique_ptr<Object> value) {
 std::string World::toString() const noexcept {
     std::string out;
 
-    for (uint32_t y = 0; y < ROW_AMOUNT_; ++y) {
-        for (uint32_t x = 0; x < ROW_SIZE_; ++x) {
+    for (double y = 0; y < ROW_AMOUNT_; ++y) {
+        for (double x = 0; x < ROW_SIZE_; ++x) {
             out += map_[convert_to_1D_({x, y})]->glyph();
         }
 
@@ -71,7 +96,7 @@ void World::saveToFile(const std::filesystem::path& path) const {
 }
 
 uint32_t World::convert_to_1D_(Vector2 vec) const noexcept {
-    return vec.y * ROW_SIZE_ + vec.x;
+    return (uint32_t)(vec.y * ROW_SIZE_ + vec.x);
 }
 
 bool World::valid_position_(Vector2 vec) const noexcept {
@@ -103,7 +128,7 @@ void World::deserialize_(const nlohmann::json& world) {
         if (obj == nullptr)
             throw std::runtime_error("Failed to construct map, no conversion for: " + name + ". Check that you registered types before construction");
 
-        update(std::move(obj));
+        replaceObject(std::move(obj));
         map_[convert_to_1D_(t.position)]->deserialize(j);
     }
 }

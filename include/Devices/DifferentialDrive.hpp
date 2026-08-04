@@ -11,7 +11,7 @@
 class DifferentialDrive : public Device {
 public:
     DifferentialDrive(const std::string& id, const std::string& leftMotorId, const std::string& rightMotorId,
-                      double wheelRadiue, double wheelBase, const std::string& type = "DifferentialDrive");
+                      double wheelRadius, double wheelBase, const std::string& type = "DifferentialDrive");
 
     /// @brief Registers the differential drive into the devices factory
     static void registerDifferentialDrive();
@@ -51,6 +51,5 @@ private:
 
     double linearVelocity_;
     double angularVelocity_;
-
 
 };

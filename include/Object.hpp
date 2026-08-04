@@ -11,9 +11,11 @@ class World;
 /// @brief This is one position in the world. It 
 /// consists of an x and y value. They can be
 /// any real value that the world will support. 
-struct Vector2 {
-    uint32_t x;
-    uint32_t y;
+struct Vector2 { 
+    double x;
+    double y;
+
+    bool operator==(Vector2 other);
 };
 
 /// @brief This is the positional and rotational
@@ -46,7 +48,6 @@ public:
     static inline Factory::Factory<Object, World&, Transform> Object_Factory;
 
 public:
-    Object();
     Object(World& world, Transform transform = Transform(), const std::string& name = " ", char glyph = ' ');
 
     virtual ~Object();
@@ -60,12 +61,20 @@ public:
     virtual void deserialize(const nlohmann::json& json);
 
     /// @brief Gets this object's current transform
-    /// @return this object's current transform (reference)
-    Transform& transform();
-
-    /// @brief Gets this object's current transform
     /// @return this object's current transform (const reference)
     const Transform& transform() const;
+
+    /// @brief Updates the transform to a new location, updates World as well
+    /// @param transform 
+    void setTransform(const Transform& transform);
+    
+    /// @brief Updates the position of this object to a new location, updates the world as well
+    /// @param position 
+    void setPosition(Vector2 position);
+
+    /// @brief Updates the rotation of this object to a new location, updates the world as well 
+    /// @param rotation 
+    void setRotation(double rotation);
 
     /// @brief Gets the current world this object is in
     /// @return the current world this object is it (reference)
@@ -102,6 +111,8 @@ private:
     std::string name_;
 
     char glyph_;
+
+    friend class World;
 };
 
 /// @brief An empty square, sublass of Object, does nothing

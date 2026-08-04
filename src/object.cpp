@@ -1,4 +1,9 @@
 #include <Object.hpp>
+#include <World.hpp>
+
+bool Vector2::operator==(Vector2 other) {
+    return other.x == x && other.y == y;
+}
 
 Transform::Transform() : position({0, 0}), rotation(0) {}
 Transform::Transform(Vector2 vec, double rot) : position(vec), rotation(rot) {}
@@ -14,8 +19,6 @@ nlohmann::json Transform::serialize() const {
 
     return json;
 }
-
-Object::Object() : world_(nullptr), transform_(Transform()), name_("") {}
 
 Object::Object(World& world, Transform transform, const std::string& name, char glyph) : world_(&world), transform_(transform), name_(name), glyph_(glyph) {}
 
@@ -33,15 +36,23 @@ void Object::deserialize(const nlohmann::json& json) {
     name_ = json.at("type");
     std::string s = json.at("glyph");
     glyph_ = s[0];
-    transform_ = Transform(json.at("transform"));
-}
-
-Transform& Object::transform() {
-    return transform_;
+    setTransform(Transform(json.at("transform")));
 }
 
 const Transform& Object::transform() const {
     return transform_;
+}
+
+void Object::setTransform(const Transform& transform) {
+    world_->moveObject(*this, transform);
+}
+
+void Object::setPosition(Vector2 position) {
+    setTransform(Transform(position, transform().rotation));
+}
+
+void Object::setRotation(double rotation) {
+    setTransform(Transform(transform().position, rotation));
 }
 
 World& Object::world() {

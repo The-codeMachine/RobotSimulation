@@ -31,10 +31,15 @@ public:
     /// @return the current object at that position (const reference)
     const Object& at(Vector2 pos) const;
 
+    /// @brief Moves an object to a new Transform, checks for collisions
+    /// @param obj 
+    /// @param newTransform 
+    void moveObject(Object& obj, const Transform& newTransform);
+
     /// @brief changes the ObjectType at a position to the new value
     /// @param pos
     /// @param value 
-    void update(std::unique_ptr<Object> value);
+    void replaceObject(std::unique_ptr<Object> value);
 
     /// @brief converts the world into string for visual representation
     /// @return the world as a string
