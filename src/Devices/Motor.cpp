@@ -29,12 +29,14 @@ nlohmann::json Motor::serialize() const {
 }
 
 void Motor::deserialize(const nlohmann::json& json) {
-    angularPosition_        = json.at("angular_position");
-    angularVelocity_        = json.at("angular_velocity");
-    angularAcceleration_    = json.at("angular_acceleration");
+    nlohmann::json data = json.at("data");
 
-    maxAngularVelocity_     = json.at("max_angular_velocity");
-    maxAngularAcceleration_ = json.at("max_angular_acceleration");
+    angularPosition_        = data.at("angular_position");
+    angularVelocity_        = data.at("angular_velocity");
+    angularAcceleration_    = data.at("angular_acceleration");
+
+    maxAngularVelocity_     = data.at("max_angular_velocity");
+    maxAngularAcceleration_ = data.at("max_angular_acceleration");
 }
 
 void Motor::setThrottle(double power) {

@@ -3,7 +3,6 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
-#include <iostream>
 
 World::World(const nlohmann::json& world) : ROW_SIZE_(-1) {
     deserialize_(world);
@@ -47,9 +46,6 @@ void World::moveObject(Object& obj, const Transform& newTransform) {
     uint32_t oldIndex = convert_to_1D_(oldPosition);
     uint32_t newIndex = convert_to_1D_(newPosition);
     
-    std::cout << "old index: " << oldIndex << "\n";
-    std::cout << "new index: " << newIndex << "\n";
-
     if (&*map_[oldIndex] != &obj)
         throw std::runtime_error("Object is not located at its recorded position");
 
@@ -57,9 +53,6 @@ void World::moveObject(Object& obj, const Transform& newTransform) {
         obj.transform_ = newTransform;
         return;
     }
-
-    std::cout << oldPosition.x << ", " << oldPosition.y << "\n";
-    std::cout << newPosition.x << ", " << newPosition.y << "\n";
 
     if (!map_[newIndex]->isEmpty())
         throw std::runtime_error("Cannot move object into an occupied position");

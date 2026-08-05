@@ -133,14 +133,14 @@ void DifferentialDrive::update(double deltaTime) {
 nlohmann::json DifferentialDrive::serialize() const {
     nlohmann::json json = Device::serialize();
 
-    json["data"]["LeftMotorId"] = leftMotorId_;
-    json["data"]["RightMotorId"] = rightMotorId_;
-
-    json["data"]["WheelRadius"] = wheelRadius_;
-    json["data"]["WheelBase"] = wheelBase_;
-
-    json["data"]["LinearVelocity"] = linearVelocity_;
-    json["data"]["AngularVelocity"] = angularVelocity_;
+    json["data"] = {
+        {"LeftMotorId", leftMotorId_},
+        {"RightMotorId", rightMotorId_},
+        {"WheelRadius", wheelRadius_},
+        {"WheelBase", wheelBase_},
+        {"LinearVelocity", linearVelocity_},
+        {"AngularVelocity", angularVelocity_}
+    };
 
     return json;
 }
