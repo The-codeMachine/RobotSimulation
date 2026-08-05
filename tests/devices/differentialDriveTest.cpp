@@ -29,7 +29,7 @@ int main() {
     registerBuiltinObjects();
 
     {    
-        World world(std::filesystem::path("assets/tests/differentialDriveConstruction.json"));
+        World world(std::filesystem::path("assets/tests/DifferentialDriveConstruction.json"));
 
         Robot& robot = dynamic_cast<Robot&>(world.at({5, 5}));
 
