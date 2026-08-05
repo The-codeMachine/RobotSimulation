@@ -10,7 +10,7 @@ void Robot::deserialize(const nlohmann::json& json) {
     devices_.clear();
 
     for (const auto& j : json.at("data").at("devices")) {
-        auto device = Device::Device_Factory.create(j.at("type"), j.at("id"));
+        auto device = Device::Device_Factory.create(std::string_view(j.at("type")), j.at("id"));
         device->deserialize(j);
 
         addDevice<Device>(std::move(device));

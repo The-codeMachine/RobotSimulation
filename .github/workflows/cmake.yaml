@@ -18,7 +18,9 @@ jobs:
         include:
           - os: windows-latest
             name: Windows / MSVC
-            generator: "Visual Studio 17 2022"
+            generator: Ninja
+            c_compiler: cl 
+            cxx_compiler: cl
             config: Debug
 
           - os: ubuntu-latest
@@ -47,6 +49,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Set up MSVC
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
 
       - name: Configure CMake
         shell: bash
