@@ -8,40 +8,58 @@
 #include <optional>
 #include <stdexcept>
 
-bool Vector2::operator==(const Vector2& other) const noexcept {
+nlohmann::json Vector2::serialize() const {
+    return {
+        {"x", x},
+        {"y", y}
+    };
+}
+
+void Vector2::deserialize(const nlohmann::json& json) {
+    x = json.at("x");
+    y = json.at("y");
+}
+
+bool Vector2::operator==(Vector2 other) const noexcept {
     return x == other.x && y == other.y;
 }
 
-namespace {
+bool Vector2::operator!=(Vector2 other) const noexcept {
+    return !(*this == other);
+}
+
+Vector2 Vector2::operator+(Vector2 other) const noexcept {
+    return {x + other.x, y + other.y};
+}
+
+Vector2 Vector2::operator-(Vector2 other) const noexcept {
+    return {x - other.x, y - other.y};
+}
+
+Vector2 Vector2::operator*(double scalar) const noexcept {
+    return {x * scalar, y * scalar};
+}
+
+Vector2 Vector2::operator/(double scalar) const noexcept {
+    return {x / scalar, y / scalar};
+} 
 
 constexpr double NORMAL_EPSILON = 1e-12;
 
-Vector2 operator+(Vector2 lhs, Vector2 rhs) noexcept {
-    return {lhs.x + rhs.x, lhs.y + rhs.y};
-}
-
-Vector2 operator-(Vector2 lhs, Vector2 rhs) noexcept {
-    return {lhs.x - rhs.x, lhs.y - rhs.y};
-}
-
-Vector2 operator*(Vector2 lhs, double scalar) noexcept {
-    return {lhs.x * scalar, lhs.y * scalar};
-}
-
-double dot(Vector2 lhs, Vector2 rhs) noexcept {
+double Vector2::dot(Vector2 lhs, Vector2 rhs) noexcept {
     return lhs.x * rhs.x + lhs.y * rhs.y;
 }
 
-double lengthSquared(Vector2 value) noexcept {
-    return dot(value, value);
+double Vector2::lengthSquared(Vector2 value) noexcept {
+    return Vector2::dot(value, value);
 }
 
-double length(Vector2 value) noexcept {
-    return std::sqrt(lengthSquared(value));
+double Vector2::length(Vector2 value) noexcept {
+    return std::sqrt(Vector2::lengthSquared(value));
 }
 
-Vector2 normalize(Vector2 value) noexcept {
-    const double magnitude = length(value);
+Vector2 Vector2::normalize(Vector2 value) noexcept {
+    const double magnitude = Vector2::length(value);
 
     if (magnitude <= NORMAL_EPSILON)
         return {0.0, 0.0};
@@ -49,14 +67,12 @@ Vector2 normalize(Vector2 value) noexcept {
     return value * (1.0 / magnitude);
 }
 
-Vector2 clamp(Vector2 value, Vector2 minimum, Vector2 maximum) noexcept {
+Vector2 Vector2::clamp(Vector2 value, Vector2 minimum, Vector2 maximum) noexcept {
     return {
         std::clamp(value.x, minimum.x, maximum.x),
         std::clamp(value.y, minimum.y, maximum.y)
     };
 }
-
-} // namespace
 
 AcceleratedTrajectory::AcceleratedTrajectory(Vector2 position,
     Vector2 velocity, Vector2 acceleration, double deltaTime)
@@ -90,12 +106,37 @@ Vector2 AcceleratedTrajectory::velocity(double t) const {
     };
 }
 
-AABBCollider::AABBCollider(Vector2 minimum, Vector2 maximum)
-    : minimum_(minimum), maximum_(maximum)
+nlohmann::json Collider::serialize() const {
+    return {{"type", type_}};
+}
+
+AABBCollider::AABBCollider(Vector2 minimum, Vector2 maximum, const std::string& type)
+    : Collider(type), minimum_(minimum), maximum_(maximum)
 {
     if (minimum.x > maximum.x || minimum.y > maximum.y) {
         throw std::invalid_argument("AABB minimum must not exceed maximum");
     }
+}
+
+void AABBCollider::registerAABBCollider() {
+    Collider::Collider_Factory.registerType<AABBCollider>("AABBCollider");
+}
+
+void AABBCollider::deserialize(const nlohmann::json& json) {
+    Collider::deserialize(json);
+    
+    minimum_.deserialize(json.at("data").at("minimum"));
+    maximum_.deserialize(json.at("data").at("maximum"));
+}
+
+nlohmann::json AABBCollider::serialize() const {
+    nlohmann::json json = Collider::serialize();
+    json["data"] = {
+        {"minimum", minimum_.serialize()},
+        {"maximum", maximum_.serialize()}
+    };
+
+    return json;
 }
 
 Vector2 AABBCollider::minimum() const noexcept {
@@ -114,12 +155,12 @@ bool AABBCollider::contains(Vector2 point) const {
 }
 
 double AABBCollider::signedDistance(Vector2 point) const {
-    const Vector2 closest = clamp(point, minimum_, maximum_);
+    const Vector2 closest = Vector2::clamp(point, minimum_, maximum_);
     const Vector2 difference = point - closest;
 
     // Outside the AABB.
     if (difference.x != 0.0 || difference.y != 0.0)
-        return length(difference);
+        return Vector2::length(difference);
 
     // Inside the AABB.
     const double left   = point.x - minimum_.x;
@@ -130,11 +171,32 @@ double AABBCollider::signedDistance(Vector2 point) const {
     return -std::min({left, right, bottom, top});
 }
 
-CircleCollider::CircleCollider(Vector2 center, double radius)
-    : center_(center), radius_(radius)
+CircleCollider::CircleCollider(Vector2 center, double radius, const std::string& type)
+    : Collider(type), center_(center), radius_(radius)
 {
     if (radius < 0.0)
         throw std::invalid_argument("Circle radius cannot be negative");
+}
+
+void CircleCollider::registerCircleCollider() {
+    Collider::Collider_Factory.registerType<CircleCollider>("CircleCollider");
+}
+
+void CircleCollider::deserialize(const nlohmann::json& json) {
+    Collider::deserialize(json);
+
+    center_.deserialize(json.at("data").at("center"));
+    radius_ = json.at("data").at("radius");
+}
+
+nlohmann::json CircleCollider::serialize() const {
+    nlohmann::json json = Collider::serialize();
+    json["data"] = {
+        {"center", center_.serialize()},
+        {"radius", radius_}
+    };
+
+    return json;
 }
 
 Vector2 CircleCollider::center() const noexcept {
@@ -146,11 +208,11 @@ double CircleCollider::radius() const noexcept {
 }
 
 bool CircleCollider::contains(Vector2 point) const {
-    return lengthSquared(point - center_) <= radius_ * radius_;
+    return Vector2::lengthSquared(point - center_) <= radius_ * radius_;
 }
 
 double CircleCollider::signedDistance(Vector2 point) const {
-    return length(point - center_) - radius_;
+    return Vector2::length(point - center_) - radius_;
 }
 
 std::optional<double> findRoot(const std::function<double(double)>& function,
@@ -268,7 +330,7 @@ std::optional<CollisionResult> castTrajectory(const Trajectory& trajectory, cons
             const Vector2 before = trajectory.position(beforeT);
             const Vector2 after = trajectory.position(afterT);
 
-            const Vector2 normal = normalize(after - before);
+            const Vector2 normal = Vector2::normalize(after - before);
 
             return CollisionResult{collisionTime, collisionPosition,
                 normal, object};

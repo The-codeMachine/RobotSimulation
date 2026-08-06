@@ -5,7 +5,6 @@ import json
 import sys
 from pathlib import Path
 
-
 # JSON object type -> World string glyph
 TYPE_TO_GLYPH = {
     "Wall": "#",
@@ -62,14 +61,33 @@ def json_to_world(input_path: Path, output_path: Path) -> None:
                 f"No glyph mapping exists for object type '{object_type}'"
             )
 
+        # Validate the nested vector2 field.
+        if not isinstance(transform, dict):
+            raise RuntimeError(
+                f"Object '{object_type}' has an invalid 'transform'"
+            )
+
+        if "vector2" not in transform:
+            raise RuntimeError(
+                f"Object '{object_type}' transform is missing 'vector2'"
+            )
+
+        vector2 = transform["vector2"]
+
+        if not isinstance(vector2, dict):
+            raise RuntimeError(
+                f"Object '{object_type}' has an invalid 'vector2'"
+            )
+
         for field in ("x", "y"):
-            if field not in transform:
+            if field not in vector2:
                 raise RuntimeError(
-                    f"Object '{object_type}' transform is missing '{field}'"
+                    f"Object '{object_type}' transform.vector2 "
+                    f"is missing '{field}'"
                 )
 
-        x = transform["x"]
-        y = transform["y"]
+        x = vector2["x"]
+        y = vector2["y"]
 
         if not isinstance(x, int) or not isinstance(y, int):
             raise RuntimeError(
@@ -92,7 +110,11 @@ def json_to_world(input_path: Path, output_path: Path) -> None:
     world_string = "\n".join("".join(row) for row in grid)
 
     try:
-        with output_path.open("w", encoding="utf-8", newline="\n") as file:
+        with output_path.open(
+            "w",
+            encoding="utf-8",
+            newline="\n"
+        ) as file:
             file.write(world_string)
             file.write("\n")
     except OSError as e:
@@ -119,12 +141,16 @@ def main() -> int:
     args = parser.parse_args()
 
     if args.input.suffix.lower() != ".json":
-        print("Warning: input file does not have a .json extension",
-              file=sys.stderr)
+        print(
+            "Warning: input file does not have a .json extension",
+            file=sys.stderr
+        )
 
     if args.output.suffix.lower() != ".txt":
-        print("Warning: output file does not have a .txt extension",
-              file=sys.stderr)
+        print(
+            "Warning: output file does not have a .txt extension",
+            file=sys.stderr
+        )
 
     try:
         json_to_world(args.input, args.output)

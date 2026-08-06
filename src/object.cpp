@@ -4,16 +4,19 @@
 Transform::Transform() : position({0, 0}), rotation(0) {}
 Transform::Transform(Vector2 vec, double rot) : position(vec), rotation(rot) {}
 Transform::Transform(double x, double y, double rot) : position({x, y}), rotation(rot) {}
-Transform::Transform(const nlohmann::json& json) : position({json.at("x"), json.at("y")}), rotation(json.at("rotation")) {}
 
 nlohmann::json Transform::serialize() const {
     nlohmann::json json;
 
-    json["x"] = position.x;
-    json["y"] = position.y;
+    json["vector2"] = position.serialize();
     json["rotation"] = rotation;
 
     return json;
+}
+
+void Transform::deserialize(const nlohmann::json& json) {
+    position.deserialize(json.at("vector2"));
+    rotation = json.at("rotation");
 }
 
 Object::Object(World& world, Transform transform, const std::string& name, char glyph) : world_(&world), transform_(transform), name_(name), glyph_(glyph) {}
@@ -21,18 +24,27 @@ Object::Object(World& world, Transform transform, const std::string& name, char 
 Object::~Object() = default;
 
 nlohmann::json Object::serialize() const {
-    return {
-        {"type", name_}, 
-        {"glyph", std::string(1, glyph_)},
-        {"transform", transform_.serialize()}
-    };
+    nlohmann::json json;
+    if (collider_ != nullptr)
+        json["collider"] = collider_->serialize();
+
+    json["type"] = name_;
+    json["glyph"] = std::string(1, glyph_);
+    json["transform"] = transform_.serialize();
+
+    return json;
 }
 
 void Object::deserialize(const nlohmann::json& json) {
     name_ = json.at("type");
     std::string s = json.at("glyph");
     glyph_ = s[0];
-    setTransform(Transform(json.at("transform")));
+    transform_.deserialize(json.at("transform"));
+    
+    if (json.contains("collider")) {
+        collider_ = Collider::Collider_Factory.create(json.at("collider").at("type"));
+        collider_->deserialize(json.at("collider"));
+    }
 }
 
 const Transform& Object::transform() const {
@@ -49,6 +61,14 @@ void Object::setPosition(Vector2 position) {
 
 void Object::setRotation(double rotation) {
     setTransform(Transform(transform().position, rotation));
+}
+
+Collider& Object::collider() {
+    return *collider_;
+}
+
+const Collider& Object::collider() const {
+    return *collider_;
 }
 
 World& Object::world() {
@@ -93,6 +113,12 @@ Wall::Wall(World& world, Transform transform, const std::string& name) : Object(
 
 void Wall::registerWall() {
     Object::Object_Factory.registerType<Wall>("Wall");
+}
+
+void Wall::deserialize(const nlohmann::json& json) {
+    Object::deserialize(json);
+    if (collider_ == nullptr)
+        collider_ = Collider::Collider_Factory.create("AABBCollider");
 }
 
 bool Wall::isEmpty() const noexcept {

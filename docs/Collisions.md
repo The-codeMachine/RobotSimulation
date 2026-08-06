@@ -38,7 +38,7 @@ It provides equality comparison and is used throughout the collision system for:
 * Directions
 * Collision normals
 
-The collision implementation also provides internal vector operations including:
+The collision implementation also provides vector operations including:
 
 * Addition
 * Subtraction
@@ -47,8 +47,6 @@ The collision implementation also provides internal vector operations including:
 * Length
 * Normalization
 * Component-wise clamping
-
-These operations are internal implementation details and are not exposed as part of the collision API.
 
 ## Trajectories
 

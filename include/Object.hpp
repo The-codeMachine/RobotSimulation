@@ -19,6 +19,7 @@ struct Transform {
     Transform(const nlohmann::json& json);
 
     nlohmann::json serialize() const;
+    void deserialize(const nlohmann::json& json);
 
     Vector2 position;
     double rotation;
@@ -67,6 +68,31 @@ public:
     /// @param rotation 
     void setRotation(double rotation);
 
+    /// @brief Sets the collider and constructs it
+    /// @tparam T 
+    /// @tparam ...Args 
+    /// @param ...args 
+    template<typename T, typename... Args>
+    void setCollider(Args&&... args) {
+        return setCollider<T>(std::make_unique<T>(std::forward<Args>(args)...));
+    }
+
+    /// @brief Sets the collider based off a premade unique pointer
+    /// @tparam T 
+    /// @param collider 
+    template<typename T>
+    void setCollider(std::unique_ptr<Collider> collider) {
+        collider_ = std::move(collider);
+    }
+
+    /// @brief Gets the collider of this object 
+    /// @return this object's collider (reference)
+    Collider& collider();
+
+    /// @brief Gets the collider of this object 
+    /// @return this object's collider (const reference)
+    const Collider& collider() const;
+
     /// @brief Gets the current world this object is in
     /// @return the current world this object is it (reference)
     World& world();
@@ -104,6 +130,10 @@ private:
     char glyph_;
 
     friend class World;
+    
+protected:
+    std::unique_ptr<Collider> collider_;
+
 };
 
 /// @brief An empty square, sublass of Object, does nothing
@@ -122,6 +152,8 @@ public:
     Wall(World& world, Transform transform = Transform(), const std::string& name = "Wall");
 
     static void registerWall();
+
+    void deserialize(const nlohmann::json& json) override;
 
     bool isEmpty() const noexcept override;
 };

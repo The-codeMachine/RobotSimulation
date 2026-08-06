@@ -70,8 +70,10 @@ def world_to_json(input_path: Path, output_path: Path) -> None:
                 "type": object_type,
                 "glyph": glyph,
                 "transform": {
-                    "x": x,
-                    "y": y,
+                    "vector2": {
+                        "x": x,
+                        "y": y,
+                    },
                     "rotation": 0
                 }
             }

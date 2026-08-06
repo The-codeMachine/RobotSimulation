@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Collision.hpp>
 #include <Object.hpp>
 #include <Robot.hpp>
 
@@ -8,6 +9,9 @@
 
 /// @brief Registers all builtin objects. Must be done before constructing a world
 void registerBuiltinObjects() {
+    AABBCollider::registerAABBCollider();
+    CircleCollider::registerCircleCollider();
+    
     Motor::registerMotor();
     DifferentialDrive::registerDifferentialDrive();
 

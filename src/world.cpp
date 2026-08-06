@@ -72,11 +72,8 @@ std::optional<CollisionResult> World::cast(const Trajectory& trajectory, const O
         if (object->isEmpty())
             continue;
 
-        // Currently every non-empty object is treated
-        // as a 1x1 wall-like AABB.
         const Vector2 position = object->transform().position;
-        
-        AABBCollider collider(position, {position.x + 1.0, position.y + 1.0});
+        Collider& collider = object->collider();
         auto collision = castTrajectory(trajectory, collider, object.get());
 
         if (!collision)
@@ -148,7 +145,8 @@ void World::deserialize_(const nlohmann::json& world) {
 
     for (const auto j : world.at("objects")) {
         std::string name = j.at("type");
-        Transform t(j.at("transform"));
+        Transform t;
+        t.deserialize(j.at("transform"));
         
         if (!valid_position_(t.position))
             throw std::runtime_error("Invalid object position according to Row size and amount");

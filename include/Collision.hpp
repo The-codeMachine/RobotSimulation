@@ -1,5 +1,9 @@
 #pragma once
 
+#include <Factory.hpp>
+
+#include <nlohmann/json.hpp>
+
 #include <optional>
 #include <functional>
 #include <limits>
@@ -11,7 +15,28 @@ struct Vector2 {
     double x;
     double y;
 
-    bool operator==(const Vector2& other) const noexcept;
+    /// @brief Serializes the Vector2 into JSON
+    /// @return the Vector2 as JSON
+    nlohmann::json serialize() const;
+
+    /// @brief Deserializes the Vector2 from JSON
+    /// @param json 
+    void deserialize(const nlohmann::json& json);
+
+    bool operator==(Vector2 other) const noexcept;
+    bool operator!=(Vector2 other) const noexcept;
+
+    Vector2 operator+(Vector2 other) const noexcept;
+    Vector2 operator-(Vector2 other) const noexcept;
+    Vector2 operator*(double scalar) const noexcept;
+    Vector2 operator/(double scalar) const noexcept;
+
+    static double dot(Vector2 lhs, Vector2 rhs) noexcept;
+    static double lengthSquared(Vector2 value) noexcept;
+    static double length(Vector2 value) noexcept;
+
+    static Vector2 normalize(Vector2 value) noexcept;
+    static Vector2 clamp(Vector2 value, Vector2 minimum, Vector2 maximum) noexcept;
 };
 
 class Object;
@@ -62,7 +87,15 @@ private:
 /// @brief Base class for all collision shapes
 class Collider {
 public:
+    static inline Factory::Factory<Collider> Collider_Factory;
+
+public:
+    Collider(const std::string& type) : type_(type) {} 
+
     virtual ~Collider() = default;
+
+    virtual void deserialize(const nlohmann::json& json) {}
+    virtual nlohmann::json serialize() const;
 
     /// @brief Determines whether a point is inside the collider
     /// @param point 
@@ -80,20 +113,41 @@ public:
     virtual double signedDistance(Vector2 point) const = 0;
 
 private:
-    Vector2 minimum_;
-    Vector2 maximum_;
+    std::string type_;
 
 };
 
 /// @brief Axis-aligned bounding box collider
 class AABBCollider final : public Collider {
 public:
-    AABBCollider(Vector2 minimum, Vector2 maximum);
+    AABBCollider(Vector2 minimum = {0, 0}, Vector2 maximum = {0, 0}, const std::string& type = "AABBCollider");
 
+    static void registerAABBCollider();
+
+    /// @brief Deserializes this collider based off JSON
+    /// @param json 
+    void deserialize(const nlohmann::json& json) override;
+
+    /// @brief Serializes this collider to JSON
+    /// @return this collider represented as JSON
+    nlohmann::json serialize() const override;
+
+    /// @brief Gets the minimum Vector of this AABB collider
+    /// @return the minimum vector of this AABB collider
     Vector2 minimum() const noexcept;
+
+    /// @brief Gets the maximum Vector of this AABB collider
+    /// @return the maximum vector of this AABB collider
     Vector2 maximum() const noexcept;
 
+    /// @brief Checks whether this point is within this AABB collider
+    /// @param point 
+    /// @return true if the pointer is within this collider
     bool contains(Vector2 point) const override;
+
+    /// @brief Calculates the signed distance from the collider to this point
+    /// @param point 
+    /// @return the signed distance from the collider to this point 
     double signedDistance(Vector2 point) const override;
 
 private:
@@ -105,12 +159,34 @@ private:
 /// @brief A circular collider
 class CircleCollider final : public Collider {
 public:
-    CircleCollider(Vector2 center, double radius);
+    CircleCollider(Vector2 center = {0, 0}, double radius = 1, const std::string& type = "CircleCollider");
 
+    static void registerCircleCollider();
+
+    /// @brief Deserializes this collider based off JSON
+    /// @param json 
+    void deserialize(const nlohmann::json& json) override;
+
+    /// @brief Serializes this collider to JSON
+    /// @return this collider represented as JSON
+    nlohmann::json serialize() const override;
+
+    /// @brief Gets the center position of the circle of this collider
+    /// @return Vector2 position representing the center of the circle
     Vector2 center() const noexcept;
+
+    /// @brief Gets the radius of the circle of this collider
+    /// @return the radius of this circle
     double radius() const noexcept;
 
+    /// @brief Checks whether this point is within this circle collider
+    /// @param point 
+    /// @return true if the pointer is within this collider
     bool contains(Vector2 point) const override;
+
+    /// @brief Calculates the signed distance from the collider to this point
+    /// @param point 
+    /// @return the signed distance from the collider to this point 
     double signedDistance(Vector2 point) const override;
 
 private:
