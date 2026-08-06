@@ -121,7 +121,7 @@ void World::saveToFile(const std::filesystem::path& path) const {
     file.close();
 }
 
-uint32_t World::convert_to_1D_(Vector2 vec) const noexcept {
+size_t World::convert_to_1D_(Vector2 vec) const noexcept {
     return std::round(vec.y) * ROW_SIZE_ + std::round(vec.x);
 }
 
@@ -130,34 +130,109 @@ bool World::valid_position_(Vector2 vec) const noexcept {
 }
 
 void World::deserialize_(const nlohmann::json& world) {
-    if (world.at("version") != WORLD_FILE_VERSION)
+    if (!world.is_object())
+        throw std::runtime_error("World file root must be a JSON object");
+
+    const auto versionIt = world.find("version");
+    if (versionIt == world.end() || !versionIt->is_number_integer())
+        throw std::runtime_error("World file is missing a valid integer 'version'");
+
+    if (versionIt->get<int>() != WORLD_FILE_VERSION)
         throw std::runtime_error("Invalid world file version");
 
-    ROW_SIZE_ = world.at("ROW_SIZE");
-    ROW_AMOUNT_ = world.at("ROW_AMOUNT");
-    map_.reserve(ROW_SIZE_ * ROW_AMOUNT_);
+    const auto rowSizeIt = world.find("ROW_SIZE");
+    if (rowSizeIt == world.end() || !rowSizeIt->is_number_unsigned())
+        throw std::runtime_error("World file is missing a valid 'ROW_SIZE'");
 
-    // set all objects in the world to empty 
-    for (size_t i = 0; i < ROW_AMOUNT_ * ROW_SIZE_; ++i) {
-        Transform t(i % ROW_SIZE_, i / ROW_SIZE_, 0);
-        map_.push_back(Object::Object_Factory.create("Empty", *this, t));
+    const auto rowAmountIt = world.find("ROW_AMOUNT");
+    if (rowAmountIt == world.end() || !rowAmountIt->is_number_unsigned())
+        throw std::runtime_error("World file is missing a valid 'ROW_AMOUNT'");
+
+    const size_t rowSize = rowSizeIt->get<size_t>();
+    const size_t rowAmount = rowAmountIt->get<size_t>();
+
+    if (rowSize == 0)
+        throw std::runtime_error("World ROW_SIZE must be greater than zero");
+
+    if (rowAmount == 0)
+        throw std::runtime_error("World ROW_AMOUNT must be greater than zero");
+
+    if (rowAmount > std::numeric_limits<size_t>::max() / rowSize)
+        throw std::runtime_error("World dimensions are too large");
+
+    const size_t mapSize = rowSize * rowAmount;
+
+    const auto objectsIt = world.find("objects");
+    if (objectsIt == world.end() || !objectsIt->is_array())
+        throw std::runtime_error("World file is missing an 'objects' array");
+
+    std::vector<std::unique_ptr<Object>> newMap;
+    newMap.reserve(mapSize);
+
+    for (size_t i = 0; i < mapSize; ++i) {
+        Transform t(
+            static_cast<double>(i % rowSize),
+            static_cast<double>(i / rowSize),
+            0
+        );
+
+        auto obj = Object::Object_Factory.create("Empty", *this, t);
+
+        if (!obj)
+            throw std::runtime_error("Failed to create default Empty object");
+
+        newMap.push_back(std::move(obj));
     }
 
-    for (const auto j : world.at("objects")) {
-        std::string name = j.at("type");
+    // keeps track of the positions that have already been populated
+    std::vector<bool> occupied(mapSize, false);
+
+    for (const auto& j : *objectsIt) {
+        if (!j.is_object())
+            throw std::runtime_error("Every entry in 'objects' must be a JSON object");
+
+        const auto typeIt = j.find("type");
+        if (typeIt == j.end() || !typeIt->is_string())
+            throw std::runtime_error("World object is missing a valid string 'type'");
+
+        const auto transformIt = j.find("transform");
+        if (transformIt == j.end() || !transformIt->is_object())
+            throw std::runtime_error("World object is missing a valid 'transform'");
+
+        const std::string name = typeIt->get<std::string>();
+
         Transform t;
-        t.deserialize(j.at("transform"));
-        
-        if (!valid_position_(t.position))
-            throw std::runtime_error("Invalid object position according to Row size and amount");
-        
-        std::unique_ptr<Object> obj = Object::Object_Factory.create(name, *this, t);
-        if (obj == nullptr)
-            throw std::runtime_error("Failed to construct map, no conversion for: " + name + ". Check that you registered types before construction");
+        t.deserialize(*transformIt);
 
-        replaceObject(std::move(obj));
-        map_[convert_to_1D_(t.position)]->deserialize(j);
+        if (!valid_position_(t.position))
+            throw std::runtime_error("Invalid object position according to world dimensions");
+
+        const size_t index = convert_to_1D_(t.position);
+
+        if (index >= mapSize)
+            throw std::runtime_error("Object position converted to an invalid map index");
+
+        if (occupied[index])
+            throw std::runtime_error("Multiple objects occupy the same world position");
+
+        auto obj = Object::Object_Factory.create(name, *this, t);
+
+        if (!obj)
+            throw std::runtime_error(
+                "Failed to construct object of type '" +
+                name +
+                "'. Check that the type was registered before loading"
+            );
+
+        obj->deserialize(j);
+
+        newMap[index] = std::move(obj);
+        occupied[index] = true;
     }
+
+    ROW_SIZE_ = rowSize;
+    ROW_AMOUNT_ = rowAmount;
+    map_ = std::move(newMap);
 }
 
 nlohmann::json World::serialize_() const {

@@ -40,7 +40,6 @@ ctest --test-dir build -C Debug --output-on-failure
 
 ### TODO
 
- - We need to make a ```.yaml``` file for testing MacOS and Linux compatiability. 
  - We need to make a test linking this library to something completely else.
  - We need to make a demo, maybe make this open source and then maybe market it IDK how.
 

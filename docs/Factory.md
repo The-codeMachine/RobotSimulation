@@ -149,10 +149,6 @@ This provides several advantages:
 The factory is intended for one-time registration during application startup. Once initialization is complete, 
 registrations typically remain unchanged for the lifetime of the application.
 
-### TODO
-
- - Make it so that factory expects lowercase only types (will convert to lowercase only so it is not case-sensitive)
-
 ### References
 
  - [Object](Object.md)

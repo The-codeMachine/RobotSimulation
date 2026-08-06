@@ -71,12 +71,6 @@ to be making a true renderer on top of this library later that will base its ren
 include things like updates packets in JSON. Currently, however the ```toString``` function is used exclusively for
 debugging and simple conversions. 
 
-### TODO
-
- - Improve errors 
- - Catch serialization and deserialization errors and return better errors
- - Improve general safety of the world loading/saving
-
 ### References
 
 - [Object](Object.md)

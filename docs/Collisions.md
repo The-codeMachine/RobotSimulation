@@ -129,7 +129,8 @@ The collider interface provides geometric queries such as:
 * Determining the signed distance from a point to the collider.
 
 The collision system does not need to know the concrete collider type. It interacts with the abstract
-`Collider` interface instead.
+`Collider` interface instead. `Collider`s can be made using a Collider factory. Access through 
+`Collider::Collider_Factory` works just like `Object` and `Device` factories.  
 
 This makes it possible to add additional collider types without modifying the trajectory casting algorithm.
 
@@ -537,3 +538,4 @@ Collision response remains the responsibility of the higher-level physics or mov
 * [Device](Device.md)
 * [Robot](Robot.md)
 * [World](World.md)
+* [Factory](Factory.md)
