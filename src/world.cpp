@@ -43,8 +43,8 @@ void World::moveObject(Object& obj, const Transform& newTransform) {
     if (!valid_position_(newPosition))
         throw std::runtime_error("(x, y) is an invalid position for this world");
 
-    uint32_t oldIndex = convert_to_1D_(oldPosition);
-    uint32_t newIndex = convert_to_1D_(newPosition);
+    size_t oldIndex = convert_to_1D_(oldPosition);
+    size_t newIndex = convert_to_1D_(newPosition);
     
     if (&*map_[oldIndex] != &obj)
         throw std::runtime_error("Object is not located at its recorded position");
@@ -148,19 +148,19 @@ void World::deserialize_(const nlohmann::json& world) {
     if (rowAmountIt == world.end() || !rowAmountIt->is_number_unsigned())
         throw std::runtime_error("World file is missing a valid 'ROW_AMOUNT'");
 
-    const size_t rowSize = rowSizeIt->get<size_t>();
-    const size_t rowAmount = rowAmountIt->get<size_t>();
+    ROW_SIZE_ = rowSizeIt->get<size_t>();
+    ROW_AMOUNT_ = rowAmountIt->get<size_t>();
 
-    if (rowSize == 0)
+    if (ROW_SIZE_ == 0)
         throw std::runtime_error("World ROW_SIZE must be greater than zero");
 
-    if (rowAmount == 0)
+    if (ROW_AMOUNT_ == 0)
         throw std::runtime_error("World ROW_AMOUNT must be greater than zero");
 
-    if (rowAmount > std::numeric_limits<size_t>::max() / rowSize)
+    if (ROW_AMOUNT_ > std::numeric_limits<size_t>::max() / ROW_SIZE_)
         throw std::runtime_error("World dimensions are too large");
 
-    const size_t mapSize = rowSize * rowAmount;
+    const size_t mapSize = ROW_SIZE_ * ROW_AMOUNT_;
 
     const auto objectsIt = world.find("objects");
     if (objectsIt == world.end() || !objectsIt->is_array())
@@ -171,8 +171,8 @@ void World::deserialize_(const nlohmann::json& world) {
 
     for (size_t i = 0; i < mapSize; ++i) {
         Transform t(
-            static_cast<double>(i % rowSize),
-            static_cast<double>(i / rowSize),
+            static_cast<double>(i % ROW_SIZE_),
+            static_cast<double>(i / ROW_SIZE_),
             0
         );
 
@@ -230,8 +230,6 @@ void World::deserialize_(const nlohmann::json& world) {
         occupied[index] = true;
     }
 
-    ROW_SIZE_ = rowSize;
-    ROW_AMOUNT_ = rowAmount;
     map_ = std::move(newMap);
 }
 

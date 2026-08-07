@@ -36,6 +36,8 @@ private:
 };
 
 int main() {
+    try {
+
     registerBuiltinObjects();
     Device::Device_Factory.registerType<TestDevice>("Test_Device");
 
@@ -64,6 +66,8 @@ int main() {
     Robot& r = dynamic_cast<Robot&>(w.at({10, 5}));
 
     assert(r.getDevice<TestDevice>(id)->counter() == 4);
-
+    } catch (const std::exception& e) {
+        std::cout << e.what() << "\n";
+    }
     return 0;
 }
