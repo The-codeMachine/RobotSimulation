@@ -42,7 +42,7 @@ void Object::deserialize(const nlohmann::json& json) {
     transform_.deserialize(json.at("transform"));
     
     if (json.contains("collider")) {
-        collider_ = Collider::Collider_Factory.create(json.at("collider").at("type"));
+        collider_ = Collider::Collider_Factory.create(json.at("collider").at("type").get<std::string>());
         collider_->deserialize(json.at("collider"));
     }
 }
