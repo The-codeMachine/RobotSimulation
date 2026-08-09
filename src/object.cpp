@@ -19,7 +19,8 @@ void Transform::deserialize(const nlohmann::json& json) {
     rotation = json.at("rotation");
 }
 
-Object::Object(World& world, Transform transform, const std::string& name, char glyph) : world_(&world), transform_(transform), name_(name), glyph_(glyph) {}
+Object::Object(World& world, Transform transform, const std::string& name, char glyph) 
+            : world_(&world), transform_(transform), name_(name), glyph_(glyph) {}
 
 Object::~Object() = default;
 

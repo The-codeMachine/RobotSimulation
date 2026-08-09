@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Object.hpp>
+#include <Ray.hpp>
 #include <Collision.hpp>
 
 #include <string>
@@ -42,6 +43,8 @@ public:
     /// @param ignore 
     /// @return the result of the collision ray cast
     std::optional<CollisionResult> cast(const Trajectory& trajectory, const Object& ignore) const;
+
+    std::optional<RaycastResult> raycast() const;
 
     /// @brief changes the ObjectType at a position to the new value
     /// @param pos
