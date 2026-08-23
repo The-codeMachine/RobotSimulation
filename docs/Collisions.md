@@ -26,28 +26,6 @@ uses the Collider system for its physics calculations.
 This allows movement devices such as `DifferentialDrive` to use collision detection without implementing
 collision mathematics themselves.
 
-## Vector2
-
-`Vector2` represents a two-dimensional position or vector.
-
-It provides equality comparison and is used throughout the collision system for:
-
-* Positions
-* Velocities
-* Accelerations
-* Directions
-* Collision normals
-
-The collision implementation also provides vector operations including:
-
-* Addition
-* Subtraction
-* Scalar multiplication
-* Dot product
-* Length
-* Normalization
-* Component-wise clamping
-
 ## Trajectories
 
 A `Trajectory` represents the movement of an object over a single physics timestep.
@@ -539,3 +517,4 @@ Collision response remains the responsibility of the higher-level physics or mov
 * [Robot](Robot.md)
 * [World](World.md)
 * [Factory](Factory.md)
+* [Vector2](Vector2.md)
