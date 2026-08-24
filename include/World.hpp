@@ -3,6 +3,8 @@
 #include <Object.hpp>
 #include <Ray.hpp>
 #include <Collision.hpp>
+#include <Devices/Sensors/SensorShape.hpp>
+#include <Devices/Sensors/Image.hpp>
 
 #include <string>
 #include <filesystem>
@@ -44,7 +46,14 @@ public:
     /// @return the result of the collision ray cast
     std::optional<CollisionResult> cast(const Trajectory& trajectory, const Object& ignore) const;
 
+    /// @brief Casts a ray across the world (not implemented)
+    /// @return the raycast's result from its calculation 
     std::optional<RaycastResult> raycast() const;
+
+    /// @brief Senses all detections from a shape (needs to be optimized)
+    /// @param shape 
+    /// @return a vector of detections sensed from the shape
+    std::vector<Detection> sense(const SensorShape& shape) const noexcept;
 
     /// @brief changes the ObjectType at a position to the new value
     /// @param pos

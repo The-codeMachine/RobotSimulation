@@ -87,6 +87,21 @@ std::optional<CollisionResult> World::cast(const Trajectory& trajectory, const O
     return closest;
 }
 
+std::vector<Detection> World::sense(const SensorShape& shape) const noexcept {
+    std::vector<Detection> out;
+
+    for (const auto& obj : map_) {
+        const auto& transform = obj->transform();        
+
+        if (shape.contains(transform)) {
+            // copies the object and its position
+            out.push_back({std::make_unique<Object>(*obj), transform.position});
+        }
+    }
+
+    return out;
+}
+
 void World::replaceObject(std::unique_ptr<Object> value) {
     Vector2 pos = value->transform().position;
     if (!valid_position_(pos))
