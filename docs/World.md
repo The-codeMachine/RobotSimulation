@@ -63,6 +63,12 @@ You can update a location using the ```update``` function. This allows you to ch
 is at that location. This function only takes an ```std::unique_ptr<Object>``` as a parameter because Objects own where
 they are located, and that can simply be accessed. 
 
+## Sensing
+
+`World` can sense things based off a shape. `World` traverses the shape's world location within the `World`. Based off
+these result calculations it will return `std::vector<Detection>`. This can be used to construct an `Image`, or other
+sensor related objects. 
+
 ## To String
 
 The string conversion function converts the current world's situation into a string. It will not be as detailed as the
@@ -75,3 +81,5 @@ debugging and simple conversions.
 
 - [Object](Object.md)
 - [Robot](Robot.md)
+- [Sensor](Devices/Sensors/Sensor.md)
+- [SensorShape](Devices/Sensors/SensorShape.md)

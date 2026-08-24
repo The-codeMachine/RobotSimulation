@@ -32,3 +32,8 @@ For example, a future distance sensor could perform a raycast and store the resu
 The base class intentionally contains very little functionality. World queries such as raycasting belong to the `World` rather than to `Sensor`, allowing sensors to remain independent of the world's internal collision implementation.
 
 Future sensor-specific functionality such as update rates, noise models, and filtering should be added only when there is a concrete need for it.
+
+## References
+
+* [Device](../../Device.md)
+* [World](../../World.md)
