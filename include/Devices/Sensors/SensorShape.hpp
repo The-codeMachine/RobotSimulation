@@ -8,7 +8,10 @@
 /// transform. 
 class SensorShape {
 public:
+    SensorShape() = default;
     SensorShape(Transform origin);
+
+    virtual ~SensorShape() = default;
 
     virtual bool contains(Transform point) const noexcept = 0;
 

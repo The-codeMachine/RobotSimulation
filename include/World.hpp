@@ -53,7 +53,7 @@ public:
     /// @brief Senses all detections from a shape (needs to be optimized)
     /// @param shape 
     /// @return a vector of detections sensed from the shape
-    std::vector<Detection> sense(const SensorShape& shape) const noexcept;
+    std::vector<Detection> sense(const SensorShape& shape);
 
     /// @brief changes the ObjectType at a position to the new value
     /// @param pos
@@ -80,6 +80,11 @@ private:
     /// @param y as base-0
     /// @return true if it is valid
     bool valid_position_(Vector2 vec) const noexcept;
+
+    /// @brief Clones an object completely, and returns the clone
+    /// @param original 
+    /// @return the clone from the object
+    std::unique_ptr<Object> clone_object_(const Object& original);
 
     /// @brief constructs the world from a string
     /// @param world 

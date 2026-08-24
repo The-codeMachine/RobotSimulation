@@ -1,0 +1,75 @@
+#include <Devices/Sensors/Sensor.hpp>
+
+#include <Vector2.hpp>
+#include <Object.hpp>
+#include <World.hpp>
+#include <Robot.hpp>
+#include <Factory.hpp>
+#include <Device.hpp>
+
+#include <memory>
+#include <utility>
+
+Sensor::Sensor(const std::string& id, const std::string& type) 
+    : Device(id, type) {}
+
+Sensor::Sensor(std::unique_ptr<SensorShape> shape, Transform localTransform,
+    const std::string& id, const std::string& type) 
+    : Device(id, type), shape_(std::move(shape)), localTransform_(localTransform) {}
+
+SensorShape& Sensor::shape() {
+    return *shape_;
+}
+
+const SensorShape& Sensor::shape() const noexcept {
+    return *shape_;
+}
+
+Transform& Sensor::localTransform() {
+    return localTransform_;
+}
+
+const Transform& Sensor::localTransform() const noexcept {
+    return localTransform_;
+}
+
+void Sensor::update(double deltaTime) {
+    sense();
+}
+
+ViewSensor::ViewSensor(const std::string& id, const std::string& type) 
+    : Sensor(id, type) {}
+
+ViewSensor::ViewSensor(double fov, double range, Transform localTransform,
+    const std::string& id, const std::string& type) 
+    : Sensor(std::make_unique<SensorShapeCone>(Transform(Vector2{0, 0}, 0), fov, range), localTransform, id, type) {
+    // finish making the SensorShapeCone
+}
+
+void ViewSensor::registerViewSensor() {
+    Device::Device_Factory.registerType<ViewSensor>("ViewSensor");
+}
+    
+double& ViewSensor::fov() {
+    return dynamic_cast<SensorShapeCone*>(shape_.get())->fov();
+}
+
+const double& ViewSensor::fov() const noexcept {
+    return dynamic_cast<SensorShapeCone*>(shape_.get())->fov();
+}
+
+double& ViewSensor::range() {
+    return dynamic_cast<SensorShapeCone*>(shape_.get())->range();
+}
+
+const double& ViewSensor::range() const noexcept {
+    return dynamic_cast<SensorShapeCone*>(shape_.get())->range();
+}
+
+void ViewSensor::sense() {
+    image_ = Image(robot_->world().sense(shape()));
+}
+
+const Image& ViewSensor::image() const noexcept {
+    return image_;
+}

@@ -87,15 +87,15 @@ std::optional<CollisionResult> World::cast(const Trajectory& trajectory, const O
     return closest;
 }
 
-std::vector<Detection> World::sense(const SensorShape& shape) const noexcept {
+std::vector<Detection> World::sense(const SensorShape& shape) {
     std::vector<Detection> out;
 
     for (const auto& obj : map_) {
         const auto& transform = obj->transform();        
 
-        if (shape.contains(transform)) {
+        if (obj->name() != "Empty" && shape.contains(transform)) {
             // copies the object and its position
-            out.push_back({std::make_unique<Object>(*obj), transform.position});
+            out.push_back({std::move(clone_object_(*obj)), transform.position});
         }
     }
 
@@ -142,6 +142,15 @@ size_t World::convert_to_1D_(Vector2 vec) const noexcept {
 
 bool World::valid_position_(Vector2 vec) const noexcept {
     return vec.x < ROW_SIZE_ && vec.y < ROW_AMOUNT_;
+}
+
+std::unique_ptr<Object> World::clone_object_(const Object& original) {
+    auto copy = Object::Object_Factory.create(original.name(), *this, original.transform());
+    if (!copy)
+        throw std::runtime_error("Failed to create a copy of the original object");
+    
+    copy->deserialize(original.serialize());
+    return std::move(copy);
 }
 
 void World::deserialize_(const nlohmann::json& world) {
