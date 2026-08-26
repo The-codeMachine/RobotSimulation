@@ -10,12 +10,12 @@ SensorShape::SensorShape(Transform origin, const std::string& type)
     : origin_(origin), type_(type) {}
 
 nlohmann::json SensorShape::serialize() const noexcept {
-    return {
-        {"type", type_},
-        {"data", 
-            {"origin", origin_.serialize()}
-        }
-    };
+    nlohmann::json out;
+
+    out["type"] = type_;
+    out["data"]["origin"] = origin_.serialize();
+
+    return out;
 }
 
 void SensorShape::deserialize(const nlohmann::json& json) {

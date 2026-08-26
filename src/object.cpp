@@ -4,6 +4,9 @@
 Transform::Transform() : position({0, 0}), rotation(0) {}
 Transform::Transform(Vector2 vec, double rot) : position(vec), rotation(rot) {}
 Transform::Transform(double x, double y, double rot) : position({x, y}), rotation(rot) {}
+Transform::Transform(const nlohmann::json& json) {
+    deserialize(json);
+}
 
 nlohmann::json Transform::serialize() const {
     nlohmann::json json;

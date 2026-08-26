@@ -58,9 +58,15 @@ public:
     ViewSensor(const std::string& id, const std::string& type = "ViewSensor");
     ViewSensor(double fov, double range, Transform localTransform, 
         const std::string& id, const std::string& type = "ViewSensor");
+    ViewSensor(std::unique_ptr<SensorShape> shape, Transform localTransform,
+        const std::string& id, const std::string& type = "ViewSensor");
 
     /// @brief Registers the view sensor to the device factory
     static void registerViewSensor();
+
+    /// @brief Gets the Sensor's global world coordinates
+    /// @return the sensor's global world coordinates
+    Transform worldTransform() const;
 
     /// @brief Gets the FOV of the cone
     /// @return the FOV of the cone (reference)

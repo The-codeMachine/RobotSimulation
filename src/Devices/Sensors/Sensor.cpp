@@ -33,7 +33,7 @@ void Sensor::deserialize(const nlohmann::json& json) {
     
     // type is found in shape directly, and origin is inside the data
     nlohmann::json shape = json.at("data").at("shape");
-    shape_ = std::move(SensorShape::SensorShape_Factory.create(shape.at("type"), shape.at("data").at("origin")));
+    shape_ = std::move(SensorShape::SensorShape_Factory.create(shape.at("type").get<std::string>(), Transform(shape.at("data").at("origin"))));
     shape_->deserialize(shape);
 }
 
@@ -62,12 +62,24 @@ ViewSensor::ViewSensor(const std::string& id, const std::string& type)
 
 ViewSensor::ViewSensor(double fov, double range, Transform localTransform,
     const std::string& id, const std::string& type) 
-    : Sensor(std::make_unique<SensorShapeCone>(Transform(Vector2{0, 0}, 0), fov, range), localTransform, id, type) {
-    // finish making the SensorShapeCone
-}
+    : Sensor(std::make_unique<SensorShapeCone>(Transform(Vector2{0, 0}, 0), fov, range), localTransform, id, type) {}
+
+ViewSensor::ViewSensor(std::unique_ptr<SensorShape> shape, Transform localTransform,
+        const std::string& id, const std::string& type)
+        : Sensor(std::move(shape), localTransform, id, type) {}
 
 void ViewSensor::registerViewSensor() {
     Device::Device_Factory.registerType<ViewSensor>("ViewSensor");
+}
+
+Transform ViewSensor::worldTransform() const {
+    const Transform& t = robot_->transform();
+
+    return Transform{
+        t.position.x + localTransform_.position.x,
+        t.position.y + localTransform_.position.y,
+        std::fmod(t.rotation + localTransform_.rotation,360.0)
+    };
 }
 
 double& ViewSensor::fov() {
@@ -87,7 +99,31 @@ const double& ViewSensor::range() const noexcept {
 }
 
 void ViewSensor::sense() {
-    image_ = Image(robot_->world().sense(shape()));
+    if (!robot_)
+        throw std::runtime_error("ViewSensor is not attached to a robot");
+
+    const Transform& robotTransform = robot_->transform();
+
+    const double cosTheta = std::cos(robotTransform.rotation);
+    const double sinTheta = std::sin(robotTransform.rotation);
+
+    const double worldX = robotTransform.position.x +
+        localTransform_.position.x * cosTheta -
+        localTransform_.position.y * sinTheta;
+
+    const double worldY = robotTransform.position.y +
+        localTransform_.position.x * sinTheta +
+        localTransform_.position.y * cosTheta;
+
+    const double worldRotation = robotTransform.rotation + localTransform_.rotation;
+
+    SensorShapeCone worldShape(
+        Transform{{worldX, worldY}, worldRotation},
+        fov(),
+        range()
+    );
+
+    image_ = Image(robot_->world().sense(worldShape));
 }
 
 const Image& ViewSensor::image() const noexcept {
