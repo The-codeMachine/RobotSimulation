@@ -17,6 +17,26 @@ Sensor::Sensor(std::unique_ptr<SensorShape> shape, Transform localTransform,
     const std::string& id, const std::string& type) 
     : Device(id, type), shape_(std::move(shape)), localTransform_(localTransform) {}
 
+nlohmann::json Sensor::serialize() const noexcept {
+    nlohmann::json out = Device::serialize();
+
+    out["data"]["localTransform"] = localTransform_.serialize();
+    out["data"]["shape"] = shape_->serialize();
+
+    return out;
+}
+
+void Sensor::deserialize(const nlohmann::json& json) {
+    Device::deserialize(json);
+
+    localTransform_.deserialize(json.at("data").at("localTransform"));
+    
+    // type is found in shape directly, and origin is inside the data
+    nlohmann::json shape = json.at("data").at("shape");
+    shape_ = std::move(SensorShape::SensorShape_Factory.create(shape.at("type"), shape.at("data").at("origin")));
+    shape_->deserialize(shape);
+}
+
 SensorShape& Sensor::shape() {
     return *shape_;
 }
@@ -49,7 +69,7 @@ ViewSensor::ViewSensor(double fov, double range, Transform localTransform,
 void ViewSensor::registerViewSensor() {
     Device::Device_Factory.registerType<ViewSensor>("ViewSensor");
 }
-    
+
 double& ViewSensor::fov() {
     return dynamic_cast<SensorShapeCone*>(shape_.get())->fov();
 }

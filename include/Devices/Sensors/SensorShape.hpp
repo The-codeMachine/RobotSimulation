@@ -8,10 +8,21 @@
 /// transform. 
 class SensorShape {
 public:
-    SensorShape() = default;
-    SensorShape(Transform origin);
+    static inline Factory::Factory<SensorShape, Transform> SensorShape_Factory;
+
+public:
+    SensorShape(const std::string& type = "SensorShape");
+    SensorShape(Transform origin, const std::string& type = "SensorShape");
 
     virtual ~SensorShape() = default;
+
+    /// @brief Serializes a SensorShape 
+    /// @return JSON representing a base SensorShape (returning its origin)
+    virtual nlohmann::json serialize() const noexcept;
+
+    /// @brief Based off the inputted json, this will deconstruct the origin and set it
+    /// @param json 
+    virtual void deserialize(const nlohmann::json& json);
 
     virtual bool contains(Transform point) const noexcept = 0;
 
@@ -26,6 +37,9 @@ public:
 protected:
     Transform origin_;
 
+private:
+    std::string type_;
+
 };
 
 /// @brief This is a subclass of SensorShape. It 
@@ -35,8 +49,20 @@ protected:
 /// not based off the origin. 
 class SensorShapeQuadratic : public SensorShape {
 public:
-    SensorShapeQuadratic(const std::array<Transform, 4>& vertices);
+    SensorShapeQuadratic(Transform origin, const std::string& type = "SensorShapeQuadratic");
+    SensorShapeQuadratic(const std::array<Transform, 4>& vertices, const std::string& type = "SensorShapeQuadratic");
     
+    /// @brief Registers SensorShapeQuadratic into the SensorShape Factory
+    static void registerSensorShapeQuadratic();
+
+    /// @brief Serializes the SensorShapeQuadratic into JSON
+    /// @return JSON representing this object
+    nlohmann::json serialize() const noexcept override;
+
+    /// @brief Deserializes the SensorShapeQuadratic from JSON
+    /// @param json 
+    void deserialize(const nlohmann::json& json) override;
+
     /// @brief Gets the vertices
     /// @return the vertices as a const reference
     const std::array<Transform, 4>& vertices() const noexcept;
@@ -51,13 +77,17 @@ public:
     bool contains(Transform point) const noexcept override;
 
 private:
+    static inline constexpr size_t NUMBER_OF_VERTICES = 4;
+
+private:
     /// @brief Orders all the vertices counter-clockwise around the center
     /// @param vertices 
     /// @return the ordered array of vertices
-    static std::array<Transform, 4> order_vertices_(const std::array<Transform, 4>& vertices);
+    static std::array<Transform, NUMBER_OF_VERTICES> order_vertices_(const std::array<Transform, 4>& vertices);
 
 private:
-    std::array<Transform, 4> vertices_;
+    std::array<Transform, NUMBER_OF_VERTICES> vertices_;
+
 
 };
 
@@ -68,7 +98,19 @@ private:
 /// expands for view). This is based off the origin. 
 class SensorShapeCone : public SensorShape {
 public:
-    SensorShapeCone(Transform origin, double fov, double range);
+    SensorShapeCone(Transform origin, const std::string& type = "SensorShapeCone");
+    SensorShapeCone(Transform origin, double fov, double range, const std::string& type = "SensorShapeCone");
+    
+    /// @brief Registers SensorShapeCone into the SensorShape Factory
+    static void registerSensorShapeCone();
+    
+    /// @brief Serializes the SensorShapeCone into JSON
+    /// @return JSON representing this object
+    nlohmann::json serialize() const noexcept override;
+
+    /// @brief Deserializes the SensorShapeCone from JSON
+    /// @param json 
+    void deserialize(const nlohmann::json& json) override;
 
     /// @brief Gets the FOV
     /// @return the FOV as a reference
@@ -103,7 +145,19 @@ private:
 /// off a radius. 
 class SensorShapeBall : public SensorShape {
 public:
-    SensorShapeBall(Transform origin, double radius);
+    SensorShapeBall(Transform origin, const std::string& type = "SensorShapeBall");
+    SensorShapeBall(Transform origin, double radius, const std::string& type = "SensorShapeBall");
+
+    /// @brief Registers SensorShapeBall into the SensorShape Factory
+    static void registerSensorShapeBall();
+
+    /// @brief Serializes the SensorShapeBall into JSON
+    /// @return JSON representing this object
+    nlohmann::json serialize() const noexcept override;
+
+    /// @brief Deserializes the SensorShapeBall from JSON
+    /// @param json 
+    void deserialize(const nlohmann::json& json) override;
 
     /// @brief Gets the radius
     /// @return the radius as a reference

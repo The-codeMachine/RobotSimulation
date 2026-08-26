@@ -13,6 +13,14 @@ public:
 
     virtual ~Sensor() = default;
 
+    /// @brief Serializes the Sensor into JSON
+    /// @return JSON representing this Sensor
+    virtual nlohmann::json serialize() const noexcept override;
+
+    /// @brief Deserializes this Sensor from JSON
+    /// @param json 
+    virtual void deserialize(const nlohmann::json& json) override;
+
     /// @brief Gets the shape of the Sensor
     /// @return the shape of the sensor (reference)
     SensorShape& shape();
