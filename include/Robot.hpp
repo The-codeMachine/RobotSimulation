@@ -59,6 +59,8 @@ public:
 
         devices_.push_back(std::move(device));
 
+        sortDevices();
+
         ptr->robot_ = this;
         ptr->onAttach(*this);
 

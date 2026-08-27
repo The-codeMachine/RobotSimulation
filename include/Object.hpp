@@ -11,7 +11,7 @@ class World;
 
 /// @brief This is the positional and rotational
 /// structure. Every object within the world has this.
-/// Rotation is represented as radians. 
+/// Rotation is represented as degrees. 
 struct Transform {
     Transform();
     Transform(Vector2 vec, double rot);
