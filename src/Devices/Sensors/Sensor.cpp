@@ -60,12 +60,12 @@ void Sensor::update(double deltaTime) {
 ViewSensor::ViewSensor(const std::string& id, const std::string& type) 
     : Sensor(id, type) {}
 
-ViewSensor::ViewSensor(double fov, double range, Transform localTransform,
-    const std::string& id, const std::string& type) 
+ViewSensor::ViewSensor(const std::string& id, double fov, double range,
+    Transform localTransform, const std::string& type) 
     : Sensor(std::make_unique<SensorShapeCone>(Transform(Vector2{0, 0}, 0), fov, range), localTransform, id, type) {}
 
-ViewSensor::ViewSensor(std::unique_ptr<SensorShape> shape, Transform localTransform,
-        const std::string& id, const std::string& type)
+ViewSensor::ViewSensor(const std::string& id, std::unique_ptr<SensorShape> shape,
+    Transform localTransform, const std::string& type)
         : Sensor(std::move(shape), localTransform, id, type) {}
 
 void ViewSensor::registerViewSensor() {

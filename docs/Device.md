@@ -31,6 +31,15 @@ update something about the device, or robot.
 sequentially. Currently, this is a non-static function but works in a similar way to a static function.
 Perhaps we will give the user the ability to specify it, I am not sure yet. Default = 0. 
 
+## Factory Quirk
+
+Due to how `Factory` is constructed, all `Device`'s first argument must be `const std::string& id`. This
+allows the `Factory` to identify and build the `Device` object. There must also be a `const std::string type`.
+These are required. 
+
+There may be as many different type of arguments that you want, but there must be a id and type (id being
+before type). There must also be a default constructor consisting exclusively of an id and type. 
+
 ### References
 
 - [Robot](Robot.md)

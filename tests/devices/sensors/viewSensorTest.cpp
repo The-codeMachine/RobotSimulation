@@ -15,7 +15,7 @@ bool approximatelyEqual(double a, double b, double epsilon = 1e-9) {
 }
 
 void testViewSensorConstruction() {
-    ViewSensor sensor(90.0, 100.0, Transform{}, "camera");
+    ViewSensor sensor("camera", 90.0, 100.0, Transform{});
 
     assert(sensor.id() == "camera");
 
@@ -30,7 +30,7 @@ void testViewSensorConstruction() {
 }
 
 void testViewSensorAccessors() {
-    ViewSensor sensor(90.0, 100.0, Transform{}, "camera");
+    ViewSensor sensor("camera", 90.0, 100.0, Transform{});
 
     sensor.fov() = 120.0;
     sensor.range() = 250.0;
@@ -51,7 +51,7 @@ void testLocalTransform() {
     transform.position = {5.0, 10.0};
     transform.rotation = 2.0;
 
-    ViewSensor sensor(90.0, 100.0, transform, "camera");
+    ViewSensor sensor("camera", 90.0, 100.0, transform);
 
     assert(approximatelyEqual(sensor.localTransform().position.x, 5.0));
 
@@ -71,7 +71,7 @@ void testSensorShapeOwnership() {
     localTransform.position = {2.0, 3.0};
     localTransform.rotation = 0.5;
 
-    ViewSensor sensor(std::move(shape), localTransform, "camera");
+    ViewSensor sensor("camera", std::move(shape), localTransform);
 
     auto* cone = dynamic_cast<SensorShapeCone*>(&sensor.shape());
 
@@ -97,7 +97,7 @@ void testSensorCanOwnQuadraticShape() {
 
     auto shape = std::make_unique<SensorShapeQuadratic>(vertices);
 
-    ViewSensor sensor(std::move(shape), Transform{}, "camera");
+    ViewSensor sensor("camera", std::move(shape), Transform{});
 
     auto* quadratic = dynamic_cast<SensorShapeQuadratic*>(&sensor.shape());
 
@@ -107,7 +107,7 @@ void testSensorCanOwnQuadraticShape() {
 void testSensorCanOwnBallShape() {
     auto shape = std::make_unique<SensorShapeBall>(Transform{}, 10.0);
 
-    ViewSensor sensor(std::move(shape), Transform{}, "sensor");
+    ViewSensor sensor("sensor", std::move(shape), Transform{});
 
     auto* ball = dynamic_cast<SensorShapeBall*>(&sensor.shape());
 
@@ -127,7 +127,7 @@ void testSerialize() {
 
     transform.position = {4.0, 8.0};
     transform.rotation = 1.25;
-    ViewSensor sensor(75.0, 125.0, transform, "camera");
+    ViewSensor sensor("camera", 75.0, 125.0, transform);
     
     nlohmann::json json = sensor.serialize();
 
@@ -143,7 +143,7 @@ void testDeserialize() {
     transform.position = {4.0, 8.0};
     transform.rotation = 1.25;
 
-    ViewSensor original(75.0, 125.0, transform, "camera");
+    ViewSensor original("camera", 75.0, 125.0, transform);
 
     nlohmann::json json = original.serialize();
 
@@ -172,7 +172,7 @@ void testDeserialize() {
 }
 
 void testDeserializePreservesShapeType() {
-    ViewSensor original(90.0, 100.0, Transform{}, "camera");
+    ViewSensor original("camera", 90.0, 100.0, Transform{});
 
     nlohmann::json json = original.serialize();
 
@@ -194,7 +194,7 @@ void testSerializeDeserializeRoundTrip() {
     transform.position = {4.0, 8.0};
     transform.rotation = 1.25;
 
-    ViewSensor original(75.0, 125.0, transform, "camera");
+    ViewSensor original("camera", 75.0, 125.0, transform);
 
     nlohmann::json serialized = original.serialize();
 
