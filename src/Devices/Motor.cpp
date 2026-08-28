@@ -60,8 +60,10 @@ double Motor::getAngularAcceleration() const noexcept {
 }
 
 void Motor::update(double deltaTime) {
-    // Convert milliseconds to seconds
-    double dt = static_cast<double>(deltaTime) / 1000.0;
+    if (deltaTime < 0.0)
+        throw std::invalid_argument("Delta time cannot be negative");
+
+    double dt = static_cast<double>(deltaTime);
 
     /*
         Calculate desired velocity.
