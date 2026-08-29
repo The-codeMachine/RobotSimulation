@@ -40,3 +40,4 @@ target_link_libraries(RobotSimulationLib
 enable_testing()
 
 add_subdirectory(tests)
+add_subdirectory(examples) 
