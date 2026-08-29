@@ -63,54 +63,39 @@ void Motor::update(double deltaTime) {
     if (deltaTime < 0.0)
         throw std::invalid_argument("Delta time cannot be negative");
 
-    double dt = static_cast<double>(deltaTime);
+    if (deltaTime == 0.0)
+        return;
 
-    /*
-        Calculate desired velocity.
+    const double targetVelocity =
+        throttle_ * maxAngularVelocity_;
 
-        Example:
-        power = 0.5
-        max velocity = 20 rad/s
+    const double requiredAcceleration =
+        (targetVelocity - angularVelocity_) / deltaTime;
 
-        target = 10 rad/s
-    */
-    double targetVelocity = throttle_ * maxAngularVelocity_;
+    angularAcceleration_ =
+        std::clamp(
+            requiredAcceleration,
+            -maxAngularAcceleration_,
+            maxAngularAcceleration_
+        );
 
+    // Preserve the velocity at the beginning of the timestep.
+    const double initialVelocity = angularVelocity_;
 
-    /*
-        Calculate required acceleration.
+    // θ = θ₀ + v₀t + ½at²
+    angularPosition_ +=
+        initialVelocity * deltaTime +
+        0.5 * angularAcceleration_ * deltaTime * deltaTime;
 
-        a = (vf - vi) / t
-    */
-    double requiredAcceleration = (targetVelocity - angularVelocity_) / dt;
+    // v = v₀ + at
+    angularVelocity_ +=
+        angularAcceleration_ * deltaTime;
 
-
-    /*
-        Motors cannot accelerate infinitely.
-
-        Clamp acceleration.
-    */
-    angularAcceleration_ = std::clamp(requiredAcceleration, -maxAngularAcceleration_, maxAngularAcceleration_);
-
-
-    /*
-        Update velocity.
-
-        v = v0 + at
-    */
-    angularVelocity_ += angularAcceleration_ * dt;
-
-
-    /*
-        Prevent exceeding motor speed.
-    */
-    angularVelocity_ = std::clamp(angularVelocity_, -maxAngularVelocity_, maxAngularVelocity_);
-
-
-    /*
-        Update rotation.
-
-        θ = θ + ωt
-    */
-    angularPosition_ += angularVelocity_ * dt;
+    // Prevent numerical overshoot.
+    angularVelocity_ =
+        std::clamp(
+            angularVelocity_,
+            -maxAngularVelocity_,
+            maxAngularVelocity_
+        );
 }

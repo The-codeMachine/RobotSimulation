@@ -135,3 +135,7 @@ Release and distribution infrastructure is currently under development.
 Once a stable distribution system is available, releases will provide the appropriate build artifacts and instructions for integrating Robot Simulation into other C++ projects.
 
 Until then, building the library from source is the recommended approach.
+
+## Security Reporting
+
+Security reporting can be made to the maintainer's email address: [Rey Slimmon](mailto:coolestbro5113@gmail.com)

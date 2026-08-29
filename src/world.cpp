@@ -45,7 +45,7 @@ void World::moveObject(Object& obj, const Transform& newTransform) {
 
     size_t oldIndex = convert_to_1D_(oldPosition);
     size_t newIndex = convert_to_1D_(newPosition);
-    
+
     if (&*map_[oldIndex] != &obj)
         throw std::runtime_error("Object is not located at its recorded position");
 

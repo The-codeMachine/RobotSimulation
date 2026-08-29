@@ -33,12 +33,12 @@ int main() {
 
         Robot& robot = dynamic_cast<Robot&>(world.at({5, 5}));
 
-        Motor& leftMotor = robot.addDevice<Motor>("LeftMotor_DD", 100, 100);
+        Motor& leftMotor = robot.addDevice<Motor>("LeftMotor_DD", 20, 40);
 
-        Motor& rightMotor = robot.addDevice<Motor>("RightMotor_DD", 100, 100);
+        Motor& rightMotor = robot.addDevice<Motor>("RightMotor_DD", 20, 40);
 
         DifferentialDrive& drive = robot.addDevice<DifferentialDrive>(
-                "DD", "LeftMotor_DD", "RightMotor_DD", 4, 10
+                "DD", "LeftMotor_DD", "RightMotor_DD", 0.25, 1
         );
 
         // Verify the devices can be retrieved after registration.
@@ -46,13 +46,13 @@ int main() {
         assert(std::addressof(*robot.getDevice<Motor>("RightMotor_DD")) == std::addressof(rightMotor));
         assert(std::addressof(*robot.getDevice<DifferentialDrive>("DD")) == std::addressof(drive));
 
-        leftMotor.setThrottle(1.0);
-        rightMotor.setThrottle(1.0);
+        leftMotor.setThrottle(0.75);
+        rightMotor.setThrottle(0.75);
 
         const Vector2 initialPosition = robot.transform().position;
         const double initialRotation = robot.transform().rotation;
 
-        robot.update(1.5);
+        robot.update(1);
 
         const Vector2 firstPosition = robot.transform().position;
         const double firstRotation = robot.transform().rotation;
@@ -68,7 +68,7 @@ int main() {
 
         rightMotor.setThrottle(-1.0);
 
-        robot.update(8.0);
+        robot.update(2.0);
 
         const Vector2 finalPosition = robot.transform().position;
         const double finalRotation = robot.transform().rotation;
@@ -85,7 +85,7 @@ int main() {
 
         // file saving
         world.saveToFile("assets/tests/ddSaveTest.json");
-    }
+    } 
 
     // file loading
 

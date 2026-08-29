@@ -57,14 +57,15 @@ const Transform& Object::transform() const {
 
 void Object::setTransform(const Transform& transform) {
     world_->moveObject(*this, transform);
+    transform_ = transform;
 }
 
 void Object::setPosition(Vector2 position) {
-    setTransform(Transform(position, transform().rotation));
+    setTransform(Transform(position, transform_.rotation));
 }
 
 void Object::setRotation(double rotation) {
-    setTransform(Transform(transform().position, rotation));
+    setTransform(Transform(transform_.position, rotation));
 }
 
 Collider& Object::collider() {
