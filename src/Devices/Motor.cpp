@@ -22,7 +22,8 @@ nlohmann::json Motor::serialize() const {
         {"angular_velocity", angularVelocity_},
         {"angular_acceleration", angularAcceleration_},
         {"max_angular_velocity", maxAngularVelocity_},
-        {"max_angular_acceleration", maxAngularAcceleration_}
+        {"max_angular_acceleration", maxAngularAcceleration_},
+        {"throttle", throttle_}
     };
 
     return json;
@@ -37,6 +38,8 @@ void Motor::deserialize(const nlohmann::json& json) {
 
     maxAngularVelocity_     = data.at("max_angular_velocity");
     maxAngularAcceleration_ = data.at("max_angular_acceleration");
+
+    throttle_               = data.at("throttle");
 }
 
 void Motor::setThrottle(double power) {
@@ -66,36 +69,44 @@ void Motor::update(double deltaTime) {
     if (deltaTime == 0.0)
         return;
 
-    const double targetVelocity =
-        throttle_ * maxAngularVelocity_;
+    const double targetVelocity = throttle_ * maxAngularVelocity_;
+    const double velocityDiff = targetVelocity - angularVelocity_;
 
-    const double requiredAcceleration =
-        (targetVelocity - angularVelocity_) / deltaTime;
+    if (std::abs(velocityDiff) > 1e-9) {
+        // Determine acceleration direction based on the target velocity
+        angularAcceleration_ = (velocityDiff > 0.0) ? maxAngularAcceleration_ : -maxAngularAcceleration_;
 
-    angularAcceleration_ =
-        std::clamp(
-            requiredAcceleration,
-            -maxAngularAcceleration_,
-            maxAngularAcceleration_
-        );
+        // Calculate the exact time needed to reach target velocity
+        double timeToTarget = velocityDiff / angularAcceleration_;
 
-    // Preserve the velocity at the beginning of the timestep.
-    const double initialVelocity = angularVelocity_;
+        // If it reaches target velocity BEFORE deltaTime ends, split the step
+        if (timeToTarget < deltaTime) {
+            const double initialVelocity = angularVelocity_;
 
-    // θ = θ₀ + v₀t + ½at²
-    angularPosition_ +=
-        initialVelocity * deltaTime +
-        0.5 * angularAcceleration_ * deltaTime * deltaTime;
+            // Phase 1: Accelerate up to the target velocity
+            angularPosition_ += initialVelocity * timeToTarget + 0.5 * angularAcceleration_ * timeToTarget * timeToTarget;
+            angularVelocity_ = targetVelocity;
 
-    // v = v₀ + at
-    angularVelocity_ +=
-        angularAcceleration_ * deltaTime;
+            // Phase 2: Cruise at target velocity for the remaining time
+            const double remainingTime = deltaTime - timeToTarget;
+            angularPosition_ += angularVelocity_ * remainingTime;
+            
+            // Acceleration stops once target is reached
+            angularAcceleration_ = 0.0; 
+        } 
+        // Otherwise, it accelerates for the entire duration of deltaTime
+        else {
+            const double initialVelocity = angularVelocity_;
+            angularPosition_ += initialVelocity * deltaTime + 0.5 * angularAcceleration_ * deltaTime * deltaTime;
+            angularVelocity_ += angularAcceleration_ * deltaTime;
+        }
+    } 
+    // Already at target velocity: Constant velocity motion
+    else {
+        angularAcceleration_ = 0.0;
+        angularPosition_ += angularVelocity_ * deltaTime;
+    }
 
-    // Prevent numerical overshoot.
-    angularVelocity_ =
-        std::clamp(
-            angularVelocity_,
-            -maxAngularVelocity_,
-            maxAngularVelocity_
-        );
+    // Keep numerical safety clamp against floating-point drift
+    angularVelocity_ = std::clamp(angularVelocity_, -maxAngularVelocity_, maxAngularVelocity_);
 }

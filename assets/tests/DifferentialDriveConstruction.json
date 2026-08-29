@@ -1,7 +1,7 @@
 {
     "version": 1,
-    "ROW_SIZE": 10,
-    "ROW_AMOUNT": 10,
+    "ROW_SIZE": 31,
+    "ROW_AMOUNT": 21,
     "objects": [
         {
             "type": "Wall",
@@ -118,6 +118,237 @@
             "glyph": "#",
             "transform": {
                 "vector2": {
+                    "x": 10,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 11,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 12,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 13,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 14,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 15,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 16,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 17,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 18,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 19,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 20,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 21,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 22,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 23,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 24,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 25,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 26,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 27,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 28,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 29,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 30,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
                     "x": 0,
                     "y": 1
                 },
@@ -129,7 +360,7 @@
             "glyph": "#",
             "transform": {
                 "vector2": {
-                    "x": 9,
+                    "x": 30,
                     "y": 1
                 },
                 "rotation": 0
@@ -151,7 +382,7 @@
             "glyph": "#",
             "transform": {
                 "vector2": {
-                    "x": 9,
+                    "x": 30,
                     "y": 2
                 },
                 "rotation": 0
@@ -173,7 +404,7 @@
             "glyph": "#",
             "transform": {
                 "vector2": {
-                    "x": 9,
+                    "x": 30,
                     "y": 3
                 },
                 "rotation": 0
@@ -195,7 +426,7 @@
             "glyph": "#",
             "transform": {
                 "vector2": {
-                    "x": 9,
+                    "x": 30,
                     "y": 4
                 },
                 "rotation": 0
@@ -213,27 +444,11 @@
             }
         },
         {
-            "type": "Robot",
-            "glyph": "R",
-            "transform": {
-                "vector2": {
-                    "x": 5,
-                    "y": 5
-                },
-                "rotation": 0
-            },
-            "data": {
-                "devices": [
-                    
-                ]
-            }
-        },
-        {
             "type": "Wall",
             "glyph": "#",
             "transform": {
                 "vector2": {
-                    "x": 9,
+                    "x": 30,
                     "y": 5
                 },
                 "rotation": 0
@@ -255,7 +470,7 @@
             "glyph": "#",
             "transform": {
                 "vector2": {
-                    "x": 9,
+                    "x": 30,
                     "y": 6
                 },
                 "rotation": 0
@@ -277,7 +492,7 @@
             "glyph": "#",
             "transform": {
                 "vector2": {
-                    "x": 9,
+                    "x": 30,
                     "y": 7
                 },
                 "rotation": 0
@@ -299,7 +514,7 @@
             "glyph": "#",
             "transform": {
                 "vector2": {
-                    "x": 9,
+                    "x": 30,
                     "y": 8
                 },
                 "rotation": 0
@@ -312,6 +527,262 @@
                 "vector2": {
                     "x": 0,
                     "y": 9
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 30,
+                    "y": 9
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 0,
+                    "y": 10
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Robot",
+            "glyph": "R",
+            "transform": {
+                "vector2": {
+                    "x": 7,
+                    "y": 10
+                },
+                "rotation": 0
+            },
+            "data": {
+                "devices": []
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 30,
+                    "y": 10
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 0,
+                    "y": 11
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 30,
+                    "y": 11
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 0,
+                    "y": 12
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 30,
+                    "y": 12
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 0,
+                    "y": 13
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 30,
+                    "y": 13
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 0,
+                    "y": 14
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 30,
+                    "y": 14
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 0,
+                    "y": 15
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 30,
+                    "y": 15
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 0,
+                    "y": 16
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 30,
+                    "y": 16
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 0,
+                    "y": 17
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 30,
+                    "y": 17
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 0,
+                    "y": 18
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 30,
+                    "y": 18
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 0,
+                    "y": 19
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 30,
+                    "y": 19
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 0,
+                    "y": 20
                 },
                 "rotation": 0
             }
@@ -322,7 +793,7 @@
             "transform": {
                 "vector2": {
                     "x": 1,
-                    "y": 9
+                    "y": 20
                 },
                 "rotation": 0
             }
@@ -333,7 +804,7 @@
             "transform": {
                 "vector2": {
                     "x": 2,
-                    "y": 9
+                    "y": 20
                 },
                 "rotation": 0
             }
@@ -344,7 +815,7 @@
             "transform": {
                 "vector2": {
                     "x": 3,
-                    "y": 9
+                    "y": 20
                 },
                 "rotation": 0
             }
@@ -355,7 +826,7 @@
             "transform": {
                 "vector2": {
                     "x": 4,
-                    "y": 9
+                    "y": 20
                 },
                 "rotation": 0
             }
@@ -366,7 +837,7 @@
             "transform": {
                 "vector2": {
                     "x": 5,
-                    "y": 9
+                    "y": 20
                 },
                 "rotation": 0
             }
@@ -377,7 +848,7 @@
             "transform": {
                 "vector2": {
                     "x": 6,
-                    "y": 9
+                    "y": 20
                 },
                 "rotation": 0
             }
@@ -388,7 +859,7 @@
             "transform": {
                 "vector2": {
                     "x": 7,
-                    "y": 9
+                    "y": 20
                 },
                 "rotation": 0
             }
@@ -399,7 +870,7 @@
             "transform": {
                 "vector2": {
                     "x": 8,
-                    "y": 9
+                    "y": 20
                 },
                 "rotation": 0
             }
@@ -410,7 +881,238 @@
             "transform": {
                 "vector2": {
                     "x": 9,
-                    "y": 9
+                    "y": 20
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 10,
+                    "y": 20
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 11,
+                    "y": 20
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 12,
+                    "y": 20
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 13,
+                    "y": 20
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 14,
+                    "y": 20
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 15,
+                    "y": 20
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 16,
+                    "y": 20
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 17,
+                    "y": 20
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 18,
+                    "y": 20
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 19,
+                    "y": 20
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 20,
+                    "y": 20
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 21,
+                    "y": 20
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 22,
+                    "y": 20
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 23,
+                    "y": 20
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 24,
+                    "y": 20
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 25,
+                    "y": 20
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 26,
+                    "y": 20
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 27,
+                    "y": 20
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 28,
+                    "y": 20
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 29,
+                    "y": 20
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "transform": {
+                "vector2": {
+                    "x": 30,
+                    "y": 20
                 },
                 "rotation": 0
             }

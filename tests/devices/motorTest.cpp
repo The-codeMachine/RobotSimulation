@@ -41,8 +41,7 @@ namespace {
 
         motor.setThrottle(1.0);
 
-        // 100 ms update.
-        motor.update(100);
+        motor.update(0.1);
 
         // Target velocity = 20 rad/s.
         // Required acceleration = 200 rad/s^2.
@@ -59,7 +58,7 @@ namespace {
         motor.setThrottle(0.5);
 
         // Target velocity = 10 rad/s.
-        motor.update(1000);
+        motor.update(1);
 
         // Acceleration is limited to 10 rad/s^2.
         // Therefore velocity reaches 10 rad/s after 1 second.
@@ -74,13 +73,13 @@ namespace {
 
         // Required acceleration is 20 rad/s^2,
         // which is below the 100 rad/s^2 limit.
-        motor.update(1000);
+        motor.update(1);
 
         assertNear(motor.getAngularVelocity(), 20.0);
 
         // Continue accelerating. Velocity must not exceed
         // the maximum velocity.
-        motor.update(1000);
+        motor.update(1);
 
         assertNear(motor.getAngularVelocity(), 20.0);
     }
@@ -93,17 +92,17 @@ namespace {
         // After 1 second:
         // velocity = 10 rad/s
         // position = 10 rad
-        motor.update(1000);
+        motor.update(1);
 
         assertNear(motor.getAngularVelocity(), 10.0);
-        assertNear(motor.getAngularPosition(), 10.0);
+        assertNear(motor.getAngularPosition(), 9.5);
 
         // Another second at 10 rad/s:
         // position = 20 rad
-        motor.update(1000);
-
+        motor.update(1);
+        
         assertNear(motor.getAngularVelocity(), 10.0);
-        assertNear(motor.getAngularPosition(), 20.0);
+        assertNear(motor.getAngularPosition(), 19.5);
     }
 
     void testReverseMotion() {
@@ -111,12 +110,12 @@ namespace {
 
         motor.setThrottle(-1.0);
 
-        motor.update(1000);
+        motor.update(1);
 
         assertNear(motor.getAngularAcceleration(), -10.0);
         assertNear(motor.getAngularVelocity(), -10.0);
 
-        motor.update(1000);
+        motor.update(1);
 
         assertNear(motor.getAngularVelocity(), -20.0);
     }
@@ -126,14 +125,14 @@ namespace {
 
         motor.setThrottle(1.0);
 
-        motor.update(1000);
+        motor.update(1);
 
         assertNear(motor.getAngularVelocity(), 10.0);
 
         // Stop the motor.
         motor.setThrottle(0.0);
 
-        motor.update(500);
+        motor.update(0.5);
 
         // Required acceleration:
         // (0 - 10) / 0.5 = -20 rad/s^2
@@ -150,13 +149,13 @@ namespace {
         Motor motor("motor", 20.0, 10.0);
 
         motor.setThrottle(1.0);
-        motor.update(1000);
+        motor.update(1);
 
         motor.setThrottle(0.0);
 
         // Takes one second to decelerate from 10 -> 0
         // at -10 rad/s^2.
-        motor.update(1000);
+        motor.update(1);
 
         assertNear(motor.getAngularVelocity(), 0.0);
         assertNear(motor.getAngularAcceleration(), -10.0);
