@@ -1,10 +1,14 @@
-file(GLOB EXAMPLE_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
+file(GLOB TEST_FILES "*.cpp")
 
-foreach(EXAMPLE_FILE_PATH ${EXAMPLE_FILES})
-    get_filename_component(EXAMPLE_NAME ${EXAMPLE_FILE_PATH} NAME_WE)
-    
-    add_executable(${EXAMPLE_NAME} ${EXAMPLE_FILE_PATH})
-    
-    target_link_libraries(${EXAMPLE_NAME} PRIVATE RobotSimulationLib)
-    
+foreach(TEST_FILE_PATH ${TEST_FILES})
+    get_filename_component(TEST_NAME ${TEST_FILE_PATH} NAME_WE)
+
+    add_executable(${TEST_NAME} ${TEST_FILE_PATH})
+    target_link_libraries(${TEST_NAME} PRIVATE RobotSimulationLib)
+
+    add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
+
+    set_tests_properties(${TEST_NAME} PROPERTIES
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    )
 endforeach()
