@@ -30,7 +30,7 @@ Robot Simulation uses **CMake** and requires a compiler with C++20 support.
 
 MSVC 2026 is recommended for development, but the project is intended to be portable across C++20-compatible compilers.
 
-MSVC 2022 is tested. MSVC 2026 is recommended for development (needs to be added to CI). 
+MSVC 2022 is tested. MSVC 2026 is recommended for development.
 
 ### Configure the project
 

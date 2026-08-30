@@ -16,13 +16,23 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: windows-latest
-            name: Windows / MSVC
+          # Windows / MSVC 2022
+          - os: windows-2022
+            name: Windows / MSVC 2022
             generator: Ninja
-            c_compiler: cl 
+            c_compiler: cl
             cxx_compiler: cl
             config: Debug
 
+          # Windows / MSVC 2026
+          - os: windows-2025-vs2026
+            name: Windows / MSVC 2026
+            generator: Ninja
+            c_compiler: cl
+            cxx_compiler: cl
+            config: Debug
+
+          # Linux / GCC
           - os: ubuntu-latest
             name: Linux / GCC
             generator: Ninja
@@ -30,6 +40,7 @@ jobs:
             cxx_compiler: g++
             config: Debug
 
+          # Linux / Clang
           - os: ubuntu-latest
             name: Linux / Clang
             generator: Ninja
@@ -37,6 +48,7 @@ jobs:
             cxx_compiler: clang++
             config: Debug
 
+          # macOS / Apple Clang
           - os: macos-latest
             name: macOS / Apple Clang
             generator: Ninja
