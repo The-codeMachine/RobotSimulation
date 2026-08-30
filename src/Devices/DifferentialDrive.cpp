@@ -116,11 +116,12 @@ void DifferentialDrive::update(double deltaTime) {
     if (collision) {
         Transform newTransform = transform;
         
-        newTransform.position = collision->position;
-        newTransform.rotation = trajectory.rotation(collision->time);
+        // gets the position and rotation just before the collision
+        newTransform.position = trajectory.position(collision->time - 0.01);
+        newTransform.rotation = trajectory.rotation(collision->time - 0.01);
+        
         robot_->setTransform(newTransform);
         
-        // collision response comes here later
         return;
     }
     
