@@ -9,3 +9,9 @@ Testing/
 
 # exclude any .exe files
 *.exe
+
+# vscode files
+.vscode/
+
+# cmake user presets
+CMakeUsersPresets.json
