@@ -164,6 +164,7 @@
         {
             "name": "windows-vs2022-debug",
             "configurePreset": "windows-vs2022-debug",
+            "configuration": "Debug",
             "output": {
                 "outputOnFailure": true
             }
@@ -171,6 +172,7 @@
         {
             "name": "windows-vs2022-release",
             "configurePreset": "windows-vs2022-release",
+            "configuration": "Release",
             "output": {
                 "outputOnFailure": true
             }
@@ -178,6 +180,7 @@
         {
             "name": "windows-vs2026-debug",
             "configurePreset": "windows-vs2026-debug",
+            "configuration": "Debug",
             "output": {
                 "outputOnFailure": true
             }
@@ -185,6 +188,7 @@
         {
             "name": "windows-vs2026-release",
             "configurePreset": "windows-vs2026-release",
+            "configuration": "Release",
             "output": {
                 "outputOnFailure": true
             }
