@@ -9,38 +9,42 @@
 
     "configurePresets": [
         {
-            "name": "base",
-            "hidden": true,
-            "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/${presetName}"
+            "name": "windows-vs2022-debug",
+            "displayName": "Windows / MSVC 2022 / Debug",
+            "generator": "Visual Studio 17 2022",
+            "architecture": "x64",
+            "binaryDir": "${sourceDir}/build/windows-vs2022-debug"
         },
 
         {
-            "name": "windows-msvc-debug",
-            "inherits": "base",
-            "displayName": "Windows / MSVC / Debug",
-            "cacheVariables": {
-                "CMAKE_C_COMPILER": "cl",
-                "CMAKE_CXX_COMPILER": "cl",
-                "CMAKE_BUILD_TYPE": "Debug"
-            }
+            "name": "windows-vs2022-release",
+            "displayName": "Windows / MSVC 2022 / Release",
+            "generator": "Visual Studio 17 2022",
+            "architecture": "x64",
+            "binaryDir": "${sourceDir}/build/windows-vs2022-release"
         },
 
         {
-            "name": "windows-msvc-release",
-            "inherits": "base",
-            "displayName": "Windows / MSVC / Release",
-            "cacheVariables": {
-                "CMAKE_C_COMPILER": "cl",
-                "CMAKE_CXX_COMPILER": "cl",
-                "CMAKE_BUILD_TYPE": "Release"
-            }
+            "name": "windows-vs2026-debug",
+            "displayName": "Windows / MSVC 2026 / Debug",
+            "generator": "Visual Studio 18 2026",
+            "architecture": "x64",
+            "binaryDir": "${sourceDir}/build/windows-vs2026-debug"
+        },
+
+        {
+            "name": "windows-vs2026-release",
+            "displayName": "Windows / MSVC 2026 / Release",
+            "generator": "Visual Studio 18 2026",
+            "architecture": "x64",
+            "binaryDir": "${sourceDir}/build/windows-vs2026-release"
         },
 
         {
             "name": "linux-gcc-debug",
-            "inherits": "base",
             "displayName": "Linux / GCC / Debug",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/linux-gcc-debug",
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "gcc",
                 "CMAKE_CXX_COMPILER": "g++",
@@ -50,8 +54,9 @@
 
         {
             "name": "linux-gcc-release",
-            "inherits": "base",
             "displayName": "Linux / GCC / Release",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/linux-gcc-release",
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "gcc",
                 "CMAKE_CXX_COMPILER": "g++",
@@ -61,8 +66,9 @@
 
         {
             "name": "linux-clang-debug",
-            "inherits": "base",
             "displayName": "Linux / Clang / Debug",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/linux-clang-debug",
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "clang",
                 "CMAKE_CXX_COMPILER": "clang++",
@@ -72,8 +78,9 @@
 
         {
             "name": "linux-clang-release",
-            "inherits": "base",
             "displayName": "Linux / Clang / Release",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/linux-clang-release",
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "clang",
                 "CMAKE_CXX_COMPILER": "clang++",
@@ -83,8 +90,9 @@
 
         {
             "name": "macos-clang-debug",
-            "inherits": "base",
-            "displayName": "macOS / Clang / Debug",
+            "displayName": "macOS / Apple Clang / Debug",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/macos-clang-debug",
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "clang",
                 "CMAKE_CXX_COMPILER": "clang++",
@@ -94,8 +102,9 @@
 
         {
             "name": "macos-clang-release",
-            "inherits": "base",
-            "displayName": "macOS / Clang / Release",
+            "displayName": "macOS / Apple Clang / Release",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/macos-clang-release",
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "clang",
                 "CMAKE_CXX_COMPILER": "clang++",
@@ -106,12 +115,24 @@
 
     "buildPresets": [
         {
-            "name": "windows-msvc-debug",
-            "configurePreset": "windows-msvc-debug"
+            "name": "windows-vs2022-debug",
+            "configurePreset": "windows-vs2022-debug",
+            "configuration": "Debug"
         },
         {
-            "name": "windows-msvc-release",
-            "configurePreset": "windows-msvc-release"
+            "name": "windows-vs2022-release",
+            "configurePreset": "windows-vs2022-release",
+            "configuration": "Release"
+        },
+        {
+            "name": "windows-vs2026-debug",
+            "configurePreset": "windows-vs2026-debug",
+            "configuration": "Debug"
+        },
+        {
+            "name": "windows-vs2026-release",
+            "configurePreset": "windows-vs2026-release",
+            "configuration": "Release"
         },
         {
             "name": "linux-gcc-debug",
@@ -136,6 +157,79 @@
         {
             "name": "macos-clang-release",
             "configurePreset": "macos-clang-release"
+        }
+    ],
+
+    "testPresets": [
+        {
+            "name": "windows-vs2022-debug",
+            "configurePreset": "windows-vs2022-debug",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "windows-vs2022-release",
+            "configurePreset": "windows-vs2022-release",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "windows-vs2026-debug",
+            "configurePreset": "windows-vs2026-debug",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "windows-vs2026-release",
+            "configurePreset": "windows-vs2026-release",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "linux-gcc-debug",
+            "configurePreset": "linux-gcc-debug",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "linux-gcc-release",
+            "configurePreset": "linux-gcc-release",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "linux-clang-debug",
+            "configurePreset": "linux-clang-debug",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "linux-clang-release",
+            "configurePreset": "linux-clang-release",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "macos-clang-debug",
+            "configurePreset": "macos-clang-debug",
+            "output": {
+                "outputOnFailure": true
+            }
+        },
+        {
+            "name": "macos-clang-release",
+            "configurePreset": "macos-clang-release",
+            "output": {
+                "outputOnFailure": true
+            }
         }
     ]
 }

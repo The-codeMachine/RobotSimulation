@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - master
+
   pull_request:
     branches:
       - main
@@ -12,49 +13,37 @@ on:
 
 jobs:
   build-and-test:
+    name: ${{ matrix.name }}
+
     strategy:
       fail-fast: false
+
       matrix:
         include:
           # Windows / MSVC 2022
           - os: windows-2022
             name: Windows / MSVC 2022
-            generator: Ninja
-            c_compiler: cl
-            cxx_compiler: cl
-            config: Debug
+            preset: windows-vs2022-debug
 
           # Windows / MSVC 2026
           - os: windows-2025-vs2026
             name: Windows / MSVC 2026
-            generator: Ninja
-            c_compiler: cl
-            cxx_compiler: cl
-            config: Debug
+            preset: windows-vs2026-debug
 
           # Linux / GCC
           - os: ubuntu-latest
             name: Linux / GCC
-            generator: Ninja
-            c_compiler: gcc
-            cxx_compiler: g++
-            config: Debug
+            preset: linux-gcc-debug
 
           # Linux / Clang
           - os: ubuntu-latest
             name: Linux / Clang
-            generator: Ninja
-            c_compiler: clang
-            cxx_compiler: clang++
-            config: Debug
+            preset: linux-clang-debug
 
           # macOS / Apple Clang
           - os: macos-latest
             name: macOS / Apple Clang
-            generator: Ninja
-            c_compiler: clang
-            cxx_compiler: clang++
-            config: Debug
+            preset: macos-clang-debug
 
     runs-on: ${{ matrix.os }}
 
@@ -62,21 +51,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up MSVC
-        if: runner.os == 'Windows'
-        uses: ilammy/msvc-dev-cmd@v1
-
       - name: Configure CMake
-        shell: bash
-        run: |
-          cmake -S . -B build \
-            -G "${{ matrix.generator }}" \
-            -DCMAKE_BUILD_TYPE="${{ matrix.config }}" \
-            ${{ matrix.c_compiler && format('-DCMAKE_C_COMPILER={0}', matrix.c_compiler) || '' }} \
-            ${{ matrix.cxx_compiler && format('-DCMAKE_CXX_COMPILER={0}', matrix.cxx_compiler) || '' }}
+        run: cmake --preset ${{ matrix.preset }}
 
       - name: Build
-        run: cmake --build build --config ${{ matrix.config }}
+        run: cmake --build --preset ${{ matrix.preset }} -j
 
       - name: Run tests
-        run: ctest --test-dir build -C ${{ matrix.config }} --output-on-failure
+        run: ctest --preset ${{ matrix.preset }} --output-on-failure

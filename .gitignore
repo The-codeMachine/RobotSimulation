@@ -14,4 +14,4 @@ Testing/
 .vscode/
 
 # cmake user presets
-CMakeUsersPresets.json
+CMakeUserPresets.json

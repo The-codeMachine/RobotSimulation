@@ -34,16 +34,23 @@ MSVC 2022 is tested. MSVC 2026 is recommended for development.
 
 ### Configure the project
 
-Create a build directory:
+To generate this project you must select your compilation version. The official versions
+consists of:
 
-```powershell
-mkdir build
-```
+* Windows MSVC 2022 Debug/Release
+* Windows MSVC 2026 Debug/Release
+* Linux GCC Debug/Release
+* Linux Clang Debug/Release
+* MacOS Clang Debug/Release
+
+For example, if you were using Windows's MSVC 2026 debug you would use the `windows-vs2026-debug`
+preset. To represent this, in the following commands we will use `your-compilationversion`. Please
+make that your actual compilation version. 
 
 Configure the project with CMake:
 
 ```powershell
-cmake -B build
+cmake --preset your-compilationconversion
 ```
 
 ### Build
@@ -51,7 +58,7 @@ cmake -B build
 Build the project with:
 
 ```powershell
-cmake --build build
+cmake --build --preset your-compilationversion --parallel
 ```
 
 ### Run tests
@@ -59,7 +66,7 @@ cmake --build build
 Run the test suite with:
 
 ```powershell
-ctest --test-dir build -C Debug --output-on-failure
+ctest --test-dir build/your-compilationversion -C Debug --output-on-failure
 ```
 
 The test suite is an important part of the project. Changes should not be considered complete until the relevant tests pass.
