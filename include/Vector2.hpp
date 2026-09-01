@@ -24,6 +24,15 @@ struct Vector2 {
     Vector2 operator-(Vector2 other) const noexcept;
     Vector2 operator*(double scalar) const noexcept;
     Vector2 operator/(double scalar) const noexcept;
+    Vector2 operator*(Vector2 other) const noexcept;
+    Vector2 operator/(Vector2 other) const noexcept;
+
+    void operator+=(Vector2 other);
+    void operator-=(Vector2 other);
+    void operator*=(double scalar);
+    void operator/=(double scalar);
+    void operator*=(Vector2 other);
+    void operator/=(Vector2 other);
 
     static double dot(Vector2 lhs, Vector2 rhs) noexcept;
     static double lengthSquared(Vector2 value) noexcept;
@@ -31,4 +40,8 @@ struct Vector2 {
 
     static Vector2 normalize(Vector2 value) noexcept;
     static Vector2 clamp(Vector2 value, Vector2 minimum, Vector2 maximum) noexcept;
+
+    /// @brief Converts a Vector2 into a string
+    /// @return a string representing a Vector2
+    std::string toString() const noexcept;
 };

@@ -36,6 +36,44 @@ Vector2 Vector2::operator/(double scalar) const noexcept {
     return {x / scalar, y / scalar};
 } 
 
+Vector2 Vector2::operator*(Vector2 other) const noexcept {
+    return {x * other.x, y * other.y};
+}
+
+Vector2 Vector2::operator/(Vector2 other) const noexcept {
+    return {x / other.x, y / other.y};
+}
+
+void Vector2::operator+=(Vector2 other) {
+    x += other.x;
+    y += other.y;
+}
+
+void Vector2::operator-=(Vector2 other) {
+    x -= other.x;
+    y -= other.y;
+}
+
+void Vector2::operator*=(double scalar) {
+    x *= scalar;
+    y *= scalar;
+}
+
+void Vector2::operator/=(double scalar) {
+    x /= scalar;
+    y /= scalar;
+}
+
+void Vector2::operator*=(Vector2 other) {
+    x *= other.x;
+    y *= other.y;
+}
+
+void Vector2::operator/=(Vector2 other) {
+    x /= other.x;
+    y /= other.y;
+}
+
 constexpr double NORMAL_EPSILON = 1e-12;
 
 double Vector2::dot(Vector2 lhs, Vector2 rhs) noexcept {
@@ -64,4 +102,8 @@ Vector2 Vector2::clamp(Vector2 value, Vector2 minimum, Vector2 maximum) noexcept
         std::clamp(value.x, minimum.x, maximum.x),
         std::clamp(value.y, minimum.y, maximum.y)
     };
+}
+
+std::string Vector2::toString() const noexcept {
+    return "(" + std::to_string(x) + ", " + std::to_string(y) + ")";
 }

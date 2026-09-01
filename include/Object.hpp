@@ -21,6 +21,10 @@ struct Transform {
     nlohmann::json serialize() const;
     void deserialize(const nlohmann::json& json);
 
+    /// @brief Converts the Transform into a string
+    /// @return a string representing the transform
+    std::string toString() const noexcept;
+
     Vector2 position;
     double rotation;
 };

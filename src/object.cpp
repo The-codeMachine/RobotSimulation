@@ -22,6 +22,10 @@ void Transform::deserialize(const nlohmann::json& json) {
     rotation = json.at("rotation");
 }
 
+std::string Transform::toString() const noexcept {
+    return position.toString() + ", " + std::to_string(rotation);
+}
+
 Object::Object(World& world, Transform transform, const std::string& name, char glyph) 
             : world_(&world), transform_(transform), name_(name), glyph_(glyph) {}
 
