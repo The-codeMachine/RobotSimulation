@@ -26,10 +26,19 @@ std::string Transform::toString() const noexcept {
     return position.toString() + ", " + std::to_string(rotation);
 }
 
-Object::Object(World& world, Transform transform, const std::string& name, char glyph) 
-            : world_(&world), transform_(transform), name_(name), glyph_(glyph) {}
+Object::Object(World& world, Transform transform, const std::string& name, char glyph, const std::string& uniqueId) 
+            : world_(&world), transform_(transform), name_(name), glyph_(glyph), uniqueId_(uniqueId) 
+{
+    if (uniqueId_.empty()) 
+        uniqueId_ = generate_unique_id_(name_);
+}
 
 Object::~Object() = default;
+
+std::string Object::generate_unique_id_(const std::string& type) {
+    counter_++;
+    return type + "-" + std::to_string(counter_);
+}
 
 nlohmann::json Object::serialize() const {
     nlohmann::json json;
@@ -39,6 +48,7 @@ nlohmann::json Object::serialize() const {
     json["type"] = name_;
     json["glyph"] = std::string(1, glyph_);
     json["transform"] = transform_.serialize();
+    json["unique_id"] = uniqueId_;
 
     return json;
 }
@@ -48,6 +58,7 @@ void Object::deserialize(const nlohmann::json& json) {
     std::string s = json.at("glyph");
     glyph_ = s[0];
     transform_.deserialize(json.at("transform"));
+    uniqueId_ = json.at("unique_id").get<std::string>();
     
     if (json.contains("collider")) {
         collider_ = Collider::Collider_Factory.create(json.at("collider").at("type").get<std::string>());

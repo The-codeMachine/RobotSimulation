@@ -31,7 +31,7 @@ int main() {
     // Ensure test directories exist for file testing
     std::filesystem::create_directories("assets/tests");
 
-    {    
+    try {    
         World world(std::filesystem::path("assets/tests/DifferentialDriveConstruction.json"));
 
         // Fetch robot from its original static spawning cell
@@ -92,9 +92,11 @@ int main() {
 
         // File serialization test
         world.saveToFile("assets/tests/ddSaveTest.json");
+    } catch (const std::exception& e) {
+        std::cout << e.what() << "\n";
+        return -1;
     }
 
-    // Step 3: Deserialization and Persistence Verification
     World world(std::filesystem::path("assets/tests/ddSaveTest.json"));
     
     // Robot should persist at the grid position it was saved at ({5, 4})

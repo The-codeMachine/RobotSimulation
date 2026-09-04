@@ -44,7 +44,7 @@ public:
     static inline Factory::Factory<Object, World&, Transform> Object_Factory;
 
 public:
-    Object(World& world, Transform transform = Transform(), const std::string& name = " ", char glyph = ' ');
+    Object(World& world, Transform transform = Transform(), const std::string& name = " ", char glyph = ' ', const std::string& uniqueId = {});
 
     virtual ~Object();
 
@@ -126,14 +126,24 @@ public:
     virtual bool isEmpty() const noexcept;
 
 private:
+    /// @brief Generates a uniqueId for the object based off the type and a counter
+    /// @param type 
+    /// @return the unique id generated for the object
+    static std::string generate_unique_id_(const std::string& type);
+
+private:
     World* world_;
 
     Transform transform_;
 
     std::string name_;
+    std::string uniqueId_;
+
     char glyph_;
 
     friend class World;
+
+    static inline uint32_t counter_ = 0;
     
 protected:
     std::unique_ptr<Collider> collider_;

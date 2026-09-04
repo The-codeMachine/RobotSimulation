@@ -13,6 +13,9 @@ The ```glyph``` is used to print the World with prettier formatting. The ```name
 used for construction specification and must be unique to all subclasses, while a 
 glyph can be reused as many times as possible, it is simply for pretty printing. 
 
+`Object` has a unique id. This is unique to very specific object. This was added so `World`
+and other programs can easily identify which `Object` is which. 
+
 ## File Saving, Loading & Serialization
 
 File saving and loading is handled through the ```World``` class. The ```World``` class will 
