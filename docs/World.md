@@ -24,6 +24,7 @@ parsing. The world files will follow formats similar to that of the following:
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-1",
             "transform": {
                 "x": 0,
                 "y": 0,
@@ -33,6 +34,7 @@ parsing. The world files will follow formats similar to that of the following:
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-2",
             "transform": {
                 "x": 1,
                 "y": 0,
@@ -42,6 +44,7 @@ parsing. The world files will follow formats similar to that of the following:
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-3",
             "transform": {
                 "x": 2,
                 "y": 0,

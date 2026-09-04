@@ -32,6 +32,7 @@ An example of a Wall represented in JSON might look like the following:
     {
         "type": "Wall",
         "glyph": "#",
+        "unique_id": "Wall-1",
         "transform": {
             "x": 0,
             "y": 5,
