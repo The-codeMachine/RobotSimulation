@@ -107,6 +107,14 @@ const std::string& Object::name() const {
     return name_;
 }
 
+std::string& Object::id() {
+    return uniqueId_;
+}
+
+const std::string& Object::id() const {
+    return uniqueId_;
+}
+
 char& Object::glyph() {
     return glyph_;
 }

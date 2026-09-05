@@ -113,6 +113,14 @@ public:
     /// @return the current name of this object (const reference)
     const std::string& name() const;
 
+    /// @brief Gets the Object's unique id
+    /// @return this Object's unique id (reference)
+    std::string& id();
+
+    /// @brief Gets the Object's unique id 
+    /// @return this Object's unique id (const reference)
+    const std::string& id() const;
+
     /// @brief Gets the current glyph of this object
     /// @return the current glyph of this object (reference)
     char& glyph();

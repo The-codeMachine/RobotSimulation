@@ -3,6 +3,7 @@
 #include <Object.hpp>
 #include <Ray.hpp>
 #include <Collision.hpp>
+#include <ChangeSink.hpp>
 #include <Devices/Sensors/SensorShape.hpp>
 #include <Devices/Sensors/Image.hpp>
 
@@ -22,6 +23,11 @@
 /// which spot. Eventually, this will own the
 /// Object.
 ///
+/// World has a ChangeSink, and emit function. To 
+/// emit the changes to a specific object, e.g.
+/// Robot, Wall, call the emit function with a 
+/// specific event you want to be emitted. 
+///
 class World {
 public:
     explicit World(const nlohmann::json& world);
@@ -34,6 +40,30 @@ public:
     /// @brief Gets the current object at that position
     /// @return the current object at that position (const reference)
     const Object& at(Vector2 pos) const;
+
+    /// @brief Gets the current ChangeSink from World. Might not be a Change
+    /// sink, could be a subclass
+    /// @return the sink from World (reference)
+    ChangeSink& sink();
+
+    /// @brief Gets the current ChangeSink from World. Might not be a Change
+    /// sink, could be a subclass
+    /// @return the sink from World (const reference)
+    const ChangeSink& sink() const;
+
+    /// @brief Sets a new ChangeSink for the World. 
+    /// @param sink 
+    void setSink(std::unique_ptr<ChangeSink> sink);
+
+    /// @brief Emits a new ChangeEvent to the ChangeSink set to the World
+    /// @param event 
+    void emit(const ChangeEvent& event) const;
+
+    /// @brief Emits a new ChanngeEvent to the sink set in World. Constructs the ChangeEvent from 
+    /// the World's sequence, and the specified type and data.
+    /// @param type 
+    /// @param data 
+    void emit(const std::string& type, const nlohmann::json& data);
 
     /// @brief Moves an object to a new Transform, checks for collisions
     /// @param obj 
@@ -96,6 +126,9 @@ private:
 
 private:
     std::vector<std::unique_ptr<Object>> map_;
+
+    std::unique_ptr<ChangeSink> sink_;
+    uint64_t sequence_ = 0;
 
     uint32_t ROW_SIZE_;
     uint32_t ROW_AMOUNT_;
