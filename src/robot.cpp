@@ -1,5 +1,7 @@
 #include <Robot.hpp>
 
+#include <World.hpp>
+
 #include <cmath>
 
 Robot::Robot(World& world, Transform t) : Object(world, t, "Robot") {}

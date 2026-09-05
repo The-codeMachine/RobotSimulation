@@ -1,5 +1,7 @@
 #include <Devices/Motor.hpp>
 
+#include <Robot.hpp>
+
 Motor::Motor(const std::string& id, const std::string& type) 
     : Device(id, type), throttle_(0.0), angularPosition_(0.0),
       angularVelocity_(0.0), angularAcceleration_(0.0), maxAngularVelocity_(100.0),
@@ -43,7 +45,15 @@ void Motor::deserialize(const nlohmann::json& json) {
 }
 
 void Motor::setThrottle(double power) {
+    double old = throttle_;
     throttle_ = std::clamp(power, -1.0, 1.0);
+    
+    emitDeviceChange("motor.throttle", {
+        {"device", id()}, 
+        {"robot", robot_->id()}, 
+        {"old", old}, 
+        {"new", throttle_}
+    });
 }
 
 double Motor::getThrottle() const noexcept {

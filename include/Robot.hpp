@@ -3,6 +3,8 @@
 #include <Device.hpp>
 #include <Object.hpp>
 
+#include <ChangeEvent.hpp>
+
 #include <vector>
 #include <memory>
 #include <stdexcept>
