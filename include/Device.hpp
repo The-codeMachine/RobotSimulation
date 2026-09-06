@@ -53,9 +53,7 @@ public:
 
     /// @brief Gets and returns the objects update priority. This is so the updates are done sequentially
     /// @return the object's update priority (default = 0)
-    virtual int updatePriority() const noexcept {
-        return 0;
-    }
+    virtual int updatePriority() const noexcept;
 
 protected:
     void emitDeviceChange(const ChangeEvent& event) const;

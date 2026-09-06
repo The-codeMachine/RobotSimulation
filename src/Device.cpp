@@ -28,14 +28,14 @@ int Device::updatePriority() const noexcept {
 }
 
 void Device::emitDeviceChange(const ChangeEvent& event) const {
-    if (robot_)
+    if (!robot_)
         throw std::runtime_error("Robot is invalid, cannot emit change");
     
     robot_->world().emit(event);
 }
 
 void Device::emitDeviceChange(const std::string& type, const nlohmann::json& data) {
-    if (robot_)
+    if (!robot_)
         throw std::runtime_error("Robot is invalid, cannot emit change");
     
     robot_->world().emit(type, data);
