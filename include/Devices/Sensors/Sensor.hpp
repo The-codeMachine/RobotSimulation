@@ -68,17 +68,17 @@ public:
     /// @return the sensor's global world coordinates
     Transform worldTransform() const;
 
-    /// @brief Gets the FOV of the cone
-    /// @return the FOV of the cone (reference)
-    double& fov();   
+    /// @brief Sets a new FOV for the sensor
+    /// @param newFov 
+    void setFov(double newFov);
     
     /// @brief Gets the FOV of the cone
     /// @return the FOV of the cone (const reference)
     const double& fov() const noexcept;
     
-    /// @brief Gets the range of the cone
-    /// @return the range of the cone (reference)
-    double& range();
+    /// @brief Sets a new range for this sensor
+    /// @param newRange 
+    void setRange(double newRange);
         
     /// @brief Gets the range of the cone
     /// @return the range of the cone (const reference)

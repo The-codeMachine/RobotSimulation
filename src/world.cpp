@@ -62,7 +62,8 @@ void World::emit(const std::string& type, const nlohmann::json& data) {
 }
 
 void World::moveObject(Object& obj, const Transform& newTransform) {
-    Vector2 oldPosition = obj.transform().position;
+    Transform oldTransform = obj.transform();
+    Vector2 oldPosition = oldTransform.position;
     Vector2 newPosition = newTransform.position;
 
     if (!valid_position_(newPosition))
@@ -88,7 +89,7 @@ void World::moveObject(Object& obj, const Transform& newTransform) {
 
     emit("object.transform", {
         {"object", map_[newIndex]->id()},
-        {"old", map_[newIndex]->transform().serialize()}, 
+        {"old", oldTransform.serialize()}, 
         {"new", newTransform.serialize()},
     });
 }

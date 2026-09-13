@@ -32,8 +32,8 @@ void testViewSensorConstruction() {
 void testViewSensorAccessors() {
     ViewSensor sensor("camera", 90.0, 100.0, Transform{});
 
-    sensor.fov() = 120.0;
-    sensor.range() = 250.0;
+    sensor.setFov(120.0);
+    sensor.setRange(250.0);
 
     assert(approximatelyEqual(sensor.fov(), 120.0));
     assert(approximatelyEqual(sensor.range(), 250.0));
