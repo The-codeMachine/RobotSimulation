@@ -51,3 +51,11 @@ void Robot::update(double deltaTime) {
 void Robot::sortDevices() {
     std::ranges::sort(devices_, {}, &Device::updatePriority);
 }
+
+void Robot::emitChange(const ChangeEvent& event) const {
+    world().emit(event);
+}
+
+void Robot::emitChange(const std::string& type, const nlohmann::json& data) {
+    world().emit(type, data);
+}

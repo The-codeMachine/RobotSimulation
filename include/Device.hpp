@@ -56,7 +56,13 @@ public:
     virtual int updatePriority() const noexcept;
 
 protected:
+    /// @brief Emits a device change through Robot by a specific event
+    /// @param event 
     void emitDeviceChange(const ChangeEvent& event) const;
+
+    /// @brief Emits a device update through robot by specifying the type of event, and the data
+    /// @param type 
+    /// @param data 
     void emitDeviceChange(const std::string& type, const nlohmann::json& data);
 
 protected:

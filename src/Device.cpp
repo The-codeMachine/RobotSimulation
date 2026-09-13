@@ -1,7 +1,6 @@
 #include <Device.hpp>
 
 #include <Robot.hpp>
-#include <World.hpp>
 
 Device::Device(const std::string& id, const std::string& type)
     : id_(id), type_(type) {}
@@ -31,7 +30,7 @@ void Device::emitDeviceChange(const ChangeEvent& event) const {
     if (!robot_)
         throw std::runtime_error("Robot is invalid, cannot emit change");
     
-    robot_->world().emit(event);
+    robot_->emitChange(event);
 }
 
 void Device::emitDeviceChange(const std::string& type, const nlohmann::json& data) {
@@ -41,5 +40,5 @@ void Device::emitDeviceChange(const std::string& type, const nlohmann::json& dat
     nlohmann::json out = data;
     out["robot"] = robot_->id();
 
-    robot_->world().emit(type, out);
+    robot_->emitChange(type, out);
 }

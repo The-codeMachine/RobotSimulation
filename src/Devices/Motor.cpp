@@ -78,6 +78,10 @@ void Motor::update(double deltaTime) {
     if (deltaTime == 0.0)
         return;
 
+    auto oldPosition = angularPosition_;
+    auto oldVelocity = angularVelocity_;
+    auto oldAcceleration = angularAcceleration_;
+
     const double targetVelocity = throttle_ * maxAngularVelocity_;
     const double velocityDiff = targetVelocity - angularVelocity_;
 
@@ -118,4 +122,19 @@ void Motor::update(double deltaTime) {
 
     // Keep numerical safety clamp against floating-point drift
     angularVelocity_ = std::clamp(angularVelocity_, -maxAngularVelocity_, maxAngularVelocity_);
+
+    emitDeviceChange("motor.update", {
+        {"device", id()},
+        {"delta_time", deltaTime},
+        {"old", {
+            {"angular_position", oldPosition},
+            {"angular_velocity", oldVelocity}, 
+            {"angular_acceleration", oldAcceleration}
+        }},
+        {"new", {
+            {"angular_position", angularPosition_},
+            {"angular_velocity", angularVelocity_}, 
+            {"angular_acceleration", angularAcceleration_}
+        }}
+    });
 }

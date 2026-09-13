@@ -61,10 +61,10 @@ public:
 
         devices_.push_back(std::move(device));
 
-        sortDevices();
-
         ptr->robot_ = this;
         ptr->onAttach(*this);
+
+        sortDevices();
 
         return *ptr;
     }
@@ -93,6 +93,15 @@ public:
     /// @brief This updates the robot based off deltaTime 
     /// @param deltaTime 
     void update(double deltaTime);
+
+    /// @brief Emits an event to the World by an Event
+    /// @param event 
+    void emitChange(const ChangeEvent& event) const;
+
+    /// @brief Emits an event to the World by specifying the type and the data of the event
+    /// @param type 
+    /// @param data 
+    void emitChange(const std::string& type, const nlohmann::json& data);
 
 private:
     void sortDevices();
