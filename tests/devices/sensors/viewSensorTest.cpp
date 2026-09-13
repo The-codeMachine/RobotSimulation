@@ -235,23 +235,28 @@ void testFactoryRegistration() {
 
 
 int main() {
-    registerBuiltinObjects();
-
-    testViewSensorConstruction();
-    testViewSensorAccessors();
-    testLocalTransform();
-    testSensorShapeOwnership();
-
-    testSensorCanOwnQuadraticShape();
-    testSensorCanOwnBallShape();
-    testImageInitiallyEmpty();
-
-    testSerialize();
-    testDeserialize();
-
-    testDeserializePreservesShapeType();
-    testSerializeDeserializeRoundTrip();
-    testFactoryRegistration();
+    try {
+        registerBuiltinObjects();
+    
+        testViewSensorConstruction();
+        testViewSensorAccessors();
+        testLocalTransform();
+        testSensorShapeOwnership();
+    
+        testSensorCanOwnQuadraticShape();
+        testSensorCanOwnBallShape();
+        testImageInitiallyEmpty();
+    
+        testSerialize();
+        testDeserialize();
+    
+        testDeserializePreservesShapeType();
+        testSerializeDeserializeRoundTrip();
+        testFactoryRegistration();
+    } catch (const std::exception& e) {
+        std::cerr << e.what() << "\n";
+        return -1;
+    }
 
     return 0;
 }

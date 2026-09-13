@@ -47,10 +47,9 @@ void Motor::deserialize(const nlohmann::json& json) {
 void Motor::setThrottle(double power) {
     double old = throttle_;
     throttle_ = std::clamp(power, -1.0, 1.0);
-    
+
     emitDeviceChange("motor.throttle", {
         {"device", id()}, 
-        {"robot", robot_->id()}, 
         {"old", old}, 
         {"new", throttle_}
     });

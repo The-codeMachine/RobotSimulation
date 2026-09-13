@@ -38,5 +38,8 @@ void Device::emitDeviceChange(const std::string& type, const nlohmann::json& dat
     if (!robot_)
         throw std::runtime_error("Robot is invalid, cannot emit change");
     
-    robot_->world().emit(type, data);
+    nlohmann::json out = data;
+    out["robot"] = robot_->id();
+
+    robot_->world().emit(type, out);
 }

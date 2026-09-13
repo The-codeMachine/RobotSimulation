@@ -6,11 +6,9 @@
 #include <stdexcept>
 
 int main() {
-
     registerBuiltinObjects();
 
     try {
-        
         World world(std::filesystem::path("assets/tests/worldInitConstruction.json"));
         
         assert(world.toString() == 
@@ -69,7 +67,7 @@ int main() {
         );
 
     } catch (const std::exception& e) {
-        std::cout << e.what() << "\n";
+        std::cerr << e.what() << "\n";
         return -1;
     }
 
