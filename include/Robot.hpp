@@ -5,26 +5,25 @@
 
 #include <ChangeEvent.hpp>
 
-#include <vector>
+#include <algorithm>
+#include <functional>
 #include <memory>
 #include <stdexcept>
+#include <string>
+#include <unordered_map>
+#include <utility>
+#include <vector>
 
 class World;
 
-/// @brief 
+/// @brief
 ///
-/// This is the Robot class. It encapsulates
-/// an object that can move, see, and have
-/// any other number of devices. These devices
-/// give the Robot specific functionality. The
-/// robot simply encapsulates these devices. 
-/// The robot does not support functionality like
-/// movement, or view. Devices support this.
+/// Encapsulates an Object that can move, see, and contain
+/// any number of Devices. Devices provide the Robot's
+/// functionality; Robot itself does not implement specific
+/// functionality such as movement or vision.
 ///
-/// Ids are only unique to the specific Device type,
-/// there can be multiple devices with the same id,
-/// as long as they are different device subclasses. 
-///
+/// Device IDs are unique within a Robot.
 class Robot : public Object {
 public:
     Robot(World& world, Transform t);
@@ -52,18 +51,22 @@ public:
     /// @return a reference to that device 
     template<typename T>
     T& addDevice(std::unique_ptr<Device> device) {
-        if (getDevice<T>(device->id()) != nullptr)
-            throw std::runtime_error("Device type with id already exists");
-            
+        if (!device)
+            throw std::invalid_argument("Cannot add a null device");
+
         T* ptr = dynamic_cast<T*>(device.get());
         if (!ptr)
             throw std::invalid_argument("Device type does not match template parameter");
 
-        devices_.push_back(std::move(device));
-
+        const std::string id = device->id();
+        if (devices_.contains(id)) 
+            throw std::runtime_error("Device with id '" + id + "' already exists");
+        
         ptr->robot_ = this;
         ptr->onAttach(*this);
 
+        devices_.emplace(id, std::move(device));
+        
         sortDevices();
 
         return *ptr;
@@ -74,20 +77,36 @@ public:
     /// @return a device reference to the object that was inserted
     Device& addDevice(std::unique_ptr<Device> device);
 
-    /// @brief Gets device T. Returns nullptr if it does not exist
+    /// @brief Gets device T by ID. Returns nullptr if it does not exist
+    /// or if the device is not of type T.
     /// @tparam T 
     /// @param id
     /// @return device T if it exists
     template<typename T> 
-    T* getDevice(const std::string& id) const {
-        for (const auto& d : devices_) {
-            T* device = dynamic_cast<T*>(d.get());
-            
-            if (device && device->id() == id) 
-                return device;
+    T* getDevice(const std::string& id) {
+        auto it = devices_.find(id);
+
+        if (it == devices_.end() || !it->second) {
+            return nullptr;
         }
 
-        return nullptr;
+        return dynamic_cast<T*>(it->second.get());
+    }
+
+    /// @brief Gets device T by ID. Returns nullptr if it does not exist
+    /// or if the device is not of type T.
+    /// @tparam T
+    /// @param id
+    /// @return device T if it exists (a constant pointer)
+    template<typename T>
+    const T* getDevice(const std::string& id) const {
+        auto it = devices_.find(id);
+
+        if (it == devices_.end() || !it->second) {
+            return nullptr;
+        }
+
+        return dynamic_cast<const T*>(it->second.get());
     }
 
     /// @brief Removes a device from the robot. 
@@ -111,6 +130,7 @@ private:
     void sortDevices();
 
 private:
-    std::vector<std::unique_ptr<Device>> devices_;
+    std::unordered_map<std::string, std::unique_ptr<Device>> devices_;
+    std::vector<std::reference_wrapper<Device>> sortedDevices_;
 
 };

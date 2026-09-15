@@ -36,8 +36,7 @@ determining whether or not to allow the users to specify exactly how long they w
 a default and then the user can set it on their own. 
 
 Devices may be removed after creation. This is done through: `removeDevice(const std::string& id)`. This will completely
-remove a device from Robot, if it exists. If it does not exist it will do nothing. Currently, this is worst case O(N) and
-best case O(1). Another optimization would be to make this O(1). I can do that later through `std::unordered_map<std::string, std::unique_ptr<Device>>`
+remove a device from Robot, if it exists. If it does not exist it will do nothing.
 
 ## File Loading
 
