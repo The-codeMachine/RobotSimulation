@@ -21,7 +21,9 @@ nlohmann::json Sensor::serialize() const noexcept {
     nlohmann::json out = Device::serialize();
 
     out["data"]["localTransform"] = localTransform_.serialize();
-    out["data"]["shape"] = shape_->serialize();
+
+    if (shape_)
+        out["data"]["shape"] = shape_->serialize();
 
     return out;
 }
@@ -32,6 +34,11 @@ void Sensor::deserialize(const nlohmann::json& json) {
     localTransform_.deserialize(json.at("data").at("localTransform"));
     
     // type is found in shape directly, and origin is inside the data
+    if (!json.at("data").contains("shape")) {
+        shape_ = nullptr;
+        return;
+    }
+    
     nlohmann::json shape = json.at("data").at("shape");
     shape_ = std::move(SensorShape::SensorShape_Factory.create(shape.at("type").get<std::string>(), Transform(shape.at("data").at("origin"))));
     shape_->deserialize(shape);

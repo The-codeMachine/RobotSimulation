@@ -48,6 +48,17 @@ void Robot::update(double deltaTime) {
         d->update(deltaTime);
 }
 
+void Robot::removeDevice(const std::string& id) {
+    for (size_t i = 0; i < devices_.size(); ++i) {
+        auto& d = devices_[i];
+        
+        if (d->id() == id) {
+            d->onDetach();
+            devices_.erase(devices_.begin() + i);
+        }
+    }
+}
+
 void Robot::sortDevices() {
     std::ranges::sort(devices_, {}, &Device::updatePriority);
 }

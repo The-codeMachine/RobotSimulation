@@ -90,6 +90,10 @@ public:
         return nullptr;
     }
 
+    /// @brief Removes a device from the robot. 
+    /// @param id 
+    void removeDevice(const std::string& id);
+
     /// @brief This updates the robot based off deltaTime 
     /// @param deltaTime 
     void update(double deltaTime);
