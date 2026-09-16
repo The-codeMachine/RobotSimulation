@@ -2,6 +2,8 @@
 
 #include <ChangeEvent.hpp>
 
+#include <utility/port.hpp>
+
 #include <iostream>
 
 /// @brief This is a sink representing a change to an object.
@@ -29,9 +31,34 @@ class DebugChangeSink : public ChangeSink {
 public:
     /// @brief Prints the event's data to the console
     /// @param event 
-    void publish(const ChangeEvent& event) override {
-        std::cout << "Sequence: " << event.sequence << "\n";
-        std::cout << "Type: " << event.type << "\n";
-        std::cout << "Data: " << event.data.dump() << "\n";
-    }
+    void publish(const ChangeEvent& event) override;
+};
+
+/// @brief 
+///
+/// PortChangeSink publishes events to a port. All the
+/// information is passed through a port specified at 
+/// construction. It is adjustable in runtime. We recommend
+/// not adjusting in runtime, but it is possible. 
+///
+class PortChangeSink : public ChangeSink {
+public:
+    PortChangeSink(Socket port);
+
+    /// @brief Publishes an event to a port specified at construction
+    /// @param event 
+    void publish(const ChangeEvent& event) override;
+
+    /// @brief Gets the current Socket being used
+    /// @return the current socket being used as a constant reference
+    const Socket& port() const;
+
+    /// @brief Updates the port to a new socket. We recommend not using 
+    /// this in runtime
+    /// @param newPort 
+    void updatePort(Socket newPort);
+
+private:
+    PortProxy proxy_;
+
 };
