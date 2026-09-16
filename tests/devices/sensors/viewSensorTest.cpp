@@ -5,6 +5,8 @@
 #include <Devices/Sensors/Sensor.hpp>
 #include <Devices/Sensors/SensorShape.hpp>
 
+#include <utility.hpp>
+
 #include <cassert>
 #include <cmath>
 #include <iostream>
@@ -12,23 +14,19 @@
 
 namespace {
 
-bool approximatelyEqual(double a, double b, double epsilon = 1e-9) {
-    return std::abs(a - b) < epsilon;
-}
-
 void testViewSensorConstruction(Robot& robot) {
     ViewSensor& sensor = dynamic_cast<ViewSensor&>(robot.addDevice(std::make_unique<ViewSensor>("construction_sensor", 90.0, 100.0, Transform{})));
 
     assert(sensor.id() == "construction_sensor");
 
-    assert(approximatelyEqual(sensor.fov(), 90.0));
-    assert(approximatelyEqual(sensor.range(), 100.0));
+    assertNear(sensor.fov(), 90.0);
+    assertNear(sensor.range(), 100.0);
 
     auto* cone = dynamic_cast<SensorShapeCone*>(&sensor.shape());
 
     assert(cone != nullptr);
-    assert(approximatelyEqual(cone->fov(), 90.0));
-    assert(approximatelyEqual(cone->range(), 100.0));
+    assertNear(cone->fov(), 90.0);
+    assertNear(cone->range(), 100.0);
 }
 
 void testViewSensorAccessors(Robot& robot) {
@@ -37,14 +35,14 @@ void testViewSensorAccessors(Robot& robot) {
     sensor.setFov(120.0);
     sensor.setRange(250.0);
 
-    assert(approximatelyEqual(sensor.fov(), 120.0));
-    assert(approximatelyEqual(sensor.range(), 250.0));
+    assertNear(sensor.fov(), 120.0);
+    assertNear(sensor.range(), 250.0);
 
     auto* cone = dynamic_cast<SensorShapeCone*>(&sensor.shape());
 
     assert(cone != nullptr);
-    assert(approximatelyEqual(cone->fov(), 120.0));
-    assert(approximatelyEqual(cone->range(), 250.0));
+    assertNear(cone->fov(), 120.0);
+    assertNear(cone->range(), 250.0);
 }
 
 void testLocalTransform(Robot& robot) {
@@ -55,9 +53,9 @@ void testLocalTransform(Robot& robot) {
 
     ViewSensor& sensor = dynamic_cast<ViewSensor&>(robot.addDevice(std::make_unique<ViewSensor>("localTransform_sensor", 90.0, 100.0, transform)));
 
-    assert(approximatelyEqual(sensor.localTransform().position.x, 5.0));
-    assert(approximatelyEqual(sensor.localTransform().position.y, 10.0));
-    assert(approximatelyEqual(sensor.localTransform().rotation, 2.0));
+    assertNear(sensor.localTransform().position.x, 5.0);
+    assertNear(sensor.localTransform().position.y, 10.0);
+    assertNear(sensor.localTransform().rotation, 2.0);
 }
 
 void testSensorShapeOwnership(Robot& robot) {
@@ -77,11 +75,11 @@ void testSensorShapeOwnership(Robot& robot) {
 
     assert(cone != nullptr);
 
-    assert(approximatelyEqual(cone->fov(), 90.0));
-    assert(approximatelyEqual(cone->range(), 50.0));
-    assert(approximatelyEqual(sensor.localTransform().position.x, 2.0));
-    assert(approximatelyEqual(sensor.localTransform().position.y, 3.0));
-    assert(approximatelyEqual(sensor.localTransform().rotation, 0.5));
+    assertNear(cone->fov(), 90.0);
+    assertNear(cone->range(), 50.0);
+    assertNear(sensor.localTransform().position.x, 2.0);
+    assertNear(sensor.localTransform().position.y, 3.0);
+    assertNear(sensor.localTransform().rotation, 0.5);
 }
 
 void testSensorCanOwnQuadraticShape(Robot& robot) {
@@ -109,7 +107,7 @@ void testSensorCanOwnBallShape(Robot& robot) {
     auto* ball = dynamic_cast<SensorShapeBall*>(&sensor.shape());
 
     assert(ball != nullptr);
-    assert(approximatelyEqual(ball->radius(), 10.0));
+    assertNear(ball->radius(), 10.0);
 }
 
 void testImageInitiallyEmpty(Robot& robot) {
@@ -149,23 +147,23 @@ void testDeserialize(Robot& robot) {
 
     restored.deserialize(json);
 
-    assert(approximatelyEqual(restored.fov(), original.fov()));
-    assert(approximatelyEqual(restored.range(), original.range()));
+    assertNear(restored.fov(), original.fov());
+    assertNear(restored.range(), original.range());
 
-    assert(approximatelyEqual(
+    assertNear(
         restored.localTransform().position.x,
         original.localTransform().position.x
-    ));
+    );
 
-    assert(approximatelyEqual(
+    assertNear(
         restored.localTransform().position.y,
         original.localTransform().position.y
-    ));
+    );
 
-    assert(approximatelyEqual(
+    assertNear(
         restored.localTransform().rotation,
         original.localTransform().rotation
-    ));
+    );
 }
 
 void testDeserializePreservesShapeType(Robot& robot) {
@@ -183,8 +181,8 @@ void testDeserializePreservesShapeType(Robot& robot) {
 
     assert(cone != nullptr);
 
-    assert(approximatelyEqual(cone->fov(), 90.0));
-    assert(approximatelyEqual(cone->range(), 100.0));
+    assertNear(cone->fov(), 90.0);
+    assertNear(cone->range(), 100.0);
 }
 
 void testSerializeDeserializeRoundTrip(Robot& robot) {
@@ -202,17 +200,17 @@ void testSerializeDeserializeRoundTrip(Robot& robot) {
     ViewSensor& restored = dynamic_cast<ViewSensor&>(robot.addDevice(std::make_unique<ViewSensor>("sdroundtrip_sensor")));
     restored.deserialize(serialized);
 
-    assert(approximatelyEqual(restored.fov(), 75.0));
-    assert(approximatelyEqual(restored.range(), 125.0));
-    assert(approximatelyEqual(restored.localTransform().position.x, 4.0));
-    assert(approximatelyEqual(restored.localTransform().position.y, 8.0));
-    assert(approximatelyEqual(restored.localTransform().rotation, 1.25));
+    assertNear(restored.fov(), 75.0);
+    assertNear(restored.range(), 125.0);
+    assertNear(restored.localTransform().position.x, 4.0);
+    assertNear(restored.localTransform().position.y, 8.0);
+    assertNear(restored.localTransform().rotation, 1.25);
 
     auto* cone = dynamic_cast<SensorShapeCone*>(&restored.shape());
 
     assert(cone != nullptr);
-    assert(approximatelyEqual(cone->fov(), 75.0));
-    assert(approximatelyEqual(cone->range(), 125.0));
+    assertNear(cone->fov(), 75.0);
+    assertNear(cone->range(), 125.0);
 }
 
 void testFactoryRegistration() {
@@ -248,7 +246,6 @@ void testWorldSave(World& world) {
 }
 
 } // namespace
-
 
 int main() {
     try {

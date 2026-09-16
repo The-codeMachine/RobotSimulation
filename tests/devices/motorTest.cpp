@@ -3,17 +3,13 @@
 #include <World.hpp>
 #include <Devices/Motor.hpp>
 
+#include <utility.hpp>
+
 #include <cassert>
 #include <cmath>
 #include <iostream>
 
 namespace {
-    constexpr double EPSILON = 1e-9;
-
-    void assertNear(double actual, double expected, double epsilon = EPSILON) {
-        assert(std::abs(actual - expected) <= epsilon);
-    }
-
     void testInitialState(Robot& robot) {
         Motor& motor = dynamic_cast<Motor&>(robot.addDevice(std::make_unique<Motor>("init_motor")));
 
