@@ -3,7 +3,7 @@
 #include <World.hpp>
 #include <Devices/Motor.hpp>
 
-#include <utility.hpp>
+#include <utility/utility.hpp>
 
 #include <cassert>
 #include <cmath>

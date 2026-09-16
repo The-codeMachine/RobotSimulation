@@ -5,7 +5,7 @@
 #include <Devices/Sensors/Sensor.hpp>
 #include <Devices/Sensors/SensorShape.hpp>
 
-#include <utility.hpp>
+#include <utility/utility.hpp>
 
 #include <cassert>
 #include <cmath>

@@ -1,4 +1,4 @@
-#include <utility.hpp>
+#include <utility/utility.hpp>
 
 void assertNear(double actual, double expected, double epsilon) {
     assert(std::abs(actual - expected) < epsilon);
