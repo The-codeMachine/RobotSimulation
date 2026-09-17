@@ -1,0 +1,439 @@
+{
+    "version": 1,
+    "ROW_SIZE": 10,
+    "ROW_AMOUNT": 10,
+    "objects": [
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-1",
+            "transform": {
+                "vector2": {
+                    "x": 0,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-2",
+            "transform": {
+                "vector2": {
+                    "x": 1,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-3",
+            "transform": {
+                "vector2": {
+                    "x": 2,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-4",
+            "transform": {
+                "vector2": {
+                    "x": 3,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-5",
+            "transform": {
+                "vector2": {
+                    "x": 4,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-6",
+            "transform": {
+                "vector2": {
+                    "x": 5,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-7",
+            "transform": {
+                "vector2": {
+                    "x": 6,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-8",
+            "transform": {
+                "vector2": {
+                    "x": 7,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-9",
+            "transform": {
+                "vector2": {
+                    "x": 8,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-10",
+            "transform": {
+                "vector2": {
+                    "x": 9,
+                    "y": 0
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-11",
+            "transform": {
+                "vector2": {
+                    "x": 0,
+                    "y": 1
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-12",
+            "transform": {
+                "vector2": {
+                    "x": 9,
+                    "y": 1
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-13",
+            "transform": {
+                "vector2": {
+                    "x": 0,
+                    "y": 2
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-14",
+            "transform": {
+                "vector2": {
+                    "x": 9,
+                    "y": 2
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-15",
+            "transform": {
+                "vector2": {
+                    "x": 0,
+                    "y": 3
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-16",
+            "transform": {
+                "vector2": {
+                    "x": 9,
+                    "y": 3
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-17",
+            "transform": {
+                "vector2": {
+                    "x": 0,
+                    "y": 4
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-18",
+            "transform": {
+                "vector2": {
+                    "x": 9,
+                    "y": 4
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-19",
+            "transform": {
+                "vector2": {
+                    "x": 0,
+                    "y": 5
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-20",
+            "transform": {
+                "vector2": {
+                    "x": 9,
+                    "y": 5
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-21",
+            "transform": {
+                "vector2": {
+                    "x": 0,
+                    "y": 6
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-22",
+            "transform": {
+                "vector2": {
+                    "x": 9,
+                    "y": 6
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-23",
+            "transform": {
+                "vector2": {
+                    "x": 0,
+                    "y": 7
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-24",
+            "transform": {
+                "vector2": {
+                    "x": 9,
+                    "y": 7
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-25",
+            "transform": {
+                "vector2": {
+                    "x": 0,
+                    "y": 8
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-26",
+            "transform": {
+                "vector2": {
+                    "x": 9,
+                    "y": 8
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-27",
+            "transform": {
+                "vector2": {
+                    "x": 0,
+                    "y": 9
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-28",
+            "transform": {
+                "vector2": {
+                    "x": 1,
+                    "y": 9
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-29",
+            "transform": {
+                "vector2": {
+                    "x": 2,
+                    "y": 9
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-30",
+            "transform": {
+                "vector2": {
+                    "x": 3,
+                    "y": 9
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-31",
+            "transform": {
+                "vector2": {
+                    "x": 4,
+                    "y": 9
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-32",
+            "transform": {
+                "vector2": {
+                    "x": 5,
+                    "y": 9
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-33",
+            "transform": {
+                "vector2": {
+                    "x": 6,
+                    "y": 9
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-34",
+            "transform": {
+                "vector2": {
+                    "x": 7,
+                    "y": 9
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-35",
+            "transform": {
+                "vector2": {
+                    "x": 8,
+                    "y": 9
+                },
+                "rotation": 0
+            }
+        },
+        {
+            "type": "Wall",
+            "glyph": "#",
+            "unique_id": "Wall-36",
+            "transform": {
+                "vector2": {
+                    "x": 9,
+                    "y": 9
+                },
+                "rotation": 0
+            }
+        }
+    ]
+}

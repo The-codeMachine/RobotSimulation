@@ -83,6 +83,6 @@ private:
     void sendAll_(const void* data, std::size_t size);
 
 private:
-    std::uint16_t port_;
+    Socket port_;
     Socket socket_ = INVALID_SOCKET_VALUE;
 };

@@ -9,7 +9,8 @@ void DebugChangeSink::publish(const ChangeEvent &event) {
 PortChangeSink::PortChangeSink(Socket port) : proxy_(port) {}
 
 void PortChangeSink::publish(const ChangeEvent& event) {
-    nlohmann::json json = event.data;
+    nlohmann::json json;
+    json["data"] = event.data;
     json["type"] = event.type;
     json["sequence"] = event.sequence;
     
