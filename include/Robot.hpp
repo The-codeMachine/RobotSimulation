@@ -109,7 +109,7 @@ public:
         return dynamic_cast<const T*>(it->second.get());
     }
 
-    /// @brief Removes a device from the robot. 
+    /// @brief Removes a device from the robot. Completely deletes the robot. 
     /// @param id 
     void removeDevice(const std::string& id);
 

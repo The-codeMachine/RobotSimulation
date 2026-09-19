@@ -138,31 +138,39 @@ void testDeserialize(Robot& robot) {
     transform.position = {4.0, 8.0};
     transform.rotation = 1.25;
 
-    ViewSensor& original = dynamic_cast<ViewSensor&>(robot.addDevice(std::make_unique<ViewSensor>("original_sensor", 75.0, 125.0, transform)));
+    robot.addDevice(std::make_unique<ViewSensor>("original_sensor", 75.0, 125.0, transform));
 
-    nlohmann::json json = original.serialize();
-    robot.removeDevice(original.id());
+    ViewSensor* original = robot.getDevice<ViewSensor>("original_sensor");
+
+    nlohmann::json json = original->serialize();
+
+    // Save the expected values before removing the original.
+    const double expectedFov = original->fov();
+    const double expectedRange = original->range();
+    const Transform expectedTransform = original->localTransform();
+
+    robot.removeDevice(original->id());
 
     ViewSensor& restored = dynamic_cast<ViewSensor&>(robot.addDevice(std::make_unique<ViewSensor>("original_sensor")));
 
     restored.deserialize(json);
 
-    assertNear(restored.fov(), original.fov());
-    assertNear(restored.range(), original.range());
+    assertNear(restored.fov(), expectedFov);
+    assertNear(restored.range(), expectedRange);
 
     assertNear(
         restored.localTransform().position.x,
-        original.localTransform().position.x
+        expectedTransform.position.x
     );
 
     assertNear(
         restored.localTransform().position.y,
-        original.localTransform().position.y
+        expectedTransform.position.y
     );
 
     assertNear(
         restored.localTransform().rotation,
-        original.localTransform().rotation
+        expectedTransform.rotation
     );
 }
 
