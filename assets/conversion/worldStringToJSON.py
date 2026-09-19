@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import argparse
 import json
 import sys
@@ -51,11 +49,10 @@ def world_to_json(input_path: Path, output_path: Path) -> None:
 
     objects = []
 
+    object_counters = {}
+
     for y, row in enumerate(rows):
         for x, glyph in enumerate(row):
-
-            # Spaces represent Empty objects, which are not serialized
-            # by World::serialize_().
             if glyph == " ":
                 continue
 
@@ -66,9 +63,13 @@ def world_to_json(input_path: Path, output_path: Path) -> None:
 
             object_type = GLYPH_TO_TYPE[glyph]
 
+            # Increment this object's type counter.
+            object_counters[object_type] = object_counters.get(object_type, 0) + 1
+
             obj = {
                 "type": object_type,
                 "glyph": glyph,
+                "unique_id": f"{object_type}-{object_counters[object_type]}",
                 "transform": {
                     "vector2": {
                         "x": x,
@@ -78,7 +79,6 @@ def world_to_json(input_path: Path, output_path: Path) -> None:
                 }
             }
 
-            # Deliberately do NOT add Robot data/devices.
             objects.append(obj)
 
     world = {
@@ -116,12 +116,16 @@ def main() -> int:
     args = parser.parse_args()
 
     if args.input.suffix.lower() != ".txt":
-        print("Warning: input file does not have a .txt extension",
-              file=sys.stderr)
+        print(
+            "Warning: input file does not have a .txt extension",
+            file=sys.stderr
+        )
 
     if args.output.suffix.lower() != ".json":
-        print("Warning: output file does not have a .json extension",
-              file=sys.stderr)
+        print(
+            "Warning: output file does not have a .json extension",
+            file=sys.stderr
+        )
 
     try:
         world_to_json(args.input, args.output)

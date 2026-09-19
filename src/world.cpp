@@ -6,6 +6,7 @@
 
 World::World(const nlohmann::json& world) : ROW_SIZE_(-1) {
     deserialize_(world);
+    sink_ = std::make_unique<DebugChangeSink>();
 }
 
 World::World(const std::filesystem::path& worldFile) : ROW_SIZE_(-1) {
@@ -20,6 +21,7 @@ World::World(const std::filesystem::path& worldFile) : ROW_SIZE_(-1) {
     }
 
     deserialize_(nlohmann::json::parse(file));
+    sink_ = std::make_unique<DebugChangeSink>();
 }
 
 Object& World::at(Vector2 pos) {
@@ -36,8 +38,32 @@ const Object& World::at(Vector2 pos) const {
     return *map_[convert_to_1D_(pos)];
 }
 
+ChangeSink& World::sink() {
+    return *sink_;
+}
+
+const ChangeSink& World::sink() const {
+    return *sink_;
+}
+
+void World::setSink(std::unique_ptr<ChangeSink> sink) {
+    sink_ = std::move(sink);
+}
+
+void World::emit(const ChangeEvent& event) const {
+    if (!sink_)
+        throw std::runtime_error("ChangeSink has not been set yet");
+    
+    sink_->publish(event);
+}
+
+void World::emit(const std::string& type, const nlohmann::json& data) {
+    emit(ChangeEvent{sequence_++, type, data});
+}
+
 void World::moveObject(Object& obj, const Transform& newTransform) {
-    Vector2 oldPosition = obj.transform().position;
+    Transform oldTransform = obj.transform();
+    Vector2 oldPosition = oldTransform.position;
     Vector2 newPosition = newTransform.position;
 
     if (!valid_position_(newPosition))
@@ -60,6 +86,12 @@ void World::moveObject(Object& obj, const Transform& newTransform) {
     map_[newIndex] = std::move(map_[oldIndex]);
     map_[newIndex]->transform_ = newTransform;
     map_[oldIndex] = std::move(Object::Object_Factory.create("Empty", *this, Transform(oldPosition, 0)));
+
+    emit("object.transform", {
+        {"object", map_[newIndex]->id()},
+        {"old", oldTransform.serialize()}, 
+        {"new", newTransform.serialize()},
+    });
 }
 
 std::optional<CollisionResult> World::cast(const Trajectory& trajectory, const Object& ignore) const {

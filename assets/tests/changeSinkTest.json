@@ -1,6 +1,6 @@
 {
     "version": 1,
-    "ROW_SIZE": 20,
+    "ROW_SIZE": 10,
     "ROW_AMOUNT": 10,
     "objects": [
         {
@@ -129,8 +129,8 @@
             "unique_id": "Wall-11",
             "transform": {
                 "vector2": {
-                    "x": 10,
-                    "y": 0
+                    "x": 0,
+                    "y": 1
                 },
                 "rotation": 0
             }
@@ -141,8 +141,8 @@
             "unique_id": "Wall-12",
             "transform": {
                 "vector2": {
-                    "x": 11,
-                    "y": 0
+                    "x": 9,
+                    "y": 1
                 },
                 "rotation": 0
             }
@@ -153,8 +153,8 @@
             "unique_id": "Wall-13",
             "transform": {
                 "vector2": {
-                    "x": 12,
-                    "y": 0
+                    "x": 0,
+                    "y": 2
                 },
                 "rotation": 0
             }
@@ -165,8 +165,8 @@
             "unique_id": "Wall-14",
             "transform": {
                 "vector2": {
-                    "x": 13,
-                    "y": 0
+                    "x": 9,
+                    "y": 2
                 },
                 "rotation": 0
             }
@@ -177,8 +177,8 @@
             "unique_id": "Wall-15",
             "transform": {
                 "vector2": {
-                    "x": 14,
-                    "y": 0
+                    "x": 0,
+                    "y": 3
                 },
                 "rotation": 0
             }
@@ -189,8 +189,8 @@
             "unique_id": "Wall-16",
             "transform": {
                 "vector2": {
-                    "x": 15,
-                    "y": 0
+                    "x": 9,
+                    "y": 3
                 },
                 "rotation": 0
             }
@@ -201,8 +201,8 @@
             "unique_id": "Wall-17",
             "transform": {
                 "vector2": {
-                    "x": 16,
-                    "y": 0
+                    "x": 0,
+                    "y": 4
                 },
                 "rotation": 0
             }
@@ -213,8 +213,8 @@
             "unique_id": "Wall-18",
             "transform": {
                 "vector2": {
-                    "x": 17,
-                    "y": 0
+                    "x": 9,
+                    "y": 4
                 },
                 "rotation": 0
             }
@@ -225,8 +225,8 @@
             "unique_id": "Wall-19",
             "transform": {
                 "vector2": {
-                    "x": 18,
-                    "y": 0
+                    "x": 0,
+                    "y": 5
                 },
                 "rotation": 0
             }
@@ -237,8 +237,8 @@
             "unique_id": "Wall-20",
             "transform": {
                 "vector2": {
-                    "x": 19,
-                    "y": 0
+                    "x": 9,
+                    "y": 5
                 },
                 "rotation": 0
             }
@@ -250,7 +250,7 @@
             "transform": {
                 "vector2": {
                     "x": 0,
-                    "y": 1
+                    "y": 6
                 },
                 "rotation": 0
             }
@@ -261,8 +261,8 @@
             "unique_id": "Wall-22",
             "transform": {
                 "vector2": {
-                    "x": 19,
-                    "y": 1
+                    "x": 9,
+                    "y": 6
                 },
                 "rotation": 0
             }
@@ -274,7 +274,7 @@
             "transform": {
                 "vector2": {
                     "x": 0,
-                    "y": 2
+                    "y": 7
                 },
                 "rotation": 0
             }
@@ -285,8 +285,8 @@
             "unique_id": "Wall-24",
             "transform": {
                 "vector2": {
-                    "x": 19,
-                    "y": 2
+                    "x": 9,
+                    "y": 7
                 },
                 "rotation": 0
             }
@@ -298,7 +298,7 @@
             "transform": {
                 "vector2": {
                     "x": 0,
-                    "y": 3
+                    "y": 8
                 },
                 "rotation": 0
             }
@@ -309,8 +309,8 @@
             "unique_id": "Wall-26",
             "transform": {
                 "vector2": {
-                    "x": 19,
-                    "y": 3
+                    "x": 9,
+                    "y": 8
                 },
                 "rotation": 0
             }
@@ -322,143 +322,6 @@
             "transform": {
                 "vector2": {
                     "x": 0,
-                    "y": 4
-                },
-                "rotation": 0
-            }
-        },
-        {
-            "type": "Wall",
-            "glyph": "#",
-            "unique_id": "Wall-28",
-            "transform": {
-                "vector2": {
-                    "x": 19,
-                    "y": 4
-                },
-                "rotation": 0
-            }
-        },
-        {
-            "type": "Wall",
-            "glyph": "#",
-            "unique_id": "Wall-29",
-            "transform": {
-                "vector2": {
-                    "x": 0,
-                    "y": 5
-                },
-                "rotation": 0
-            }
-        },
-        {
-            "type": "Robot",
-            "glyph": "R",
-            "unique_id": "Robot-1",
-            "transform": {
-                "vector2": {
-                    "x": 10,
-                    "y": 5
-                },
-                "rotation": 0
-            },
-            "data": {
-                "devices": [
-                    
-                ]
-            }
-        },
-        {
-            "type": "Wall",
-            "glyph": "#",
-            "unique_id": "Wall-30",
-            "transform": {
-                "vector2": {
-                    "x": 19,
-                    "y": 5
-                },
-                "rotation": 0
-            }
-        },
-        {
-            "type": "Wall",
-            "glyph": "#",
-            "unique_id": "Wall-31",
-            "transform": {
-                "vector2": {
-                    "x": 0,
-                    "y": 6
-                },
-                "rotation": 0
-            }
-        },
-        {
-            "type": "Wall",
-            "glyph": "#",
-            "unique_id": "Wall-32",
-            "transform": {
-                "vector2": {
-                    "x": 19,
-                    "y": 6
-                },
-                "rotation": 0
-            }
-        },
-        {
-            "type": "Wall",
-            "glyph": "#",
-            "unique_id": "Wall-33",
-            "transform": {
-                "vector2": {
-                    "x": 0,
-                    "y": 7
-                },
-                "rotation": 0
-            }
-        },
-        {
-            "type": "Wall",
-            "glyph": "#",
-            "unique_id": "Wall-34",
-            "transform": {
-                "vector2": {
-                    "x": 19,
-                    "y": 7
-                },
-                "rotation": 0
-            }
-        },
-        {
-            "type": "Wall",
-            "glyph": "#",
-            "unique_id": "Wall-35",
-            "transform": {
-                "vector2": {
-                    "x": 0,
-                    "y": 8
-                },
-                "rotation": 0
-            }
-        },
-        {
-            "type": "Wall",
-            "glyph": "#",
-            "unique_id": "Wall-36",
-            "transform": {
-                "vector2": {
-                    "x": 19,
-                    "y": 8
-                },
-                "rotation": 0
-            }
-        },
-        {
-            "type": "Wall",
-            "glyph": "#",
-            "unique_id": "Wall-37",
-            "transform": {
-                "vector2": {
-                    "x": 0,
                     "y": 9
                 },
                 "rotation": 0
@@ -467,7 +330,7 @@
         {
             "type": "Wall",
             "glyph": "#",
-            "unique_id": "Wall-38",
+            "unique_id": "Wall-28",
             "transform": {
                 "vector2": {
                     "x": 1,
@@ -479,7 +342,7 @@
         {
             "type": "Wall",
             "glyph": "#",
-            "unique_id": "Wall-39",
+            "unique_id": "Wall-29",
             "transform": {
                 "vector2": {
                     "x": 2,
@@ -491,7 +354,7 @@
         {
             "type": "Wall",
             "glyph": "#",
-            "unique_id": "Wall-40",
+            "unique_id": "Wall-30",
             "transform": {
                 "vector2": {
                     "x": 3,
@@ -503,7 +366,7 @@
         {
             "type": "Wall",
             "glyph": "#",
-            "unique_id": "Wall-41",
+            "unique_id": "Wall-31",
             "transform": {
                 "vector2": {
                     "x": 4,
@@ -515,7 +378,7 @@
         {
             "type": "Wall",
             "glyph": "#",
-            "unique_id": "Wall-42",
+            "unique_id": "Wall-32",
             "transform": {
                 "vector2": {
                     "x": 5,
@@ -527,7 +390,7 @@
         {
             "type": "Wall",
             "glyph": "#",
-            "unique_id": "Wall-43",
+            "unique_id": "Wall-33",
             "transform": {
                 "vector2": {
                     "x": 6,
@@ -539,7 +402,7 @@
         {
             "type": "Wall",
             "glyph": "#",
-            "unique_id": "Wall-44",
+            "unique_id": "Wall-34",
             "transform": {
                 "vector2": {
                     "x": 7,
@@ -551,7 +414,7 @@
         {
             "type": "Wall",
             "glyph": "#",
-            "unique_id": "Wall-45",
+            "unique_id": "Wall-35",
             "transform": {
                 "vector2": {
                     "x": 8,
@@ -563,130 +426,10 @@
         {
             "type": "Wall",
             "glyph": "#",
-            "unique_id": "Wall-46",
+            "unique_id": "Wall-36",
             "transform": {
                 "vector2": {
                     "x": 9,
-                    "y": 9
-                },
-                "rotation": 0
-            }
-        },
-        {
-            "type": "Wall",
-            "glyph": "#",
-            "unique_id": "Wall-47",
-            "transform": {
-                "vector2": {
-                    "x": 10,
-                    "y": 9
-                },
-                "rotation": 0
-            }
-        },
-        {
-            "type": "Wall",
-            "glyph": "#",
-            "unique_id": "Wall-48",
-            "transform": {
-                "vector2": {
-                    "x": 11,
-                    "y": 9
-                },
-                "rotation": 0
-            }
-        },
-        {
-            "type": "Wall",
-            "glyph": "#",
-            "unique_id": "Wall-49",
-            "transform": {
-                "vector2": {
-                    "x": 12,
-                    "y": 9
-                },
-                "rotation": 0
-            }
-        },
-        {
-            "type": "Wall",
-            "glyph": "#",
-            "unique_id": "Wall-50",
-            "transform": {
-                "vector2": {
-                    "x": 13,
-                    "y": 9
-                },
-                "rotation": 0
-            }
-        },
-        {
-            "type": "Wall",
-            "glyph": "#",
-            "unique_id": "Wall-51",
-            "transform": {
-                "vector2": {
-                    "x": 14,
-                    "y": 9
-                },
-                "rotation": 0
-            }
-        },
-        {
-            "type": "Wall",
-            "glyph": "#",
-            "unique_id": "Wall-52",
-            "transform": {
-                "vector2": {
-                    "x": 15,
-                    "y": 9
-                },
-                "rotation": 0
-            }
-        },
-        {
-            "type": "Wall",
-            "glyph": "#",
-            "unique_id": "Wall-53",
-            "transform": {
-                "vector2": {
-                    "x": 16,
-                    "y": 9
-                },
-                "rotation": 0
-            }
-        },
-        {
-            "type": "Wall",
-            "glyph": "#",
-            "unique_id": "Wall-54",
-            "transform": {
-                "vector2": {
-                    "x": 17,
-                    "y": 9
-                },
-                "rotation": 0
-            }
-        },
-        {
-            "type": "Wall",
-            "glyph": "#",
-            "unique_id": "Wall-55",
-            "transform": {
-                "vector2": {
-                    "x": 18,
-                    "y": 9
-                },
-                "rotation": 0
-            }
-        },
-        {
-            "type": "Wall",
-            "glyph": "#",
-            "unique_id": "Wall-56",
-            "transform": {
-                "vector2": {
-                    "x": 19,
                     "y": 9
                 },
                 "rotation": 0

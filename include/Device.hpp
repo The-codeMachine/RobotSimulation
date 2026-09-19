@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Factory.hpp>
+#include <ChangeEvent.hpp>
 
 #include <nlohmann/json.hpp>
 
@@ -25,25 +26,16 @@ public:
     static inline Factory::Factory<Device, const std::string&> Device_Factory;
 
 public:
-    Device(const std::string& id, const std::string& type) : id_(id), type_(type) {}
+    Device(const std::string& id, const std::string& type);
     virtual ~Device() = default;
 
     /// @brief Serializes a device to json
     /// @return the device serialized to json
-    virtual nlohmann::json serialize() const {
-        return {
-            {"id", id_}, 
-            {"type", type_},
-        };
-    }
+    virtual nlohmann::json serialize() const;
     
     /// @brief deserializes a device from json
     /// @param json 
-    virtual void deserialize(const nlohmann::json& json) {
-        id_ = json.at("id");
-        type_ = json.at("type");
-    }
-
+    virtual void deserialize(const nlohmann::json& json);
     /// @brief Called when attached to a robot
     /// @param robot 
     virtual void onAttach(Robot& robot) {}
@@ -57,15 +49,21 @@ public:
 
     /// @brief Gets the id 
     /// @return a copy of the id
-    std::string id() const {
-        return id_;
-    }
+    std::string id() const;
 
     /// @brief Gets and returns the objects update priority. This is so the updates are done sequentially
     /// @return the object's update priority (default = 0)
-    virtual int updatePriority() const noexcept {
-        return 0;
-    }
+    virtual int updatePriority() const noexcept;
+
+protected:
+    /// @brief Emits a device change through Robot by a specific event
+    /// @param event 
+    void emitDeviceChange(const ChangeEvent& event) const;
+
+    /// @brief Emits a device update through robot by specifying the type of event, and the data
+    /// @param type 
+    /// @param data 
+    void emitDeviceChange(const std::string& type, const nlohmann::json& data);
 
 protected:
     Robot* robot_ = nullptr;

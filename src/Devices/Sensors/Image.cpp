@@ -46,3 +46,16 @@ void Image::deleteDetection(size_t index) {
     
     detections_.erase(detections_.begin() + index);
 }
+
+nlohmann::json Image::serialize() const {
+    nlohmann::json out = nlohmann::json::array();
+
+    for (const auto& detection : detections_) {
+        out.push_back({
+            {"object", detection.object->serialize()},
+            {"position", detection.position.serialize()}
+        });
+    }
+
+    return out;
+}

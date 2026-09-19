@@ -28,6 +28,19 @@ called).
 Currently, ```onDetach``` is not called anywhere inside ```Robot``` or ```Device```. (including 
 in the destructor). 
 
+## Emit Device Change
+
+Device allows you to emit a specific change from a device to the world. This will use the World's
+ChangeSink to publish these events/updates. 
+
+Things to publish include:
+
+- Setting a new throttle (new value)
+- Updating the acceleration
+- Updating the deceleration
+
+Make updates clean. They should be explicity in what they are describing. 
+
 ## Updating
 
 ```update``` is where most of the functionality occurs, based off the ```deltaTime``` it should

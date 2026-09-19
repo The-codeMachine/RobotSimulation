@@ -35,6 +35,9 @@ executed squentially according to their own input. This is not a static function
 determining whether or not to allow the users to specify exactly how long they want that device. We could simply have
 a default and then the user can set it on their own. 
 
+Devices may be removed after creation. This is done through: `removeDevice(const std::string& id)`. This will completely
+remove a device from Robot, if it exists. If it does not exist it will do nothing.
+
 ## File Loading
 
 File loading and saving is done through JSON files. JSON is parsed through ```nlohmann::json```. An

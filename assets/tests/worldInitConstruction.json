@@ -6,6 +6,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-1",
             "transform": {
                 "vector2": {
                     "x": 0,
@@ -17,6 +18,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-2",
             "transform": {
                 "vector2": {
                     "x": 1,
@@ -28,6 +30,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-3",
             "transform": {
                 "vector2": {
                     "x": 2,
@@ -39,6 +42,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-4",
             "transform": {
                 "vector2": {
                     "x": 3,
@@ -50,6 +54,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-5",
             "transform": {
                 "vector2": {
                     "x": 4,
@@ -61,6 +66,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-6",
             "transform": {
                 "vector2": {
                     "x": 5,
@@ -72,6 +78,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-7",
             "transform": {
                 "vector2": {
                     "x": 6,
@@ -83,6 +90,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-8",
             "transform": {
                 "vector2": {
                     "x": 7,
@@ -94,6 +102,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-9",
             "transform": {
                 "vector2": {
                     "x": 8,
@@ -105,6 +114,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-10",
             "transform": {
                 "vector2": {
                     "x": 9,
@@ -116,6 +126,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-11",
             "transform": {
                 "vector2": {
                     "x": 10,
@@ -127,6 +138,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-12",
             "transform": {
                 "vector2": {
                     "x": 11,
@@ -138,6 +150,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-13",
             "transform": {
                 "vector2": {
                     "x": 12,
@@ -149,6 +162,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-14",
             "transform": {
                 "vector2": {
                     "x": 13,
@@ -160,6 +174,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-15",
             "transform": {
                 "vector2": {
                     "x": 14,
@@ -171,6 +186,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-16",
             "transform": {
                 "vector2": {
                     "x": 15,
@@ -182,6 +198,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-17",
             "transform": {
                 "vector2": {
                     "x": 16,
@@ -193,6 +210,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-18",
             "transform": {
                 "vector2": {
                     "x": 17,
@@ -204,6 +222,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-19",
             "transform": {
                 "vector2": {
                     "x": 18,
@@ -215,6 +234,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-20",
             "transform": {
                 "vector2": {
                     "x": 19,
@@ -226,6 +246,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-21",
             "transform": {
                 "vector2": {
                     "x": 20,
@@ -237,6 +258,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-22",
             "transform": {
                 "vector2": {
                     "x": 21,
@@ -248,6 +270,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-23",
             "transform": {
                 "vector2": {
                     "x": 22,
@@ -259,6 +282,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-24",
             "transform": {
                 "vector2": {
                     "x": 0,
@@ -270,6 +294,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-25",
             "transform": {
                 "vector2": {
                     "x": 22,
@@ -281,6 +306,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-26",
             "transform": {
                 "vector2": {
                     "x": 0,
@@ -292,6 +318,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-27",
             "transform": {
                 "vector2": {
                     "x": 22,
@@ -303,6 +330,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-28",
             "transform": {
                 "vector2": {
                     "x": 0,
@@ -314,6 +342,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-29",
             "transform": {
                 "vector2": {
                     "x": 6,
@@ -325,6 +354,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-30",
             "transform": {
                 "vector2": {
                     "x": 7,
@@ -336,6 +366,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-31",
             "transform": {
                 "vector2": {
                     "x": 8,
@@ -347,6 +378,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-32",
             "transform": {
                 "vector2": {
                     "x": 9,
@@ -358,6 +390,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-33",
             "transform": {
                 "vector2": {
                     "x": 10,
@@ -369,6 +402,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-34",
             "transform": {
                 "vector2": {
                     "x": 11,
@@ -380,6 +414,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-35",
             "transform": {
                 "vector2": {
                     "x": 12,
@@ -391,6 +426,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-36",
             "transform": {
                 "vector2": {
                     "x": 13,
@@ -402,6 +438,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-37",
             "transform": {
                 "vector2": {
                     "x": 14,
@@ -413,6 +450,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-38",
             "transform": {
                 "vector2": {
                     "x": 15,
@@ -424,6 +462,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-39",
             "transform": {
                 "vector2": {
                     "x": 22,
@@ -435,6 +474,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-40",
             "transform": {
                 "vector2": {
                     "x": 0,
@@ -446,6 +486,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-41",
             "transform": {
                 "vector2": {
                     "x": 15,
@@ -457,6 +498,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-42",
             "transform": {
                 "vector2": {
                     "x": 22,
@@ -468,6 +510,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-43",
             "transform": {
                 "vector2": {
                     "x": 0,
@@ -479,6 +522,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-44",
             "transform": {
                 "vector2": {
                     "x": 15,
@@ -490,6 +534,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-45",
             "transform": {
                 "vector2": {
                     "x": 22,
@@ -501,6 +546,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-46",
             "transform": {
                 "vector2": {
                     "x": 0,
@@ -512,6 +558,7 @@
         {
             "type": "Robot",
             "glyph": "R",
+            "unique_id": "Robot-1",
             "transform": {
                 "vector2": {
                     "x": 8,
@@ -528,6 +575,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-47",
             "transform": {
                 "vector2": {
                     "x": 15,
@@ -539,6 +587,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-48",
             "transform": {
                 "vector2": {
                     "x": 22,
@@ -550,6 +599,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-49",
             "transform": {
                 "vector2": {
                     "x": 0,
@@ -561,6 +611,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-50",
             "transform": {
                 "vector2": {
                     "x": 15,
@@ -572,6 +623,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-51",
             "transform": {
                 "vector2": {
                     "x": 16,
@@ -583,6 +635,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-52",
             "transform": {
                 "vector2": {
                     "x": 17,
@@ -594,6 +647,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-53",
             "transform": {
                 "vector2": {
                     "x": 19,
@@ -605,6 +659,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-54",
             "transform": {
                 "vector2": {
                     "x": 20,
@@ -616,6 +671,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-55",
             "transform": {
                 "vector2": {
                     "x": 21,
@@ -627,6 +683,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-56",
             "transform": {
                 "vector2": {
                     "x": 22,
@@ -638,6 +695,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-57",
             "transform": {
                 "vector2": {
                     "x": 0,
@@ -649,6 +707,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-58",
             "transform": {
                 "vector2": {
                     "x": 16,
@@ -660,6 +719,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-59",
             "transform": {
                 "vector2": {
                     "x": 22,
@@ -671,6 +731,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-60",
             "transform": {
                 "vector2": {
                     "x": 0,
@@ -682,6 +743,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-61",
             "transform": {
                 "vector2": {
                     "x": 16,
@@ -693,6 +755,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-62",
             "transform": {
                 "vector2": {
                     "x": 22,
@@ -704,6 +767,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-63",
             "transform": {
                 "vector2": {
                     "x": 0,
@@ -715,6 +779,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-64",
             "transform": {
                 "vector2": {
                     "x": 1,
@@ -726,6 +791,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-65",
             "transform": {
                 "vector2": {
                     "x": 2,
@@ -737,6 +803,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-66",
             "transform": {
                 "vector2": {
                     "x": 3,
@@ -748,6 +815,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-67",
             "transform": {
                 "vector2": {
                     "x": 4,
@@ -759,6 +827,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-68",
             "transform": {
                 "vector2": {
                     "x": 5,
@@ -770,6 +839,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-69",
             "transform": {
                 "vector2": {
                     "x": 6,
@@ -781,6 +851,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-70",
             "transform": {
                 "vector2": {
                     "x": 7,
@@ -792,6 +863,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-71",
             "transform": {
                 "vector2": {
                     "x": 8,
@@ -803,6 +875,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-72",
             "transform": {
                 "vector2": {
                     "x": 16,
@@ -814,6 +887,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-73",
             "transform": {
                 "vector2": {
                     "x": 17,
@@ -825,6 +899,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-74",
             "transform": {
                 "vector2": {
                     "x": 18,
@@ -836,6 +911,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-75",
             "transform": {
                 "vector2": {
                     "x": 19,
@@ -847,6 +923,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-76",
             "transform": {
                 "vector2": {
                     "x": 20,
@@ -858,6 +935,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-77",
             "transform": {
                 "vector2": {
                     "x": 21,
@@ -869,6 +947,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-78",
             "transform": {
                 "vector2": {
                     "x": 22,
@@ -880,6 +959,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-79",
             "transform": {
                 "vector2": {
                     "x": 0,
@@ -891,6 +971,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-80",
             "transform": {
                 "vector2": {
                     "x": 22,
@@ -902,6 +983,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-81",
             "transform": {
                 "vector2": {
                     "x": 0,
@@ -913,6 +995,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-82",
             "transform": {
                 "vector2": {
                     "x": 1,
@@ -924,6 +1007,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-83",
             "transform": {
                 "vector2": {
                     "x": 2,
@@ -935,6 +1019,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-84",
             "transform": {
                 "vector2": {
                     "x": 3,
@@ -946,6 +1031,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-85",
             "transform": {
                 "vector2": {
                     "x": 4,
@@ -957,6 +1043,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-86",
             "transform": {
                 "vector2": {
                     "x": 5,
@@ -968,6 +1055,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-87",
             "transform": {
                 "vector2": {
                     "x": 6,
@@ -979,6 +1067,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-88",
             "transform": {
                 "vector2": {
                     "x": 7,
@@ -990,6 +1079,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-89",
             "transform": {
                 "vector2": {
                     "x": 8,
@@ -1001,6 +1091,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-90",
             "transform": {
                 "vector2": {
                     "x": 9,
@@ -1012,6 +1103,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-91",
             "transform": {
                 "vector2": {
                     "x": 10,
@@ -1023,6 +1115,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-92",
             "transform": {
                 "vector2": {
                     "x": 11,
@@ -1034,6 +1127,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-93",
             "transform": {
                 "vector2": {
                     "x": 12,
@@ -1045,6 +1139,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-94",
             "transform": {
                 "vector2": {
                     "x": 13,
@@ -1056,6 +1151,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-95",
             "transform": {
                 "vector2": {
                     "x": 14,
@@ -1067,6 +1163,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-96",
             "transform": {
                 "vector2": {
                     "x": 15,
@@ -1078,6 +1175,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-97",
             "transform": {
                 "vector2": {
                     "x": 16,
@@ -1089,6 +1187,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-98",
             "transform": {
                 "vector2": {
                     "x": 17,
@@ -1100,6 +1199,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-99",
             "transform": {
                 "vector2": {
                     "x": 18,
@@ -1111,6 +1211,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-100",
             "transform": {
                 "vector2": {
                     "x": 19,
@@ -1122,6 +1223,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-101",
             "transform": {
                 "vector2": {
                     "x": 20,
@@ -1133,6 +1235,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-102",
             "transform": {
                 "vector2": {
                     "x": 21,
@@ -1144,6 +1247,7 @@
         {
             "type": "Wall",
             "glyph": "#",
+            "unique_id": "Wall-103",
             "transform": {
                 "vector2": {
                     "x": 22,

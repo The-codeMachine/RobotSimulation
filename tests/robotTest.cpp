@@ -37,37 +37,39 @@ private:
 
 int main() {
     try {
+        registerBuiltinObjects();
+        
+        Device::Device_Factory.registerType<TestDevice>("Test_Device");
 
-    registerBuiltinObjects();
-    Device::Device_Factory.registerType<TestDevice>("Test_Device");
+        World world(std::filesystem::path("assets/tests/robotWorldConstruction.json"));
+        Robot& robot = dynamic_cast<Robot&>(world.at({10, 5}));
 
-    World world(std::filesystem::path("assets/tests/robotWorldConstruction.json"));
-    Robot& robot = dynamic_cast<Robot&>(world.at({10, 5}));
+        assert(world.at({10, 5}).name() == "Robot");
 
-    assert(world.at({10, 5}).name() == "Robot");
+        std::string id = "test_id";
 
-    std::string id = "test_id";
+        TestDevice& d = robot.addDevice<TestDevice>(id);
+        TestDevice* found = robot.getDevice<TestDevice>(id);
 
-    TestDevice& d = robot.addDevice<TestDevice>(id);
-    TestDevice* found = robot.getDevice<TestDevice>(id);
+        assert(found != nullptr);
+        assert(found == &d);
 
-    assert(found != nullptr);
-    assert(found == &d);
+        for (double i = 0; i < 5; ++i) {
+            robot.update(i);
+        }
 
-    for (double i = 0; i < 5; ++i) {
-        robot.update(i);
-    }
+        assert(d.counter() == 4);
 
-    assert(d.counter() == 4);
+        world.saveToFile("assets/tests/robotSaveTest.json");
 
-    world.saveToFile("assets/tests/robotSaveTest.json");
+        World w(std::filesystem::path("assets/tests/robotSaveTest.json"));
+        Robot& r = dynamic_cast<Robot&>(w.at({10, 5}));
 
-    World w(std::filesystem::path("assets/tests/robotSaveTest.json"));
-    Robot& r = dynamic_cast<Robot&>(w.at({10, 5}));
-
-    assert(r.getDevice<TestDevice>(id)->counter() == 4);
+        assert(r.getDevice<TestDevice>(id)->counter() == 4);
     } catch (const std::exception& e) {
-        std::cout << e.what() << "\n";
+        std::cerr << e.what() << "\n";
+        return -1;
     }
+
     return 0;
 }

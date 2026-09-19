@@ -116,9 +116,11 @@ void DifferentialDrive::update(double deltaTime) {
     if (collision) {
         Transform newTransform = transform;
         
+        double time = std::max(0.0, collision->time - 0.01);
+        
         // gets the position and rotation just before the collision
-        newTransform.position = trajectory.position(collision->time - 0.01);
-        newTransform.rotation = trajectory.rotation(collision->time - 0.01);
+        newTransform.position = trajectory.position(time);
+        newTransform.rotation = trajectory.rotation(time);
         
         robot_->setTransform(newTransform);
         
@@ -129,6 +131,16 @@ void DifferentialDrive::update(double deltaTime) {
     newTransform.position = trajectory.position(1.0);
     newTransform.rotation = trajectory.rotation(1.0);
 
+    // Emit the device change before setting a new transform
+    // for the robot so that the device changes before the robot
+    // changes
+    
+    emitDeviceChange("differentialdrive.state", {
+        {"device", id()}, 
+        {"linear_velocity", linearVelocity_},
+        {"angular_velocity", angularVelocity_}
+    });
+    
     robot_->setTransform(newTransform);
 }
 

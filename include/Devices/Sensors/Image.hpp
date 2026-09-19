@@ -53,6 +53,10 @@ public:
     /// @param index 
     void deleteDetection(size_t index);
 
+    /// @brief Serializes the image into JSON using nlohmann::json
+    /// @return json representing the image
+    nlohmann::json serialize() const;
+
 private:
     std::vector<Detection> detections_;
 
