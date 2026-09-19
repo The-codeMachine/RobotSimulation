@@ -1,0 +1,76 @@
+name: Question / Support Request
+description: Ask a question or get help using the project.
+title: "[Question]: "
+labels:
+  - question
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reaching out!
+
+        Please provide enough information for us to understand what you're trying to do and where you're stuck.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: What is your question?
+      description: Clearly describe what you are trying to accomplish or what you are unsure about.
+      placeholder: |
+        I am trying to...
+        I expected...
+        I am unsure how...
+    validations:
+      required: true
+
+  - type: textarea
+    id: attempted
+    attributes:
+      label: What have you tried?
+      description: Describe what you've already tried and what happened.
+      placeholder: |
+        I tried...
+        This resulted in...
+    validations:
+      required: true
+
+  - type: textarea
+    id: code
+    attributes:
+      label: Relevant Code or Configuration
+      description: Include a minimal example if applicable.
+      render: cpp
+      placeholder: |
+        // Minimal example
+    validations:
+      required: false
+
+  - type: input
+    id: version
+    attributes:
+      label: Project Version
+      description: Which version or commit are you using?
+      placeholder: "e.g. v0.3.0 or commit abc1234"
+    validations:
+      required: false
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include relevant OS, compiler, C++ standard, or other environment information.
+      placeholder: |
+        OS: Windows 11
+        Compiler: MSVC 2022
+        C++ Standard: C++20
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other information that may help answer your question.
+      placeholder: "Anything else..."
+    validations:
+      required: false

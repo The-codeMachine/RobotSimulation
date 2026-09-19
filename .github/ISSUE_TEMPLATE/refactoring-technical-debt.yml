@@ -1,0 +1,67 @@
+name: Refactoring / Technical Debt
+description: Suggest a refactoring or report technical debt that should be addressed.
+title: "[Refactor]: "
+labels:
+  - refactoring
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template for internal code improvements that do not primarily change
+        the project's external behavior or API.
+
+        Please explain the problem and why addressing it would be worthwhile.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What part of the codebase needs refactoring, and what makes it problematic?
+      placeholder: |
+        The current implementation...
+        This makes it difficult to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed Refactoring
+      description: Describe how you think the code could be improved.
+      placeholder: |
+        Refactor this into...
+        Move this functionality to...
+        Replace this implementation with...
+    validations:
+      required: true
+
+  - type: textarea
+    id: benefits
+    attributes:
+      label: Expected Benefits
+      description: What would this refactoring improve?
+      placeholder: |
+        - Reduce duplication
+        - Improve maintainability
+        - Simplify the API
+        - Improve testability
+    validations:
+      required: true
+
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks / Considerations
+      description: Are there compatibility concerns, API changes, performance considerations, or other risks?
+      placeholder: "Any potential risks or things that should be considered..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Include relevant files, classes, code snippets, benchmarks, or related issues.
+      placeholder: "Anything else that may help..."
+    validations:
+      required: false
