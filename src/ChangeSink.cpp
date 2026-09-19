@@ -17,7 +17,7 @@ void PortChangeSink::publish(const ChangeEvent& event) {
     proxy_.send(json);
 }
 
-const Socket& PortChangeSink::port() const {
+std::uint16_t PortChangeSink::port() const {
     return proxy_.port();
 }
 

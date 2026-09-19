@@ -51,7 +51,7 @@ public:
 
     /// @brief Gets the current Socket being used
     /// @return the current socket being used as a constant reference
-    const Socket& port() const;
+    std::uint16_t port() const;
 
     /// @brief Updates the port to a new socket. We recommend not using 
     /// this in runtime
