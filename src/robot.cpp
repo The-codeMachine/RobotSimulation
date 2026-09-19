@@ -29,11 +29,8 @@ nlohmann::json Robot::serialize() const {
     nlohmann::json json = Object::serialize();
     
     nlohmann::json devices = nlohmann::json::array();
-    for (const auto& [id, device] : devices_) {
-        if (!device)
-            continue;
-
-        devices.push_back(device->serialize());
+    for (const Device& device : sortedDevices_) {
+        devices.push_back(device.serialize());
     }
 
     json["data"]["devices"] = std::move(devices);
