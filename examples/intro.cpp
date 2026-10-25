@@ -118,7 +118,6 @@ int main() {
         );
 
         std::cout << "\n[world]\n";
-        std::cout << world.toString() << "\n";
 
         std::cout << "\n[robot]\n";
         std::cout << "Initial position: ";
@@ -189,7 +188,6 @@ int main() {
 
         World restored(output);
         std::cout << "Reload successful.\n";
-        std::cout << restored.toString() << "\n";
 
         std::filesystem::remove(output);
 

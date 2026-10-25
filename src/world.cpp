@@ -4,12 +4,12 @@
 #include <sstream>
 #include <stdexcept>
 
-World::World(const nlohmann::json& world) : ROW_SIZE_(-1) {
+World::World(const nlohmann::json& world) {
     deserialize_(world);
     sink_ = std::make_unique<DebugChangeSink>();
 }
 
-World::World(const std::filesystem::path& worldFile) : ROW_SIZE_(-1) {
+World::World(const std::filesystem::path& worldFile) {
     if (!std::filesystem::exists(worldFile) 
         || !std::filesystem::is_regular_file(worldFile)) {
             throw std::runtime_error("World file does not exist, or is an invalid file");
@@ -25,17 +25,11 @@ World::World(const std::filesystem::path& worldFile) : ROW_SIZE_(-1) {
 }
 
 Object& World::at(Vector2 pos) {
-    if (!valid_position_(pos))
-        throw std::runtime_error("Invalid position");
-
-    return *map_[convert_to_1D_(pos)];
+    return *map_.at(pos);
 }
 
 const Object& World::at(Vector2 pos) const {
-    if (!valid_position_(pos))
-        throw std::runtime_error("Invalid position");
-
-    return *map_[convert_to_1D_(pos)];
+    return *map_.at(pos);
 }
 
 ChangeSink& World::sink() {
@@ -66,30 +60,39 @@ void World::moveObject(Object& obj, const Transform& newTransform) {
     Vector2 oldPosition = oldTransform.position;
     Vector2 newPosition = newTransform.position;
 
-    if (!valid_position_(newPosition))
-        throw std::runtime_error("(x, y) is an invalid position for this world");
+    std::cout << oldPosition.toString() << "\n";
+    std::cout << newPosition.toString() << "\n";
 
-    size_t oldIndex = convert_to_1D_(oldPosition);
-    size_t newIndex = convert_to_1D_(newPosition);
-
-    if (&*map_[oldIndex] != &obj)
+    auto oldIt = map_.find(oldPosition);
+    if (oldIt == map_.end() || oldIt->second.get() != &obj)
         throw std::runtime_error("Object is not located at its recorded position");
 
-    if (oldIndex == newIndex) {
+    if (oldPosition == newPosition) {
         obj.transform_ = newTransform;
+        emit("object.transform", {
+            {"object", obj.id()},
+            {"old", oldTransform.serialize()},
+            {"new", newTransform.serialize()},
+        });
         return;
     }
 
-    if (!map_[newIndex]->isEmpty())
-        throw std::runtime_error("Cannot move object into an occupied position");
+    // checks whether or not the new position is occupied
+    auto newIt = map_.find(newPosition);
+    if (newIt != map_.end() && !newIt->second->isEmpty())
+        throw std::out_of_range(
+            "Cannot move object: target position " + newPosition.toString() +
+            " is already occupied");
 
-    map_[newIndex] = std::move(map_[oldIndex]);
-    map_[newIndex]->transform_ = newTransform;
-    map_[oldIndex] = std::move(Object::Object_Factory.create("Empty", *this, Transform(oldPosition, 0)));
+    auto moved = std::move(oldIt->second);
+    Object* movedPtr = moved.get();
+    movedPtr->transform_ = newTransform;
+    map_[newPosition] = std::move(moved);
+    map_[oldPosition] = Object::Object_Factory.create("Empty", *this, Transform(oldPosition, 0));
 
     emit("object.transform", {
-        {"object", map_[newIndex]->id()},
-        {"old", oldTransform.serialize()}, 
+        {"object", movedPtr->id()},
+        {"old", oldTransform.serialize()},
         {"new", newTransform.serialize()},
     });
 }
@@ -97,7 +100,7 @@ void World::moveObject(Object& obj, const Transform& newTransform) {
 std::optional<CollisionResult> World::cast(const Trajectory& trajectory, const Object& ignore) const {
     std::optional<CollisionResult> closest;
 
-    for (const auto& object : map_) {
+    for (const auto& [pos, object] : map_) {
         if (object.get() == &ignore)
             continue;
 
@@ -122,7 +125,7 @@ std::optional<CollisionResult> World::cast(const Trajectory& trajectory, const O
 std::vector<Detection> World::sense(const SensorShape& shape) {
     std::vector<Detection> out;
 
-    for (const auto& obj : map_) {
+    for (const auto& [pos, obj] : map_) {
         const auto& transform = obj->transform();        
 
         if (obj->name() != "Empty" && shape.contains(transform)) {
@@ -136,25 +139,8 @@ std::vector<Detection> World::sense(const SensorShape& shape) {
 
 void World::replaceObject(std::unique_ptr<Object> value) {
     Vector2 pos = value->transform().position;
-    if (!valid_position_(pos))
-        throw std::runtime_error("(x, y) is an invalid position for this world");
 
-    map_[convert_to_1D_(pos)] = std::move(value);
-}
-
-std::string World::toString() const noexcept {
-    std::string out;
-
-    for (double y = 0; y < ROW_AMOUNT_; ++y) {
-        for (double x = 0; x < ROW_SIZE_; ++x) {
-            out += map_[convert_to_1D_({x, y})]->glyph();
-        }
-
-        if (y + 1 < ROW_AMOUNT_)
-            out += '\n';
-    }
-
-    return out;
+    map_[pos] = std::move(value);
 }
 
 void World::saveToFile(const std::filesystem::path& path) const {
@@ -166,14 +152,6 @@ void World::saveToFile(const std::filesystem::path& path) const {
     file << serialize_();
     
     file.close();
-}
-
-size_t World::convert_to_1D_(Vector2 vec) const noexcept {
-    return std::round(vec.y) * ROW_SIZE_ + std::round(vec.x);
-}
-
-bool World::valid_position_(Vector2 vec) const noexcept {
-    return vec.x < ROW_SIZE_ && vec.y < ROW_AMOUNT_;
 }
 
 std::unique_ptr<Object> World::clone_object_(const Object& original) {
@@ -196,52 +174,11 @@ void World::deserialize_(const nlohmann::json& world) {
     if (versionIt->get<int>() != WORLD_FILE_VERSION)
         throw std::runtime_error("Invalid world file version");
 
-    const auto rowSizeIt = world.find("ROW_SIZE");
-    if (rowSizeIt == world.end() || !rowSizeIt->is_number_unsigned())
-        throw std::runtime_error("World file is missing a valid 'ROW_SIZE'");
-
-    const auto rowAmountIt = world.find("ROW_AMOUNT");
-    if (rowAmountIt == world.end() || !rowAmountIt->is_number_unsigned())
-        throw std::runtime_error("World file is missing a valid 'ROW_AMOUNT'");
-
-    ROW_SIZE_ = rowSizeIt->get<size_t>();
-    ROW_AMOUNT_ = rowAmountIt->get<size_t>();
-
-    if (ROW_SIZE_ == 0)
-        throw std::runtime_error("World ROW_SIZE must be greater than zero");
-
-    if (ROW_AMOUNT_ == 0)
-        throw std::runtime_error("World ROW_AMOUNT must be greater than zero");
-
-    if (ROW_AMOUNT_ > std::numeric_limits<size_t>::max() / ROW_SIZE_)
-        throw std::runtime_error("World dimensions are too large");
-
-    const size_t mapSize = ROW_SIZE_ * ROW_AMOUNT_;
-
     const auto objectsIt = world.find("objects");
     if (objectsIt == world.end() || !objectsIt->is_array())
         throw std::runtime_error("World file is missing an 'objects' array");
 
-    std::vector<std::unique_ptr<Object>> newMap;
-    newMap.reserve(mapSize);
-
-    for (size_t i = 0; i < mapSize; ++i) {
-        Transform t(
-            static_cast<double>(i % ROW_SIZE_),
-            static_cast<double>(i / ROW_SIZE_),
-            0
-        );
-
-        auto obj = Object::Object_Factory.create("Empty", *this, t);
-
-        if (!obj)
-            throw std::runtime_error("Failed to create default Empty object");
-
-        newMap.push_back(std::move(obj));
-    }
-
-    // keeps track of the positions that have already been populated
-    std::vector<bool> occupied(mapSize, false);
+    std::unordered_map<Vector2, std::unique_ptr<Object>> newMap;
 
     for (const auto& j : *objectsIt) {
         if (!j.is_object())
@@ -259,17 +196,7 @@ void World::deserialize_(const nlohmann::json& world) {
 
         Transform t;
         t.deserialize(*transformIt);
-
-        if (!valid_position_(t.position))
-            throw std::runtime_error("Invalid object position according to world dimensions");
-
-        const size_t index = convert_to_1D_(t.position);
-
-        if (index >= mapSize)
-            throw std::runtime_error("Object position converted to an invalid map index");
-
-        if (occupied[index])
-            throw std::runtime_error("Multiple objects occupy the same world position");
+        Vector2 pos = t.position;
 
         auto obj = Object::Object_Factory.create(name, *this, t);
 
@@ -282,8 +209,7 @@ void World::deserialize_(const nlohmann::json& world) {
 
         obj->deserialize(j);
 
-        newMap[index] = std::move(obj);
-        occupied[index] = true;
+        newMap[pos] = std::move(obj);
     }
 
     map_ = std::move(newMap);
@@ -293,11 +219,9 @@ nlohmann::json World::serialize_() const {
     nlohmann::json json;
 
     json["version"] = WORLD_FILE_VERSION;
-    json["ROW_SIZE"] = ROW_SIZE_;
-    json["ROW_AMOUNT"] = map_.size() / ROW_SIZE_;
 
     nlohmann::json objects;
-    for (const auto& o : map_) {
+    for (const auto& [pos, o] : map_) {
         // skip empty objects
         if (o->name() == "Empty")
             continue;

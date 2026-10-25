@@ -110,7 +110,6 @@ void DifferentialDrive::update(double deltaTime) {
         linearVelocity_, angularVelocity_, dt
     );
 
-    
     auto collision = robot_->world().cast(trajectory, *robot_);
     
     if (collision) {
