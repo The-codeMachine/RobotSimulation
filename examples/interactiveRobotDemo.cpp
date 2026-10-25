@@ -232,7 +232,6 @@ int main() {
             }
             else if (command == "world") {
                 std::cout << "\n[world]\n";
-                std::cout << world.toString() << "\n";
             }
             else if (command == "stop") {
                 applyThrottle(

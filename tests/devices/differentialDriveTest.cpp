@@ -27,9 +27,7 @@ int main() {
             Motor& rightMotor = robot.addDevice<Motor>("RightMotor_DD", 20, 40);
 
             // Drive setup: Wheel radius = 0.25, Track Width = 1.0
-            DifferentialDrive& drive = robot.addDevice<DifferentialDrive>(
-                    "DD", "LeftMotor_DD", "RightMotor_DD", 0.25, 1.0
-            );
+            DifferentialDrive& drive = robot.addDevice<DifferentialDrive>("DD", "LeftMotor_DD", "RightMotor_DD", 0.25, 1.0);
 
             // Verify the devices can be retrieved after registration.
             assert(std::addressof(*robot.getDevice<Motor>("LeftMotor_DD")) == std::addressof(leftMotor));
@@ -42,8 +40,6 @@ int main() {
 
             const Vector2 initialPosition = robot.transform().position;
             const double initialRotation = robot.transform().rotation;
-
-            std::cout << world.toString() << "\n";
 
             // Process physics timestep via the parent robot container
             robot.update(1.0);
@@ -68,9 +64,9 @@ int main() {
             // The robot must rotate because the wheels have mismatched thrust profiles
             assert(std::abs(finalRotation - firstRotation) > EPSILON);
             assert(finalPosition.x != firstPosition.x || finalPosition.y != firstPosition.y);
-
+            
             // Explicitly update grid tracking inside your world structure before mapping grid assertions
-            world.moveObject(world.at({11, 10}), {{5, 4}, 0}); 
+            world.moveObject(robot, {{5, 4}, 0}); 
 
             // Verify the updated grid handle matches the active robot address
             assert(std::addressof(world.at({5, 4})) == std::addressof(robot));

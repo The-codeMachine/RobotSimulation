@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Object.hpp>
+#include <Vector2.hpp>
 #include <Ray.hpp>
 #include <Collision.hpp>
 #include <ChangeSink.hpp>
@@ -90,27 +91,11 @@ public:
     /// @param value 
     void replaceObject(std::unique_ptr<Object> value);
 
-    /// @brief converts the world into string for visual representation
-    /// @return the world as a string
-    std::string toString() const noexcept;
-
     /// @brief saves the world's current state to a file
     /// @param path 
     void saveToFile(const std::filesystem::path& path) const;
 
 private:
-    /// @brief converts (x, y) to a 1D index
-    /// @param x as base-0
-    /// @param y as base-0
-    /// @return (x, y) as a 1D index
-    size_t convert_to_1D_(Vector2 vec) const noexcept;
-
-    /// @brief checks whether (x, y) is a valid position
-    /// @param x as base-0
-    /// @param y as base-0
-    /// @return true if it is valid
-    bool valid_position_(Vector2 vec) const noexcept;
-
     /// @brief Clones an object completely, and returns the clone
     /// @param original 
     /// @return the clone from the object
@@ -125,13 +110,10 @@ private:
     nlohmann::json serialize_() const;
 
 private:
-    std::vector<std::unique_ptr<Object>> map_;
+    std::unordered_map<Vector2, std::unique_ptr<Object>> map_;
 
     std::unique_ptr<ChangeSink> sink_;
     uint64_t sequence_ = 0;
-
-    uint32_t ROW_SIZE_;
-    uint32_t ROW_AMOUNT_;
 
 private:
     uint32_t WORLD_FILE_VERSION = 1;

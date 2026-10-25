@@ -2,6 +2,10 @@
 
 #include <nlohmann/json.hpp>
 
+#include <string>
+#include <cstddef>
+#include <functional>
+
 /// @brief This is one position in the world. It 
 /// consists of an x and y value. They can be
 /// any real value that the world will support. 
@@ -45,3 +49,16 @@ struct Vector2 {
     /// @return a string representing a Vector2
     std::string toString() const noexcept;
 };
+
+namespace std {
+    template <>
+    struct hash<Vector2> {
+        std::size_t operator()(const Vector2& v) const noexcept {
+            std::size_t h1 = std::hash<double>{}(v.x);
+            std::size_t h2 = std::hash<double>{}(v.y);
+
+            // combine the two hashes using a bit-mixing algorithm
+            return h1 ^ (h2 + 0x9e3779b9 + (h1 << 6) + (h1 >> 2));
+        }
+    };
+}
