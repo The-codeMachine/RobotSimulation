@@ -158,20 +158,32 @@ protected:
 
 };
 
-/// @brief An empty square, sublass of Object, does nothing
+/// @brief An empty square, sublass of Object, does nothing. Copyable and moveable. 
 class Empty : public Object {
 public:
     Empty(World& world, Transform transform = Transform(), const std::string& name = "Empty");
+
+    Empty(const Empty&) = default;
+    Empty& operator=(const Empty&) = default;
+
+    Empty(Empty&&) noexcept = default;
+    Empty& operator=(Empty&&) noexcept = default;
 
     static void registerEmpty();
 
     bool isEmpty() const noexcept override;
 };
 
-/// @brief A wall, subclass of Object something to run into
+/// @brief A wall, subclass of Object something to run into. Copyable and moveable. 
 class Wall : public Object {
 public:
     Wall(World& world, Transform transform = Transform(), const std::string& name = "Wall");
+
+    Wall(const Wall&) = default;
+    Wall& operator=(const Wall&) = default;
+
+    Wall(Wall&&) noexcept = default;
+    Wall& operator=(Wall&&) noexcept = default;
 
     static void registerWall();
 

@@ -16,6 +16,9 @@ glyph can be reused as many times as possible, it is simply for pretty printing.
 `Object` has a unique id. This is unique to very specific object. This was added so `World`
 and other programs can easily identify which `Object` is which. 
 
+`Wall` and `Empty` (the default `Object`s) are copyable and moveable. Each object defines 
+whether or not they are. 
+
 ## File Saving, Loading & Serialization
 
 File saving and loading is handled through the ```World``` class. The ```World``` class will 

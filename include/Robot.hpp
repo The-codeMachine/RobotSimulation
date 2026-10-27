@@ -24,9 +24,17 @@ class World;
 /// functionality such as movement or vision.
 ///
 /// Device IDs are unique within a Robot.
+///
+/// Robot is moveable but non-copyable. 
 class Robot : public Object {
 public:
     Robot(World& world, Transform t);
+
+    Robot(const Robot&) = delete;
+    Robot& operator=(const Robot&) = delete;
+
+    Robot(Robot&&) noexcept = default;
+    Robot& operator=(Robot&&) noexcept = default;
 
     void deserialize(const nlohmann::json& json) override;
     nlohmann::json serialize() const override;
