@@ -5,6 +5,7 @@
 #include <Devices/Sensors/Image.hpp>
 
 /// @brief Base class for devices that measure properties of the simulation.
+/// Moveable but not copyable. 
 class Sensor : public Device {
 public:
     Sensor(const std::string& id, const std::string& type = "Sensor");
@@ -12,6 +13,12 @@ public:
         const std::string& id, const std::string& type = "Sensor");
 
     virtual ~Sensor() = default;
+
+    Sensor(const Sensor&) = delete;
+    Sensor& operator=(const Sensor&) = delete;
+    
+    Sensor(Sensor&&) noexcept = default;
+    Sensor& operator=(Sensor&&) noexcept = default;
 
     /// @brief Serializes the Sensor into JSON
     /// @return JSON representing this Sensor
@@ -53,6 +60,7 @@ protected:
 /// @brief This is the sensor that views the world around it.
 /// This uses the cone SensorShape for detection. Local position
 /// is this sensor's position on the Robot. 
+/// Moveable but not copyable. 
 class ViewSensor : public Sensor {
 public:
     ViewSensor(const std::string& id, const std::string& type = "ViewSensor");
@@ -60,6 +68,12 @@ public:
         Transform localTransform, const std::string& type = "ViewSensor");
     ViewSensor(const std::string& id, std::unique_ptr<SensorShape> shape,
         Transform localTransform, const std::string& type = "ViewSensor");
+
+    ViewSensor(const ViewSensor&) = delete;
+    ViewSensor& operator=(const ViewSensor&) = delete;
+    
+    ViewSensor(ViewSensor&&) noexcept = default;
+    ViewSensor& operator=(ViewSensor&&) noexcept = default;
 
     /// @brief Registers the view sensor to the device factory
     static void registerViewSensor();

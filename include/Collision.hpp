@@ -16,17 +16,9 @@ class Object;
 ///
 /// The trajectory can be linear, accelerated, or eventually any other
 /// parametic path. 
-/// 
-/// Moveable and copyable object
 class Trajectory {
 public:
     virtual ~Trajectory() = default;
-
-    Trajectory(const Trajectory&) = default;
-    Trajectory& operator=(const Trajectory&) = default;
-
-    Trajectory(Trajectory&&) noexcept = default;
-    Trajectory& operator=(Trajectory&&) noexcept = default;
 
     /// @brief Gets the position at normalized time t
     /// @param t Normalized time in [0, 1]

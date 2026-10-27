@@ -5,7 +5,7 @@
 /// @brief Sensor shape is a specific geometric
 /// shape specifying how a sensor scans an area
 /// in World. It holds a simple origin point 
-/// transform. 
+/// transform. Moveable and copyable. 
 class SensorShape {
 public:
     static inline Factory::Factory<SensorShape, Transform> SensorShape_Factory;
@@ -15,6 +15,12 @@ public:
     SensorShape(Transform origin, const std::string& type = "SensorShape");
 
     virtual ~SensorShape() = default;
+
+    SensorShape(const SensorShape&) = default;
+    SensorShape& operator=(const SensorShape&) = default;
+    
+    SensorShape(SensorShape&&) noexcept = default;
+    SensorShape& operator=(SensorShape&&) noexcept = default;
 
     /// @brief Serializes a SensorShape 
     /// @return JSON representing a base SensorShape (returning its origin)
@@ -46,12 +52,18 @@ private:
 /// inherits publically from SensorShape. It defines
 /// a quadratic shape representing the SensorShape. 
 /// This can be any shape with 4 points. This is 
-/// not based off the origin. 
+/// not based off the origin. Moveable and copyable. 
 class SensorShapeQuadratic : public SensorShape {
 public:
     SensorShapeQuadratic(Transform origin, const std::string& type = "SensorShapeQuadratic");
     SensorShapeQuadratic(const std::array<Transform, 4>& vertices, const std::string& type = "SensorShapeQuadratic");
     
+    SensorShapeQuadratic(const SensorShapeQuadratic&) = default;
+    SensorShapeQuadratic& operator=(const SensorShapeQuadratic&) = default;
+    
+    SensorShapeQuadratic(SensorShapeQuadratic&&) noexcept = default;
+    SensorShapeQuadratic& operator=(SensorShapeQuadratic&&) noexcept = default;
+
     /// @brief Registers SensorShapeQuadratic into the SensorShape Factory
     static void registerSensorShapeQuadratic();
 
@@ -96,11 +108,18 @@ private:
 /// a cone shape. This cone shape is defined by an
 /// FOV (field of view) and range (how far the cone
 /// expands for view). This is based off the origin. 
+/// Moveable and copyable. 
 class SensorShapeCone : public SensorShape {
 public:
     SensorShapeCone(Transform origin, const std::string& type = "SensorShapeCone");
     SensorShapeCone(Transform origin, double fov, double range, const std::string& type = "SensorShapeCone");
     
+    SensorShapeCone(const SensorShapeCone&) = default;
+    SensorShapeCone& operator=(const SensorShapeCone&) = default;
+    
+    SensorShapeCone(SensorShapeCone&&) noexcept = default;
+    SensorShapeCone& operator=(SensorShapeCone&&) noexcept = default;
+
     /// @brief Registers SensorShapeCone into the SensorShape Factory
     static void registerSensorShapeCone();
     
@@ -142,11 +161,17 @@ private:
 /// @brief This is a subclass of SensorShape. It 
 /// inherits publically from SensorShape. It defines
 /// a ball shape around origin. This shape is based
-/// off a radius. 
+/// off a radius. Moveable and copyable. 
 class SensorShapeBall : public SensorShape {
 public:
     SensorShapeBall(Transform origin, const std::string& type = "SensorShapeBall");
     SensorShapeBall(Transform origin, double radius, const std::string& type = "SensorShapeBall");
+
+    SensorShapeBall(const SensorShapeBall&) = default;
+    SensorShapeBall& operator=(const SensorShapeBall&) = default;
+    
+    SensorShapeBall(SensorShapeBall&&) noexcept = default;
+    SensorShapeBall& operator=(SensorShapeBall&&) noexcept = default;
 
     /// @brief Registers SensorShapeBall into the SensorShape Factory
     static void registerSensorShapeBall();

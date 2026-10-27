@@ -13,6 +13,7 @@
 /// its throttle, and access its angular position,
 /// and velocity. 
 ///
+/// Moveable and copyable. 
 class Motor : public Device {
 public:
     Motor(const std::string& id, const std::string& type = "Motor");
@@ -22,6 +23,12 @@ public:
     /// @param maxAngularVelocity Maximum shaft speed (rad/s) 
     /// @param maxAngularAcceleration Maximum acceleration (rad/s^2) 
     Motor(const std::string& id, double maxAngularVelocity, double maxAngularAcceleration, const std::string& type = "Motor");
+
+    Motor(const Motor&) = default;
+    Motor& operator=(const Motor&) = default;
+    
+    Motor(Motor&&) noexcept = default;
+    Motor& operator=(Motor&&) noexcept = default;
 
     /// @brief Registers the Motor class in the Device factory
     static void registerMotor() {

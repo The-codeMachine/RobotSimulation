@@ -10,6 +10,8 @@ identifier.
 Device has a pointer reference to its ```Robot``` owner. The ```Robot``` class is a 
 friend class. 
 
+The default Device is moveable and copyable. 
+
 ## Serialization and Deserialization
 
 ```serialization``` is called to serialize the object to JSON. We use ```nlohmann::json``` for 

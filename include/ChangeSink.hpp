@@ -13,17 +13,9 @@
 ///
 /// A ChangeSink will simply do something with an event, whether
 /// that be printing, or publishing it to a port.  
-/// 
-/// ChangeSink is moveable and copyable. 
 class ChangeSink {
 public:
     virtual ~ChangeSink() = default;
-
-    ChangeSink(const ChangeSink&) = default;
-    ChangeSink& operator=(const ChangeSink&) = default;
-
-    ChangeSink(ChangeSink&&) noexcept = default;
-    ChangeSink& operator=(ChangeSink&&) noexcept = default;
 
     /// @brief This publishes a type of event. Currently, this does nothing. 
     /// @param event 
@@ -39,12 +31,6 @@ public:
 /// Moveable and copyable
 class DebugChangeSink : public ChangeSink {
 public:
-    DebugChangeSink(const DebugChangeSink&) = default;
-    DebugChangeSink& operator=(const DebugChangeSink&) = default;
-
-    DebugChangeSink(DebugChangeSink&&) noexcept = default;
-    DebugChangeSink& operator=(DebugChangeSink&&) noexcept = default;
-
     /// @brief Prints the event's data to the console
     /// @param event 
     void publish(const ChangeEvent& event) override;

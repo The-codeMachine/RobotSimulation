@@ -1,6 +1,7 @@
 # Sensor
 
 `Sensor.hpp` defines the base `Sensor` device used by simulated robots, along with the `ViewSensor` implementation.
+A `Sensor` is moveable but non-copyable.  
 
 ## Sensor
 

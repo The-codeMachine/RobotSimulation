@@ -13,11 +13,17 @@ struct Detection {
 
 /// @brief Image represents a list of Detections. Image allows 
 /// access to its vector of Detections. Image simply 
-/// encapsulates these Detections.
+/// encapsulates these Detections. Moveable and copyable. 
 class Image {
 public:
     Image();
     Image(std::vector<Detection> detections);
+
+    Image(const Image&) = default;
+    Image& operator=(const Image&) = default;
+
+    Image(Image&&) noexcept = default;
+    Image& operator=(Image&&) noexcept = default;
 
     /// @brief Gets all the detections
     /// @return the detections as a reference
