@@ -511,6 +511,10 @@ The collision system is responsible for finding intersections between the two.
 
 Collision response remains the responsibility of the higher-level physics or movement system.
 
+## Moveability and Copyability
+
+All currently implemented `Collision`s and `Trajectory`s are fully moveable and copyable. 
+
 ## References
 
 * [Device](Device.md)

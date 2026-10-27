@@ -29,10 +29,17 @@
 /// Robot, Wall, call the emit function with a 
 /// specific event you want to be emitted. 
 ///
+/// World is explicitly not moveable and not copyable. 
 class World {
 public:
     explicit World(const nlohmann::json& world);
     explicit World(const std::filesystem::path& worldFile);
+
+    World(const World&) = delete;
+    World& operator=(const World&) = delete;
+
+    World(World&&) noexcept = delete;
+    World& operator=(World&&) noexcept = delete;
 
     /// @brief Gets the current object at that position
     /// @return the current object at that position (reference)

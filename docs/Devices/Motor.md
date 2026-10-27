@@ -8,6 +8,8 @@ Either than limit construction you only have control over throttle from ```-1.0`
 
 Default updatePriority is 0, just as ```Device``` specifies. 
 
+`Motor`s are moveable and copyable. 
+
 ## References
 
 - [Device](../Device.md)

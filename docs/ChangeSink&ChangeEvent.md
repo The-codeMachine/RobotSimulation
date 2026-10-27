@@ -11,11 +11,15 @@ for debugging to releasing it to a port for other programs to listen to.
 `ChangeSink` has a `publish` function. `publish` will release the `ChangeEvent` passed to it
 as a parameter. 
 
+All `ChangeSink`s are moveable and copyable unless specified by that class (e.g. `PortChangeSink` is not copyable). 
+
 ## PortChangeSink
 
-`PortChangeSink` is a type of sink that publishes updates to a port. That specific port. It publishes `ChangeEvent`s to a specific port (specified at construction). You can adjust this port at runtime, though we recommend you don't.
+`PortChangeSink` is a type of sink that publishes updates to a port. That specific port. It publishes `ChangeEvent`s to a specific port (specified at construction). You can adjust this port at runtime, though we recommend you don't. 
 
 Depending on your OS (e.g. Linux vs. Windows) the Socket type will represent different things. Please ensure you are using the correct Socket type. 
+
+`PortChangeSink` is moveable but not copyable. This is because when the port is active, copying it will cause issues (two classes on the same port will become an issue). 
 
 ## ChangeEvent
 

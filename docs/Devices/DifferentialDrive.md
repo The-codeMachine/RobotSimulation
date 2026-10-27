@@ -14,6 +14,8 @@ current velocities rather than their previous velocities.
 This device uses collisions to calculate its trajectory throughout the world based on the motors' acceleration
 and velocity. It uses a `Trajectory` implementation called `DifferentialDriveTrajectory`.
 
+`DifferentialDrive`s are moveable and copyable. 
+
 ## Movement
 
 A differential drive uses two independently controlled wheels:

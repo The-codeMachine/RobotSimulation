@@ -27,6 +27,8 @@ public:
 /// - its sequence
 /// - its JSON data
 /// - its type
+/// 
+/// Moveable and copyable
 class DebugChangeSink : public ChangeSink {
 public:
     /// @brief Prints the event's data to the console
@@ -41,9 +43,16 @@ public:
 /// construction. It is adjustable in runtime. We recommend
 /// not adjusting in runtime, but it is possible. 
 ///
+/// Non-moveable but copyable. 
 class PortChangeSink : public ChangeSink {
 public:
     PortChangeSink(Socket port);
+
+    PortChangeSink(const PortChangeSink&) = delete;
+    PortChangeSink& operator=(const PortChangeSink&) = delete;
+
+    PortChangeSink(PortChangeSink&&) noexcept = default;
+    PortChangeSink& operator=(PortChangeSink&&) noexcept = default;
 
     /// @brief Publishes an event to a port specified at construction
     /// @param event 

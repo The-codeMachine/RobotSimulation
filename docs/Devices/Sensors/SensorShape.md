@@ -3,6 +3,7 @@
 `SensorShape.hpp` defines the geometric regions used by sensors to determine which parts of the simulated world are within their sensing area.
 
 A `SensorShape` represents the **geometry of a sensor's sensing region**. It does not perform a world query itself and does not determine what an object contains or represents.
+All `SensorShape`s are moveable and copyable. 
 
 ## SensorShape
 

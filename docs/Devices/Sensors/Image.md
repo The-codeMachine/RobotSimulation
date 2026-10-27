@@ -1,7 +1,8 @@
 # Image
 
 The `Image` class represents a list of `Detection`s. `Image` allows access to its vector
-of `Detection`s. `Image` simply encapsulates these `Detection`s.
+of `Detection`s. `Image` simply encapsulates these `Detection`s. `Image`s are moveable and
+copyable. 
 
 ## Capabilities
 

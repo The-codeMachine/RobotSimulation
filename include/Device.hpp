@@ -20,7 +20,6 @@ class World;
 /// - Battery
 /// - IMU
 /// - Encoder
-///
 class Device {
 public:
     static inline Factory::Factory<Device, const std::string&> Device_Factory;

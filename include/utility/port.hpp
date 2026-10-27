@@ -34,6 +34,8 @@
 ///
 /// JSON messages are sent using a 4-byte network-order length prefix
 /// followed by the serialized JSON data.
+/// 
+/// Non-copyable but moveable object. 
 class PortProxy {
 public:
     /// @brief Constructs the PortProxy with a default port of 5800.

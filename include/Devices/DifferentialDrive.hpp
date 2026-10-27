@@ -10,11 +10,18 @@
 /// @brief Defines the DifferentialDrive's Trajectory. This
 /// extends from the Trajectory class. Calculates the
 /// location, velocity, and rotation of the DifferentialDrive. 
+/// Moveable and copyable. 
 class DifferentialDriveTrajectory final : public Trajectory {
 public:
     DifferentialDriveTrajectory(Vector2 position, double rotation, double linearVelocity,
                                 double angularVelocity, double deltaTime);
 
+    DifferentialDriveTrajectory(const DifferentialDriveTrajectory&) = default;
+    DifferentialDriveTrajectory& operator=(const DifferentialDriveTrajectory&) = default;
+    
+    DifferentialDriveTrajectory(DifferentialDriveTrajectory&&) noexcept = default;
+    DifferentialDriveTrajectory& operator=(DifferentialDriveTrajectory&&) noexcept = default;
+    
     /// @brief Gets the position of the trajectory based off the time
     /// @param t 
     /// @return the position of the trajectory based off the time
@@ -42,11 +49,18 @@ private:
 /// @brief This is a differential drive device. It references two motors which it converts
 /// their wheel velocities to linear/angular velocities which affect how the Robot moves.
 /// The Motors and this drive work separately. 
+/// Moveable and copyable. 
 class DifferentialDrive : public Device {
 public:
     DifferentialDrive(const std::string& id, const std::string& type = "DifferentialDrive");
     DifferentialDrive(const std::string& id, const std::string& leftMotorId, const std::string& rightMotorId,
                       double wheelRadius, double wheelBase, const std::string& type = "DifferentialDrive");
+
+    DifferentialDrive(const DifferentialDrive&) = default;
+    DifferentialDrive& operator=(const DifferentialDrive&) = default;
+    
+    DifferentialDrive(DifferentialDrive&&) noexcept = default;
+    DifferentialDrive& operator=(DifferentialDrive&&) noexcept = default;
 
     /// @brief Registers the differential drive into the devices factory
     static void registerDifferentialDrive();

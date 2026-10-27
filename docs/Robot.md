@@ -5,6 +5,8 @@ encapsulates many devices. These devices give the robot its abilities. The robot
 supports functionality such as movement and view, but the implementation is
 derived from specific ```Device```s.
 
+Robot is a non-copyable, moveable object. 
+
 ## Devices
 
 The robot allows you to access the devices through a reference. You can add a device through

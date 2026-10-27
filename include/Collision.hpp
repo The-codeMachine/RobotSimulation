@@ -37,9 +37,17 @@ public:
 ///
 /// where t is the actual elapsed time represented by the
 /// normalized parameter.
+/// 
+/// Moveable and copyable. 
 class AcceleratedTrajectory final : public Trajectory {
 public:
     AcceleratedTrajectory(Vector2 position, Vector2 velocity, Vector2 acceleration, double deltaTime);
+
+    AcceleratedTrajectory(const AcceleratedTrajectory&) = default;
+    AcceleratedTrajectory& operator=(const AcceleratedTrajectory&) = default;
+
+    AcceleratedTrajectory(AcceleratedTrajectory&&) noexcept = default;
+    AcceleratedTrajectory& operator=(AcceleratedTrajectory&&) noexcept = default;
 
     Vector2 position(double t) const override;
     Vector2 velocity(double t) const override;
@@ -52,7 +60,7 @@ private:
 
 };
 
-/// @brief Base class for all collision shapes
+/// @brief Base class for all collision shapes. Moveable and copyable. 
 class Collider {
 public:
     static inline Factory::Factory<Collider> Collider_Factory;
@@ -61,6 +69,12 @@ public:
     Collider(const std::string& type) : type_(type) {} 
 
     virtual ~Collider() = default;
+
+    Collider(const Collider&) = default;
+    Collider& operator=(const Collider&) = default;
+
+    Collider(Collider&&) noexcept = default;
+    Collider& operator=(Collider&&) noexcept = default;
 
     virtual void deserialize(const nlohmann::json& json) {}
     virtual nlohmann::json serialize() const;
@@ -85,12 +99,18 @@ private:
 
 };
 
-/// @brief Axis-aligned bounding box collider
+/// @brief Axis-aligned bounding box collider. Copyable and moveable. 
 class AABBCollider final : public Collider {
 public:
     AABBCollider(Vector2 minimum = {0, 0}, Vector2 maximum = {0, 0}, const std::string& type = "AABBCollider");
 
     static void registerAABBCollider();
+
+    AABBCollider(const AABBCollider&) = default;
+    AABBCollider& operator=(const AABBCollider&) = default;
+
+    AABBCollider(AABBCollider&&) noexcept = default;
+    AABBCollider& operator=(AABBCollider&&) noexcept = default;
 
     /// @brief Deserializes this collider based off JSON
     /// @param json 
@@ -124,12 +144,18 @@ private:
 
 };
 
-/// @brief A circular collider
+/// @brief A circular collider. Moveable and copyable
 class CircleCollider final : public Collider {
 public:
     CircleCollider(Vector2 center = {0, 0}, double radius = 1, const std::string& type = "CircleCollider");
 
     static void registerCircleCollider();
+
+    CircleCollider(const CircleCollider&) = default;
+    CircleCollider& operator=(const CircleCollider&) = default;
+
+    CircleCollider(CircleCollider&&) noexcept = default;
+    CircleCollider& operator=(CircleCollider&&) noexcept = default;
 
     /// @brief Deserializes this collider based off JSON
     /// @param json 
@@ -163,7 +189,9 @@ private:
 
 };
 
-/// @brief  Result of a successful collision cast
+/// @brief Result of a successful collision cast. Copyable and moveable. 
+/// @note When copying, the object variable will share the same memory 
+/// address as the original CollisionResult's object variable. 
 struct CollisionResult {
     /// @brief Normalized time at which the collision occurred.
     ///
