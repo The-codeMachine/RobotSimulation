@@ -9,6 +9,26 @@
 
 class Object;
 
+/// @brief Result of a successful collision cast. Copyable and moveable. 
+/// @note When copying, the object variable will share the same memory 
+/// address as the original CollisionResult's object variable. 
+struct CollisionResult {
+    /// @brief Normalized time at which the collision occurred.
+    ///
+    /// 0 = beginning of trajectory
+    /// 1 = end of trajectory
+    double time;
+
+    /// @brief Position of the collision
+    Vector2 position;
+
+    /// @brief Surface normal at the collision point
+    Vector2 normal;
+
+    /// @brief Object that was collided with
+    Object* object;
+};
+
 /// @brief A normalized trajectory through a single physics timestep.
 ///
 /// t = 0 represents the beginning of the timestep
@@ -94,6 +114,17 @@ public:
     /// @return the signed distance from a point to a collider
     virtual double signedDistance(Vector2 point) const = 0;
 
+    /// @brief Casts a trajectory through this shape to see if the points intersect
+    /// @param trajectory 
+    /// @param object 
+    /// @param epsilon 
+    /// @return an optional CollisionResult
+    virtual std::optional<CollisionResult> cast(
+        const Trajectory& trajectory,
+        Object* object = nullptr,
+        double epsilon = 1e-10
+    ) const = 0;
+
 private:
     std::string type_;
 
@@ -137,6 +168,17 @@ public:
     /// @param point 
     /// @return the signed distance from the collider to this point 
     double signedDistance(Vector2 point) const override;
+
+    /// @brief Casts a trajectory through this shape to see if the points intersect
+    /// @param trajectory 
+    /// @param object 
+    /// @param epsilon 
+    /// @return an optional CollisionResult
+    std::optional<CollisionResult> cast(
+        const Trajectory& trajectory,
+        Object* object = nullptr,
+        double epsilon = 1e-10
+    ) const override;
 
 private:
     Vector2 minimum_;
@@ -183,30 +225,21 @@ public:
     /// @return the signed distance from the collider to this point 
     double signedDistance(Vector2 point) const override;
 
+    /// @brief Casts a trajectory through this shape to see if the points intersect
+    /// @param trajectory 
+    /// @param object 
+    /// @param epsilon 
+    /// @return an optional CollisionResult
+    std::optional<CollisionResult> cast(
+        const Trajectory& trajectory,
+        Object* object = nullptr,
+        double epsilon = 1e-10
+    ) const override;
+
 private:
     Vector2 center_;
     double radius_;
 
-};
-
-/// @brief Result of a successful collision cast. Copyable and moveable. 
-/// @note When copying, the object variable will share the same memory 
-/// address as the original CollisionResult's object variable. 
-struct CollisionResult {
-    /// @brief Normalized time at which the collision occurred.
-    ///
-    /// 0 = beginning of trajectory
-    /// 1 = end of trajectory
-    double time;
-
-    /// @brief Position of the collision
-    Vector2 position;
-
-    /// @brief Surface normal at the collision point
-    Vector2 normal;
-
-    /// @brief Object that was collided with
-    Object* object;
 };
 
 /// @brief Numerical root finder.

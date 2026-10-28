@@ -276,3 +276,135 @@ std::optional<CollisionResult> castTrajectory(const Trajectory& trajectory, cons
 
     return std::nullopt;
 }
+
+namespace {
+
+constexpr std::size_t SAMPLE_COUNT = 128;
+
+Vector2 aabbNormalAt(Vector2 point, Vector2 minimum, Vector2 maximum) {
+    const double left   = std::abs(point.x - minimum.x);
+    const double right  = std::abs(maximum.x - point.x);
+    const double bottom = std::abs(point.y - minimum.y);
+    const double top    = std::abs(maximum.y - point.y);
+
+    const double nearest = std::min({left, right, bottom, top});
+
+    if (nearest == left)   return {-1.0,  0.0};
+    if (nearest == right)  return { 1.0,  0.0};
+    if (nearest == bottom) return { 0.0, -1.0};
+    return {0.0, 1.0};
+}
+
+template <typename NormalFunction>
+std::optional<CollisionResult> sampledCast(
+    const Trajectory& trajectory,
+    const Collider& collider,
+    Object* object,
+    double epsilon,
+    NormalFunction&& normalAt)
+{
+    if (!std::isfinite(epsilon) || epsilon <= 0.0) {
+        throw std::invalid_argument(
+            "Collision epsilon must be finite and positive");
+    }
+
+    double previousT = 0.0;
+    double previousDistance =
+        collider.signedDistance(trajectory.position(previousT));
+
+    if (!std::isfinite(previousDistance)) {
+        throw std::runtime_error(
+            "Collider returned a non-finite signed distance");
+    }
+
+    // Starting inside or on the surface counts as an immediate hit.
+    if (previousDistance <= 0.0) {
+        return CollisionResult{
+            0.0,
+            trajectory.position(0.0),
+            {0.0, 0.0},
+            object
+        };
+    }
+
+    for (std::size_t i = 1; i <= SAMPLE_COUNT; ++i) {
+        const double currentT = static_cast<double>(i) / static_cast<double>(SAMPLE_COUNT);
+        const double currentDistance = collider.signedDistance(trajectory.position(currentT));
+
+        if (!std::isfinite(currentDistance)) {
+            throw std::runtime_error(
+                "Collider returned a non-finite signed distance");
+        }
+
+        if (currentDistance <= 0.0) {
+            const auto root = findRoot(
+                [&](double t) {
+                    return collider.signedDistance(
+                        trajectory.position(t));
+                },
+                previousT,
+                currentT,
+                epsilon);
+
+            if (!root) {
+                // A bracket was detected, but refinement failed.
+                return std::nullopt;
+            }
+
+            const Vector2 position = trajectory.position(*root);
+
+            return CollisionResult{
+                *root,
+                position,
+                normalAt(position),
+                object
+            };
+        }
+
+        previousT = currentT;
+        previousDistance = currentDistance;
+    }
+
+    return std::nullopt;
+}
+
+} // namespace
+
+std::optional<CollisionResult> AABBCollider::cast(
+    const Trajectory& trajectory,
+    Object* object,
+    double epsilon) const
+{
+    return sampledCast(
+        trajectory,
+        *this,
+        object,
+        epsilon,
+        [this](Vector2 point) {
+            return aabbNormalAt(point, minimum_, maximum_);
+        });
+}
+
+std::optional<CollisionResult> CircleCollider::cast(
+    const Trajectory& trajectory,
+    Object* object,
+    double epsilon) const
+{
+    return sampledCast(
+        trajectory,
+        *this,
+        object,
+        epsilon,
+        [this](Vector2 point) {
+            const Vector2 delta = point - center_;
+            const double lengthSquared =
+                Vector2::lengthSquared(delta);
+
+            if (lengthSquared == 0.0) {
+                // The normal is undefined at the circle's center.
+                return Vector2{0.0, 0.0};
+            }
+
+            return delta / std::sqrt(lengthSquared);
+        });
+}
