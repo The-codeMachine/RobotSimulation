@@ -1,524 +1,313 @@
 # Collision System
 
 The collision system provides the geometric and mathematical primitives required to determine whether a moving
-`Object` intersects a `Collider` during a physics timestep.
+object intersects a collider during a physics timestep.
 
-The system is designed around three primary concepts:
+The system separates collision detection into two phases:
 
-* **Trajectories** describe where an object moves over time.
-* **Colliders** describe the geometry an object can collide with.
-* **Collision casting** determines whether a trajectory intersects a collider and, if so, when the first
-  collision occurs.
+- **Broad phase:** quickly identifies objects that could collide with the moving object.
+- **Narrow phase:** performs the actual geometric collision test.
 
-The collision system does not own the objects or colliders involved in a collision. It performs collision
-queries and returns a `CollisionResult` describing the detected collision.
+The broad phase uses axis-aligned bounding boxes (AABBs) and the world's spatial map. The narrow phase delegates
+the geometric test to the candidate collider's `cast()` implementation.
 
-## Design
+The collision system does not own the objects or colliders involved in a query. It performs collision queries
+and returns a `CollisionResult` describing a detected collision.
 
-The collision system is intentionally separated from the objects that use it.
+## Architecture
 
-A moving object does not need to know how a particular collider is represented. Instead, it provides a
-`Trajectory` to the collision system, which evaluates that trajectory against a `Collider`.
+Movement systems describe motion using a `Trajectory`. The trajectory provides its position and bounds over the
+normalized timestep. `World::cast()` uses those bounds to select candidate objects, then asks each candidate
+collider to perform its narrow-phase cast.
 
-Conceptually, the Object's movement is translated into a Trajectory. This Trajectory is casted. This cast
-uses the Collider system for its physics calculations.
+```text
+Trajectory
+    |
+    v
+Calculate swept AABB
+    |
+    v
+World::cast()
+    |
+    v
+Find candidate objects using map_
+    |
+    v
+Collider::cast()
+    |
+    v
+CollisionResult
+(earliest collision)
+```
 
-This allows movement devices such as `DifferentialDrive` to use collision detection without implementing
-collision mathematics themselves.
+This keeps movement mathematics, world-level spatial lookup, and collider geometry separate:
+
+- Movement systems create trajectories.
+- The trajectory reports its motion and reference-point bounds.
+- The world selects candidate objects.
+- Colliders perform narrow-phase geometric tests.
+- The movement or physics system is responsible for collision response.
+
+## Axis-Aligned Bounding Boxes
+
+`AABB` represents an axis-aligned bounding box using its minimum and maximum corners:
+
+```cpp
+struct AABB {
+    Vector2 minimum;
+    Vector2 maximum;
+
+    bool intersects(const AABB& other) const noexcept {
+        return minimum.x <= other.maximum.x
+            && maximum.x >= other.minimum.x
+            && minimum.y <= other.maximum.y
+            && maximum.y >= other.minimum.y;
+    }
+};
+```
+
+The `intersects()` comparisons are inclusive. Boxes that only touch at an edge or corner are therefore considered
+to intersect.
+
+This `AABB` is a general bounds primitive used by the broad phase. It is distinct from `AABBCollider`, which is
+a collider implementation with point-containment and signed-distance behavior.
 
 ## Trajectories
 
-A `Trajectory` represents the movement of an object over a single physics timestep.
+A `Trajectory` represents movement over one physics timestep. Its time parameter is normalized to `[0, 1]`:
 
-The trajectory interface allows the collision system to query the object's position at any normalized time
-between the beginning and end of the timestep.
+- `t = 0` is the beginning of the timestep.
+- `t = 1` is the end of the timestep.
 
-The time parameter `t` is normalized:
+The interface exposes the position, velocity, and bounds:
 
-```text
-t = 0
+```cpp
+class Trajectory {
+public:
+    virtual ~Trajectory() = default;
+
+    virtual Vector2 position(double t) const = 0;
+    virtual Vector2 velocity(double t) const = 0;
+    virtual AABB bounds() const = 0;
+};
 ```
 
-represents the beginning of the timestep, while:
+`bounds()` returns an AABB covering the trajectory's reference point over the entire normalized interval
+`[0, 1]`. This allows `World::cast()` to perform broad-phase lookup without knowing the mathematical form of a
+particular trajectory.
 
-```text
-t = 1
-```
-
-represents the end.
-
-This allows collision detection to remain independent of the actual timestep duration.
-
-The trajectory converts normalized time into real elapsed time:
-
-```text
-time = t × deltaTime
-```
-
-Different movement systems can implement different trajectory types while remaining compatible with the same
-collision system.
-
-For example:
-
-* `AcceleratedTrajectory` represents constant acceleration.
-* `DifferentialDriveTrajectory` represents differential-drive movement along a circular or straight path.
+Different movement systems can provide different trajectory implementations while remaining compatible with
+the same world-level casting interface.
 
 ## Accelerated Trajectory
 
-`AcceleratedTrajectory` represents motion with constant acceleration.
+`AcceleratedTrajectory` represents motion with constant acceleration. It stores the initial position, initial
+velocity, constant acceleration, and timestep duration.
 
-It stores:
+Using normalized time `t` and timestep duration `deltaTime`, the position is:
 
-* Initial position
-* Initial velocity
-* Constant acceleration
-* Timestep duration
+\[
+p(t)=p_0+v_0\Delta t\,t+\frac12a(\Delta t\,t)^2
+\]
 
-The position at time `t` is calculated using the standard kinematic equation:
+The extrema of each coordinate occur where that coordinate's velocity is zero. For a coordinate with initial
+velocity component `v₀` and acceleration component `a`, the candidate extremum is:
 
-```text
-p(t) = p₀ + v₀t + ½at²
+\[
+t=-\frac{v_0}{a\Delta t}
+\]
+
+The bounds calculation evaluates:
+
+- The initial position at `t = 0`.
+- The final position at `t = 1`.
+- Any X-coordinate extremum strictly inside `[0, 1]`.
+- Any Y-coordinate extremum strictly inside `[0, 1]`.
+
+The resulting AABB is the exact mathematical bound of the reference-point trajectory, subject to floating-point
+precision. If the relevant acceleration component is zero, that coordinate has no interior velocity-zero
+extremum to evaluate.
+
+## Differential Drive Trajectory
+
+`DifferentialDriveTrajectory` represents a differential-drive robot moving along a straight line or circular arc.
+
+Let `v` be linear velocity, `ω` angular velocity, `deltaTime` the timestep duration, and `θ₀` the starting
+rotation. The angle at normalized time `t` is:
+
+\[
+\theta(t)=\theta_0+\omega\Delta t\,t
+\]
+
+When angular velocity is non-zero, the reference point follows:
+
+\[
+x(t)=x_0+\frac{v}{\omega}[\sin(\theta(t))-\sin(\theta_0)]
+\]
+
+\[
+y(t)=y_0+\frac{v}{\omega}[\cos(\theta_0)-\cos(\theta(t))]
+\]
+
+The coordinate extrema occur when:
+
+| Coordinate | Extremum condition |
+|---|---|
+| X | `cos(θ) = 0` |
+| Y | `sin(θ) = 0` |
+
+The analytical bounds implementation:
+
+1. Initializes the bounds using the starting position.
+2. Includes the final position.
+3. Handles approximately straight-line movement separately.
+4. Handles a full revolution by using the complete circle's AABB.
+5. For a partial revolution, finds every relevant coordinate extremum inside the angular interval.
+6. Evaluates the trajectory at those extrema and expands the bounds.
+
+This avoids fixed-step sampling when calculating the trajectory AABB. As with the accelerated trajectory, the result
+is a mathematical bound of the reference point, subject to floating-point precision.
+
+## Broad-Phase Candidate Selection
+
+`World::cast()` obtains the trajectory AABB and converts its coordinates into grid-cell ranges:
+
+```cpp
+const AABB bounds = trajectory.bounds();
+
+const int minX = static_cast<int>(std::floor(bounds.minimum.x));
+const int maxX = static_cast<int>(std::floor(bounds.maximum.x));
+const int minY = static_cast<int>(std::floor(bounds.minimum.y));
+const int maxY = static_cast<int>(std::floor(bounds.maximum.y));
 ```
 
-Applied independently to the two dimensions:
+It visits the covered integer coordinates and looks each one up in `map_`. Missing cells are skipped. Null
+objects, the explicitly ignored object, and empty objects are also skipped.
 
-```text
-x(t) = x₀ + vₓt + ½aₓt²
+Each remaining object is a broad-phase candidate. Its collider is asked to perform the narrow-phase cast.
+`World::cast()` retains the collision with the smallest normalized time.
 
-y(t) = y₀ + vᵧt + ½aᵧt²
-```
+This avoids scanning every object in `map_` for every cast.
 
-The instantaneous velocity is:
+### Spatial assumptions and limitations
 
-```text
-v(t) = v₀ + at
-```
+The current map-based query relies on these assumptions:
 
-This trajectory is useful for objects whose movement can be approximated using constant linear acceleration
-during a timestep.
+- World positions are integer grid coordinates.
+- Each collider fits within its object's grid cell.
+- The trajectory AABB conservatively covers the moving object's collision geometry.
+- Collider bounds, trajectory coordinates, and map positions use the same world coordinate system.
 
-## Colliders
+A trajectory's `bounds()` currently describes the reference point. It does not automatically expand the bounds
+by the dimensions of the moving object's collider. Consequently, a robot with a non-zero collider size needs a
+conservative swept bound that includes that size; otherwise the broad phase can omit a cell containing a real
+collision.
 
-A `Collider` represents the geometry of an object that can participate in collision detection.
+Likewise, if a stationary candidate collider can extend outside its object's grid cell, looking up only cells
+inside the trajectory AABB can miss it. Supporting arbitrary-sized colliders requires conservative query
+expansion or a secondary multi-cell spatial index.
 
-The collider interface provides geometric queries such as:
+## Narrow-Phase Collider Casting
 
-* Determining whether a point is inside the collider.
-* Determining the signed distance from a point to the collider.
+The narrow phase is responsible for determining whether the trajectory intersects a candidate collider and when
+the earliest collision occurs. `World::cast()` delegates this work to the collider's `cast()` implementation.
 
-The collision system does not need to know the concrete collider type. It interacts with the abstract
-`Collider` interface instead. `Collider`s can be made using a Collider factory. Access through 
-`Collider::Collider_Factory` works just like `Object` and `Device` factories.  
+The world does not need to know whether the collider is an AABB, circle, or another geometric shape. New collider
+types can provide their own cast implementation without changing the world's broad-phase lookup.
 
-This makes it possible to add additional collider types without modifying the trajectory casting algorithm.
+The narrow-phase algorithm must correctly handle the geometry and motion it claims to support. In particular,
+fixed-step sampling can miss tangential contact or a fast pass-through if the trajectory enters and exits a
+collider between samples. An exact reference-point AABB does not fix such a narrow-phase limitation.
 
-Examples of collider implementations include:
-
-* `AABBCollider`
-* `CircleCollider`
-
-## Signed Distance
-
-The primary geometric operation used by trajectory casting is `signedDistance()`.
-
-A signed distance function returns:
-
-* A **positive** value when the point is outside the collider.
-* `0` when the point is on the collider's boundary.
-* A **negative** value when the point is inside the collider.
-
-Therefore:
-
-```text
-distance > 0  → outside
-distance = 0  → boundary
-distance < 0  → inside
-```
-
-This provides a generic way for the collision system to determine whether a trajectory has entered a collider
-without knowing the collider's specific geometry.
-
-## AABB Collider
-
-`AABBCollider` represents an axis-aligned bounding box.
-
-It is defined by two points:
-
-```text
-minimum = (minX, minY)
-maximum = (maxX, maxY)
-```
-
-The constructor requires:
-
-```text
-minX <= maxX
-minY <= maxY
-```
-
-Otherwise, `std::invalid_argument` is thrown.
-
-### Point Containment
-
-A point is contained by the AABB when:
-
-```text
-minX <= x <= maxX
-minY <= y <= maxY
-```
-
-The boundaries are therefore considered part of the collider.
-
-### Signed Distance
-
-For a point outside the AABB, the signed distance is the Euclidean distance to the closest point on the box.
-
-For a point inside the AABB, the signed distance is the negative distance to the closest edge.
-
-For example, a point located exactly on the boundary has a signed distance of:
-
-```text
-0
-```
-
-This makes the AABB compatible with the generic trajectory casting algorithm.
-
-## Circle Collider
-
-`CircleCollider` represents a circle defined by:
-
-* Center position
-* Radius
-
-The radius cannot be negative.
-
-A zero-radius circle is valid and effectively represents a single point.
-
-### Point Containment
-
-A point is contained by the circle when its distance from the center is less than or equal to the radius:
-
-```text
-|p - center| <= radius
-```
-
-### Signed Distance
-
-The signed distance is:
-
-```text
-distance(p) = |p - center| - radius
-```
-
-Therefore:
-
-```text
-distance > 0  → outside
-distance = 0  → on the circle
-distance < 0  → inside
-```
-
-## Trajectory Casting
-
-`castTrajectory()` is responsible for determining whether a trajectory intersects a collider.
-
-It takes:
-
-* A `Trajectory`
-* A `Collider`
-* An optional `Object*` associated with the collider
-* A collision epsilon
-
-The function returns:
-
-```text
-std::optional<CollisionResult>
-```
-
-If no collision occurs, it returns `std::nullopt`.
-
-If a collision occurs, it returns the earliest detected collision.
-
-### Continuous Trajectory Evaluation
-
-The trajectory is not treated as a single movement from its starting point to its ending point.
-
-Instead, the collision system samples the trajectory at multiple points throughout the timestep.
-
-The current implementation uses:
-
-```text
-SAMPLE_COUNT = 128
-```
-
-samples.
-
-The normalized timestep is divided into 128 intervals:
-
-```text
-0
-1/128
-2/128
-...
-127/128
-1
-```
-
-At every sample, the signed distance between the trajectory position and the collider is calculated.
-
-This allows curved trajectories, such as differential-drive trajectories, to be checked without requiring the
-collision system to understand their mathematical form.
-
-## Collision Detection Algorithm
-
-The algorithm first evaluates the trajectory at:
-
-```text
-t = 0
-```
-
-If the object is already inside or exactly on the collider, a collision at `t = 0` is immediately returned.
-
-Otherwise, the system proceeds through the trajectory samples.
-
-For each pair of consecutive samples:
-
-```text
-previousT → currentT
-```
-
-the signed distances are examined.
-
-If the trajectory changes from:
-
-```text
-positive → zero/negative
-```
-
-then the trajectory has entered the collider during that interval.
-
-The collision therefore lies somewhere inside:
-
-```text
-[previousT, currentT]
-```
-
-The system then performs root finding over that interval to determine a more accurate collision time.
-
-## Root Finding
-
-`findRoot()` uses the **bisection method** to find a point where a function reaches zero.
-
-The collision system supplies the function:
-
-```text
-f(t) = collider.signedDistance(trajectory.position(t))
-```
-
-A collision boundary occurs when:
-
-```text
-f(t) = 0
-```
-
-Because the system has already detected a transition from outside to inside, the interval is expected to contain
-a root.
-
-Bisection repeatedly divides the interval in half until either:
-
-* The function is sufficiently close to zero.
-* The interval is smaller than the requested epsilon.
-
-The method is deliberately simple and robust. It does not require derivatives of the trajectory or collider
-and therefore works with arbitrary implementations of the `Trajectory` and `Collider` interfaces.
+The earlier signed-distance sampling and bisection approach is one possible narrow-phase strategy, but it is not
+equivalent to an analytical or otherwise guaranteed continuous intersection test. If the current
+`Collider::cast()` implementation uses fixed sampling, its sampling limitations still apply.
 
 ## Collision Result
 
-When a collision is found, the system calculates:
+A successful cast returns a `CollisionResult`. The world-level query compares results by normalized collision
+time and returns the earliest one.
 
-* Normalized collision time
-* Collision position
-* Collision normal
-* Colliding object
+The collision time is expressed in the trajectory's normalized interval `[0, 1]`. The collision position should
+correspond to the trajectory evaluated at that time:
 
-The collision time is normalized to `[0, 1]`, matching the trajectory interface.
-
-The collision position is obtained directly from the trajectory:
-
-```text
-collisionPosition = trajectory.position(collisionTime)
+```cpp
+collisionPosition = trajectory.position(collisionTime);
 ```
 
-This ensures that the returned position corresponds exactly to the reported point in the trajectory.
+The precise fields and normal calculation are determined by the `CollisionResult` and collider implementation.
 
-## Collision Normal
+## Collision Response
 
-The collision normal is currently an approximation.
+Collision detection and collision response are separate responsibilities.
 
-The generic `Collider` interface currently provides a signed distance but does not provide a method such as:
+The collision system reports a collision; it does not decide how the moving object should react. A movement or
+physics system may stop the object, slide it, bounce it, or apply another response.
 
-```text
-normalAt(position)
-```
+A movement system that backs away from the collision time should not treat an arbitrary normalized-time offset as
+a fixed physical distance. For example, subtracting `0.01` from normalized time has a different physical effect
+depending on timestep duration and speed. A configurable scale-aware tolerance or distance-based backoff is a
+better long-term approach.
 
-A signed distance alone does not reliably provide the surface normal for every possible collider.
+## Numerical Validation
 
-Therefore, the current implementation approximates the normal using the direction of movement around the collision:
+Trajectory constructors should reject non-finite values as well as invalid ranges. A check such as
+`deltaTime < 0.0` does not reject NaN, and infinite values can propagate into bounds and collision calculations.
 
-```text
-before = trajectory.position(collisionTime - Δt)
-after  = trajectory.position(collisionTime + Δt)
+For a differential-drive trajectory, the position components, rotation, linear velocity, angular velocity, and
+timestep duration should be finite, and `deltaTime` should be non-negative. Invalid parameters should cause
+`std::invalid_argument` to be thrown.
 
-normal = normalize(after - before)
-```
+Equivalent finite-value validation should be applied to all trajectory types and to numerical parameters used by
+collider casts and root-finding routines.
 
-This produces the direction of travel through the collision point.
+## Outstanding Work
 
-**This is not a geometrically correct surface normal.**
+The following items should be addressed before treating the collision system as reliable:
 
-It is only a temporary fallback and should not be used for physically accurate collision response.
+| Priority | Item | Reason |
+|---|---|---|
+| Critical | Include the moving object's collider size in swept bounds | Prevents broad-phase false negatives |
+| Critical | Verify the grid-cell and collider-size assumptions | Prevents large colliders from being omitted |
+| High | Replace the arbitrary `0.01` normalized-time backoff | Makes collision positioning scale-aware |
+| High | Validate finite values in every trajectory constructor | Prevents invalid numerical values propagating |
+| High | Test tangential collisions and fast pass-through | Exercises narrow-phase cases that fixed sampling can miss |
+| Medium | Add world-space collider bounds | Enables more reliable broad-phase rejection and query expansion |
+| Medium | Test zero angular velocity and full revolutions | Covers important differential-drive bounds edge cases |
 
-The intended future design is for `Collider` to expose a surface-normal query, allowing the collision system to
-return the actual geometric normal at the collision point.
-
-## Starting Inside a Collider
-
-If the trajectory begins inside or exactly on the boundary of a collider, the collision system immediately
-returns a collision at:
-
-```text
-t = 0
-```
-
-No attempt is made to determine a normal in this case.
-
-This is intentional. The object may have started inside a collider because of initial placement, another collision
-response, or an externally modified transform. Inventing a normal in this situation could result in incorrect
-collision responses.
-
-## Collision Precision
-
-The collision system uses two separate concepts of precision.
-
-### Sampling precision
-
-The trajectory is initially sampled 128 times.
-
-This determines how small an interval the system must search before performing root finding.
-
-A larger sample count makes the system less likely to miss a collision but increases the number of
-`trajectory.position()` and `collider.signedDistance()` evaluations.
-
-### Root-finding precision
-
-Once a collision interval has been found, bisection refines the collision time using the supplied epsilon.
-
-The epsilon therefore controls the precision of the final collision time rather than the initial trajectory
-sampling.
-
-## Limitations
-
-The current collision system has several deliberate limitations.
-
-### Fast-moving objects
-
-The trajectory is sampled at fixed intervals. If an object moves through a sufficiently small collider
-entirely between two samples, the collision may be missed.
-
-For example:
-
-```text
-outside → collider → outside
-```
-
-can occur between two sampled points without either sample being inside the collider.
-
-The current algorithm only detects a collision when a sample crosses from outside to inside.
-
-A future implementation could address this through analytical intersection tests, adaptive subdivision,
-continuous collision detection, or collider-specific swept-volume tests.
-
-### Collision normals
-
-As described above, the current collision normal is a movement-direction approximation rather than the actual
-surface normal.
-
-This is sufficient for detecting collisions but is not sufficient for robust physical collision response.
-
-### Fixed sample count
-
-The current `SAMPLE_COUNT` is fixed at 128.
-
-This is simple and predictable, but it does not account for the speed of the object, the size of the collider,
-or the complexity of the trajectory.
-
-A future implementation could use adaptive sampling based on trajectory curvature, velocity, and collider
-geometry.
-
-## Error Handling
-
-The collision system validates its numerical parameters.
-
-The following conditions result in `std::invalid_argument`:
-
-* Negative trajectory duration.
-* Invalid AABB bounds.
-* Negative circle radius.
-* Non-positive root-finding epsilon.
-* Root-finding lower bound greater than its upper bound.
-* Non-positive collision epsilon.
-
-These checks prevent invalid mathematical states from entering the collision algorithms.
+A particularly important distinction is that exact mathematical bounds for a robot's reference-point trajectory do
+not automatically provide exact collision detection. Reliable results require both conservative broad-phase
+bounds that account for collider geometry and a narrow-phase cast that correctly detects the relevant
+intersections.
 
 ## Extensibility
 
-The system is designed so that new trajectory and collider implementations can be added independently.
+The architecture allows trajectory and collider implementations to be added independently.
 
-For example, a new collider could provide:
+Potential collider implementations include:
 
-```text
-CapsuleCollider
-PolygonCollider
-OBBCollider
-```
+- `CapsuleCollider`
+- `PolygonCollider`
+- `OBBCollider`
 
-without requiring changes to the trajectory implementations.
+Potential trajectory implementations include:
 
-Likewise, new trajectory types could represent:
+- `ProjectileTrajectory`
+- `SplineTrajectory`
+- `PhysicsTrajectory`
+- `RotationalTrajectory`
 
-```text
-ProjectileTrajectory
-SplineTrajectory
-PhysicsTrajectory
-RotationalTrajectory
-```
-
-without requiring changes to the collider implementations.
-
-The primary requirement is that the implementations conform to the existing `Trajectory` and `Collider`
-interfaces.
-
-## Intended Architecture
-
-The collision system knows **how to query movement and geometry**, but does not need to know how the
-moving object was produced or how the collision should ultimately be handled.
-
-Movement systems are responsible for creating trajectories.
-
-Colliders are responsible for describing geometry.
-
-The collision system is responsible for finding intersections between the two.
-
-Collision response remains the responsibility of the higher-level physics or movement system.
+New implementations must conform to the relevant interfaces and provide bounds or geometric tests that satisfy
+the assumptions of the broad- and narrow-phase algorithms.
 
 ## Moveability and Copyability
 
-All currently implemented `Collision`s and `Trajectory`s are fully moveable and copyable. 
+All currently implemented `Collision`s and `Trajectory`s are fully moveable and copyable.
 
 ## References
 
-* [Device](Device.md)
-* [Robot](Robot.md)
-* [World](World.md)
-* [Factory](Factory.md)
-* [Vector2](Vector2.md)
+- [Device](Device.md)
+- [Robot](Robot.md)
+- [World](World.md)
+- [Factory](Factory.md)
+- [Vector2](Vector2.md)

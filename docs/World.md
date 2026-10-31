@@ -1,19 +1,19 @@
 # World
 
-The world class encapsulates all objects within a world. This includes:
+The `World` class encapsulates all objects within a world, including:
 
- - The Robot
- - Walls
- - Interactable objects
- - Custom objects
+- The `Robot`
+- Walls
+- Interactable objects
+- Custom objects
 
-All objects are accessible based off their `Vector2` position (these are stored in a `std::unordered_map`).
-The world owns the objects. The world is non-copyable and non-moveable. 
+Objects are stored by their `Vector2` world position in a `std::unordered_map`. The world owns the objects. It is
+non-copyable and non-moveable.
 
 ## Construction
 
-The world can be constructed from a JSON file or object. We use `nlohmann::json` for our JSON
-parsing. The world files will follow formats similar to that of the following:
+The world can be constructed from a JSON file or JSON object. It uses `nlohmann::json` for parsing. World files
+follow a format similar to:
 
 ```json
 {
@@ -55,34 +55,113 @@ parsing. The world files will follow formats similar to that of the following:
 }
 ```
 
-## Object-Accessing
+## Object Access
 
-You can access a copy of the ```Object``` using the ```at``` function. This takes a ```Vector2``` position
-as a parameter. 
+Objects can be accessed by their `Vector2` position using the world's access functions. Internally, the objects are
+stored as:
 
-Internally, the Objects are stored as a map of unique pointers; `std::unordered_map<Vector2, std::unique_ptr<Object>>`.
+```cpp
+std::unordered_map<Vector2, std::unique_ptr<Object>>
+```
 
-You can update a location using the `update` function. This allows you to change which object
-is at that location. This function only takes an `std::unique_ptr<Object>` as a parameter because Objects own where
-they are located, and that can simply be accessed. 
+The world owns each object through its `std::unique_ptr`.
+
+A location can be updated using `update()`. This function accepts an `std::unique_ptr<Object>` because an
+object's transform determines its world location.
 
 ## Sensing
 
-`World` can sense things based off a shape. `World` traverses the shape's world location within the `World`. Based off
-these result calculations it will return `std::vector<Detection>`. This can be used to construct an `Image`, or other
-sensor related objects. 
+`World` can sense objects using a shape. It traverses the shape's world-space coverage and returns a
+`std::vector<Detection>`. These detections can be used to construct an `Image` or other sensor-related data.
+
+## Collision Casting
+
+`World::cast()` performs broad-phase candidate selection and delegates the actual geometric collision test to
+the candidate object's collider.
+
+The collision query follows two phases:
+
+1. **Broad phase:** Calculate the trajectory's swept AABB and use the world's `map_` to find objects in the
+   grid cells covered by that AABB.
+2. **Narrow phase:** Call the candidate collider's `cast()` implementation with the trajectory. The collider
+   performs the geometric test and may return a `CollisionResult`.
+
+The intended flow is:
+
+```text
+Trajectory
+    |
+    v
+Calculate swept AABB
+    |
+    v
+World::cast()
+    |
+    v
+Find candidate objects using map_
+    |
+    v
+Collider::cast()
+    |
+    v
+CollisionResult
+(earliest collision)
+```
+
+### Broad phase
+
+The broad phase obtains the trajectory bounds:
+
+```cpp
+const AABB bounds = trajectory.bounds();
+```
+
+It converts the minimum and maximum coordinates to grid-cell coordinates using `std::floor`, then looks up each
+covered coordinate in `map_`. This avoids iterating over every object in the world for every collision cast.
+
+Objects that are null, equal to the ignored object, or empty are skipped. Each remaining candidate is passed to
+its collider for narrow-phase testing.
+
+If multiple candidates report collisions, `World::cast()` retains the result with the smallest normalized
+collision time.
+
+### Grid and bounds assumptions
+
+The current map-based lookup is correct only under specific spatial assumptions:
+
+- World positions correspond to integer grid coordinates.
+- Each collider is contained within the grid cell associated with its object.
+- The trajectory bounds conservatively cover the moving object's collision geometry.
+- The trajectory bounds, collider geometry, and map coordinates use the same world coordinate system.
+
+The current `Trajectory::bounds()` implementations describe the trajectory of the reference point. They do not,
+by themselves, include the moving object's collider dimensions. A reference-point AABB is therefore not
+automatically a swept AABB for a robot with non-zero size.
+
+If colliders can extend beyond their object's grid cell, looking up only the cells inside the trajectory AABB can
+miss a collision. In that case, the broad phase must be expanded conservatively or replaced with a spatial index
+that registers colliders in every cell they overlap.
+
+### Scope of the collision query
+
+The broad phase only selects possible collision candidates. It does not establish that a collision occurred.
+That decision belongs to the collider's narrow-phase `cast()` implementation.
+
+Likewise, returning a collision does not automatically resolve it. Collision response remains the responsibility
+of the movement or physics system.
 
 ## Visual Representation
 
-Because the `World` has infinite bounds it is impossible to represent with text. `World` is therefore only accessible
-through files. `World`s can be saved and loaded from these files. These are JSON. Third-party programs may represent 
-these (e.g. through HTML, Godot, etc.). This is also the purpose of `ChangeSink`s. These forward real-time updates
-to a specific port (or other methods).
+The `World` has infinite bounds, so it cannot be represented in its entirety using text. Worlds are saved to and
+loaded from JSON files. Third-party programs may visualize them, for example through HTML or Godot.
 
-### References
+`ChangeSink`s can forward real-time world updates to a specific port or through other mechanisms.
+
+## References
 
 - [Object](Object.md)
 - [Robot](Robot.md)
+- [Collisions](Collisions.md)
 - [Sensor](Devices/Sensors/Sensor.md)
 - [SensorShape](Devices/Sensors/SensorShape.md)
 - [ChangeSink & ChangeEvent](ChangeSink&ChangeEvent.md)
