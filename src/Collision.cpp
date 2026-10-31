@@ -40,6 +40,43 @@ Vector2 AcceleratedTrajectory::velocity(double t) const {
     };
 }
 
+AABB AcceleratedTrajectory::bounds() const {
+    Vector2 minimum = position(0.0);
+    Vector2 maximum = minimum;
+
+    auto include = [&](Vector2 point) {
+        minimum.x = std::min(minimum.x, point.x);
+        minimum.y = std::min(minimum.y, point.y);
+
+        maximum.x = std::max(maximum.x, point.x);
+        maximum.y = std::max(maximum.y, point.y);
+    };
+
+    // Always include the beginning and end.
+    include(position(1.0));
+
+    // Find the extrema independently for each axis.
+    if (deltaTime_ > 0.0) {
+        if (acceleration_.x != 0.0) {
+            const double t = -velocity_.x
+                / (acceleration_.x * deltaTime_);
+
+            if (t > 0.0 && t < 1.0)
+                include(position(t));
+        }
+
+        if (acceleration_.y != 0.0) {
+            const double t = -velocity_.y
+                / (acceleration_.y * deltaTime_);
+
+            if (t > 0.0 && t < 1.0)
+                include(position(t));
+        }
+    }
+
+    return {minimum, maximum};
+}
+
 nlohmann::json Collider::serialize() const {
     return {{"type", type_}};
 }
@@ -54,6 +91,10 @@ AABBCollider::AABBCollider(Vector2 minimum, Vector2 maximum, const std::string& 
 
 void AABBCollider::registerAABBCollider() {
     Collider::Collider_Factory.registerType<AABBCollider>("AABBCollider");
+}
+
+AABB AABBCollider::bounds() const noexcept {
+    return AABB{minimum_, maximum_};
 }
 
 void AABBCollider::deserialize(const nlohmann::json& json) {
@@ -114,6 +155,15 @@ CircleCollider::CircleCollider(Vector2 center, double radius, const std::string&
 
 void CircleCollider::registerCircleCollider() {
     Collider::Collider_Factory.registerType<CircleCollider>("CircleCollider");
+}
+
+AABB CircleCollider::bounds() const noexcept {
+    const Vector2 extent(radius_, radius_);
+
+    return {
+        center_ - extent,
+        center_ + extent
+    };
 }
 
 void CircleCollider::deserialize(const nlohmann::json& json) {

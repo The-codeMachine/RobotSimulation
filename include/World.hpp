@@ -108,6 +108,11 @@ private:
     /// @return the clone from the object
     std::unique_ptr<Object> clone_object_(const Object& original);
 
+    /// @brief Queries the map for all objects intersecting a specific AABB bounds
+    /// @param bounds 
+    /// @return all objects that intersect these bounds
+    std::vector<Object*> query_(const AABB& bounds) const;
+
     /// @brief constructs the world from a string
     /// @param world 
     void deserialize_(const nlohmann::json& world);

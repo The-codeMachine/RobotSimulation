@@ -4,6 +4,7 @@
 #include <Robot.hpp>
 
 #include <cmath>
+#include <algorithm>
 #include <stdexcept>
 
 DifferentialDriveTrajectory::DifferentialDriveTrajectory(
@@ -49,6 +50,78 @@ Vector2 DifferentialDriveTrajectory::velocity(double t) const {
 
 double DifferentialDriveTrajectory::rotation(double t) const {
     return rotation_ + angularVelocity_ * deltaTime_ * t;
+}
+
+AABB DifferentialDriveTrajectory::bounds() const {
+    constexpr double PI = 3.14159265358979323846;
+    constexpr double TWO_PI = 2.0 * PI;
+    constexpr double EPSILON = 1e-9;
+
+    Vector2 minimum = position(0.0);
+    Vector2 maximum = minimum;
+
+    const auto include = [&](Vector2 point) {
+        minimum.x = std::min(minimum.x, point.x);
+        minimum.y = std::min(minimum.y, point.y);
+
+        maximum.x = std::max(maximum.x, point.x);
+        maximum.y = std::max(maximum.y, point.y);
+    };
+
+    const double theta0 = rotation_;
+    const double deltaTheta = angularVelocity_ * deltaTime_;
+
+    include(position(1.0));
+
+    // Approximately straight-line movement.
+    if (std::abs(angularVelocity_) < EPSILON) {
+        return {minimum, maximum};
+    }
+
+    const double radius = linearVelocity_ / angularVelocity_;
+
+    // A full revolution guarantees that the entire circle is traversed.
+    if (std::abs(deltaTheta) >= TWO_PI) {
+        const double circleRadius = std::abs(radius);
+
+        const Vector2 center{
+            position_.x - radius * std::sin(theta0),
+            position_.y + radius * std::cos(theta0)
+        };
+
+        return {
+            {center.x - circleRadius, center.y - circleRadius},
+            {center.x + circleRadius, center.y + circleRadius}
+        };
+    }
+
+    const double theta1 = theta0 + deltaTheta;
+
+    const double minTheta = std::min(theta0, theta1);
+    const double maxTheta = std::max(theta0, theta1);
+
+    // Find every angle in the traversed interval matching baseAngle + k*pi.
+    const auto includeExtrema = [&](double baseAngle) {
+        const double firstK = std::ceil((minTheta - baseAngle) / PI);
+        const double lastK = std::floor((maxTheta - baseAngle) / PI);
+
+        for (double k = firstK; k <= lastK; k += 1.0) {
+            const double theta = baseAngle + k * PI;
+            const double t = (theta - theta0) / deltaTheta;
+
+            if (t > 0.0 && t < 1.0) {
+                include(position(t));
+            }
+        }
+    };
+
+    // X extrema occur when cos(theta) = 0.
+    includeExtrema(PI / 2.0);
+
+    // Y extrema occur when sin(theta) = 0.
+    includeExtrema(0.0);
+
+    return {minimum, maximum};
 }
 
 DifferentialDrive::DifferentialDrive(const std::string& id, const std::string& type) : 

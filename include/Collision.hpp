@@ -9,6 +9,22 @@
 
 class Object;
 
+/// @brief Represents an AABB collision box (to handle collisions)
+struct AABB {
+    Vector2 minimum;
+    Vector2 maximum;
+
+    /// @brief Checks whether or not another AABB collides with this object
+    /// @param other 
+    /// @return true if they collide and false otherwise
+    bool intersects(const AABB& other) const noexcept {
+        return minimum.x <= other.maximum.x
+            && maximum.x >= other.minimum.x
+            && minimum.y <= other.maximum.y
+            && maximum.y >= other.minimum.y;
+    }
+};
+
 /// @brief Result of a successful collision cast. Copyable and moveable. 
 /// @note When copying, the object variable will share the same memory 
 /// address as the original CollisionResult's object variable. 
@@ -49,6 +65,10 @@ public:
     /// @param t Normalized time in [0, 1]
     /// @return the velocity at normalized time t
     virtual Vector2 velocity(double t) const = 0;
+
+    /// @brief Returns the AABB bounds of this trajectory
+    /// @return the AABB bounds of this trajectory
+    virtual AABB bounds() const = 0;
 };
 
 /// @brief A trajectory produced by constant acceleration.
@@ -71,6 +91,8 @@ public:
 
     Vector2 position(double t) const override;
     Vector2 velocity(double t) const override;
+
+    AABB bounds() const override;
 
 private:
     Vector2 position_;
@@ -98,6 +120,10 @@ public:
 
     virtual void deserialize(const nlohmann::json& json) {}
     virtual nlohmann::json serialize() const;
+
+    /// @brief Returns the bounds for this specific collision object
+    /// @return the AABB bounds for a specific collision object
+    virtual AABB bounds() const noexcept = 0;
 
     /// @brief Determines whether a point is inside the collider
     /// @param point 
@@ -142,6 +168,8 @@ public:
 
     AABBCollider(AABBCollider&&) noexcept = default;
     AABBCollider& operator=(AABBCollider&&) noexcept = default;
+
+    AABB bounds() const noexcept override;
 
     /// @brief Deserializes this collider based off JSON
     /// @param json 
@@ -198,6 +226,10 @@ public:
 
     CircleCollider(CircleCollider&&) noexcept = default;
     CircleCollider& operator=(CircleCollider&&) noexcept = default;
+
+    /// @brief Approximates an AABB collision shape
+    /// @return the approximate AABB collision
+    AABB bounds() const noexcept override;
 
     /// @brief Deserializes this collider based off JSON
     /// @param json 

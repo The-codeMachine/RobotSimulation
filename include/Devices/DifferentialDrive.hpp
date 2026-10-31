@@ -37,6 +37,8 @@ public:
     /// @return the rotation of the trajectory based off the time
     double rotation(double t) const;
 
+    AABB bounds() const override;
+
 private:
     Vector2 position_;
     double rotation_;

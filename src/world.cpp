@@ -3,6 +3,8 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+#include <cmath>
+#include <optional>
 
 World::World(const nlohmann::json& world) {
     deserialize_(world);
@@ -97,29 +99,82 @@ void World::moveObject(Object& obj, const Transform& newTransform) {
     });
 }
 
+std::vector<Object*> World::query_(const AABB& bounds) const {
+    std::vector<Object*> results;
+
+    const int minX = static_cast<int>(std::floor(bounds.minimum.x));
+    const int maxX = static_cast<int>(std::floor(bounds.maximum.x));
+
+    const int minY = static_cast<int>(std::floor(bounds.minimum.y));
+    const int maxY = static_cast<int>(std::floor(bounds.maximum.y));
+
+    for (int x = minX; x <= maxX; ++x) {
+        for (int y = minY; y <= maxY; ++y) {
+            const auto it = map_.find(Vector2{
+                static_cast<double>(x),
+                static_cast<double>(y)
+            });
+
+            if (it == map_.end())
+                continue;
+
+            Object* object = it->second.get();
+
+            if (!object || object->isEmpty())
+                continue;
+
+            results.push_back(object);
+        }
+    }
+
+    return results;
+}
+
 std::optional<CollisionResult> World::cast(const Trajectory& trajectory, const Object& ignore) const {
+    const AABB bounds = trajectory.bounds();
+
+    const int minX = static_cast<int>(std::floor(bounds.minimum.x));
+    const int maxX = static_cast<int>(std::floor(bounds.maximum.x));
+    const int minY = static_cast<int>(std::floor(bounds.minimum.y));
+    const int maxY = static_cast<int>(std::floor(bounds.maximum.y));
+
     std::optional<CollisionResult> closest;
 
-    for (const auto& [pos, object] : map_) {
-        if (object.get() == &ignore)
-            continue;
+    for (int x = minX; x <= maxX; ++x) {
+        for (int y = minY; y <= maxY; ++y) {
+            const Vector2 position{
+                static_cast<double>(x),
+                static_cast<double>(y)
+            };
 
-        if (object->isEmpty())
-            continue;
+            const auto it = map_.find(position);
+            if (it == map_.end()) {
+                continue;
+            }
 
-        const Vector2 position = object->transform().position;
-        Collider& collider = object->collider();
-        auto collision = castTrajectory(trajectory, collider, object.get());
+            Object* object = it->second.get();
 
-        if (!collision)
-            continue;
+            if (!object || object == &ignore || object->isEmpty()) {
+                continue;
+            }
 
-        if (!closest || collision->time < closest->time) {
-            closest = std::move(collision);
+            const Collider& collider = object->collider();
+
+            // Narrow-phase collision detection.
+            auto collision = collider.cast(trajectory, object);
+
+            if (!collision) {
+                continue;
+            }
+
+            if (!closest || collision->time < closest->time) {
+                closest = std::move(collision);
+            }
         }
     }
 
     return closest;
+
 }
 
 std::vector<Detection> World::sense(const SensorShape& shape) {
