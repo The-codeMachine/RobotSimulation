@@ -1,0 +1,3 @@
+[submodule "RobotSimulationVisualization"]
+	path = RobotSimulationVisualization
+	url = https://github.com/The-codeMachine/RobotSimulationVisualization
